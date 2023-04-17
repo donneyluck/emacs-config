@@ -1,6 +1,6 @@
 #+title: Emacs 配置文件
 #+author: donney.luck
-#+date: 2023/04/14 14:23:50
+#+date: 2023/04/15 14:23:50
 #+startup: overview
 * early-init.el
 :properties:
@@ -64,7 +64,6 @@
   (when (file-exists-p early-config-path)
     (load early-config-path nil (not minemacs-verbose))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; early-init.el ends here
 #+end_src
 * init.el
@@ -356,10 +355,132 @@
 
 (+log! "Loaded init.el")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+end_src
+** init.el 文件尾
+#+begin_src emacs-lisp
 ;;; init.el ends here
 #+end_src
-#+caption: 测试中英文字体对齐
-#+name: 测试中英文字体对齐
-| 中文 |   |
-| abcd |   |
+* core
+=core= 目录下是框架的核心配置
+** me-bootstrap.el
+:properties:
+:HEADER-ARGS: =:tangle= core/me-bootstrap.el
+:end:
+=me-bootstrap.el= 设置包下载器和包安装器
+*** me-bootstrap.el 文件头
+#+begin_src emacs-lisp
+;; me-bootstrap.el --- Bootstrap packages (straight & use-package) -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+
+#+end_src
+*** me-bootstrap.el 安装 =straight= 包下载器
+#+begin_src emacs-lisp
+(setq
+ ;; Base directory
+ straight-base-dir minemacs-local-dir
+ ;; Add Emacs version and the Git hash to the build directory to avoid problems
+ straight-build-dir (format "build-%s%s" emacs-version
+                            (if emacs-repository-version
+                                (format "-%s" (substring emacs-repository-version 0 8))
+                              ""))
+ ;; Use the "develop" branch on straight.el's repo.
+ straight-repository-branch (if (>= emacs-major-version 29) "develop" "master")
+ ;; Do not slow startup by checking for package modifs, check only on demand
+ straight-check-for-modifications '(check-on-save find-when-checking))
+
+;; Bootstraping straight.el
+;; See: github.com/radian-software/straight.el#bootstrapping-straightel
+(defvar bootstrap-version)
+(let ((bootstrap-file (concat straight-base-dir "straight/repos/straight.el/bootstrap.el"))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+#+end_src
+*** me-bootstarp.el 安装 =use-package= 包管理器
+#+begin_src emacs-lisp
+;; Configure `use-package'
+(unless (require 'use-package nil t)
+  (straight-use-package 'use-package))
+
+;; Add the `:pin-ref' extension to `use-package'
+(require 'me-use-package-pin-ref)
+
+(setq
+ ;; Set `use-package' to verbose when MinEmacs is started in verbose mode
+ use-package-verbose minemacs-verbose
+ ;; Defer loading packages by default, use `:demand' to force loading a package
+ use-package-always-defer t)
+
+#+end_src
+*** me-bootstarp.el 文件尾
+#+begin_src emacs-lisp
+(provide 'me-bootstrap)
+;;; me-bootstrap.el ends here
+#+end_src
+** me-buildin.el
+:properties:
+:HEADER-ARGS: =:tangle= core/me-buildin.el
+:end:
+=me-buildin.el= 管理一些内置包
+*** me-buildin.el 文件头
+#+begin_src emacs-lisp
+;;; me-builtin.el --- Customization of some of Emacs' builtin libraries -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+
+#+end_src
+*** me-buildin.el buildin libraries
+#+begin_src emacs-lisp
+(use-package transient
+  :straight (:type built-in)
+  :config
+  ;; Map ESC and q to quit transient
+  (define-key transient-map [escape]  #'transient-quit-one)
+  (define-key transient-map (kbd "q") #'transient-quit-one))
+
+(use-package map
+  :straight (:type built-in))
+
+(use-package let-alist
+  :straight (:type built-in))
+
+#+end_src
+*** me-buildin.el 文件尾
+#+begin_src emacs-lisp
+(provide 'me-buildin)
+;;; me-buildin ends here
+#+end_src
+** me-compat.el
+:properties:
+:HEADER-ARGS: =:tangle= core/me-compat.el
+:end:
+=me-compat.el= 向前兼容的能力
+*** me-compat.el 文件头
+#+begin_src emacs-lisp
+;;; me-compat.el --- Emacs forward compatibility layer -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+
+#+end_src
+*** me-compat.el package [[https://github.com/emacs-compat/compat][compat]]
+#+begin_src emacs-lisp
+(use-package compat
+  :straight t
+  :demand t)
+#+end_src
+*** me-compat.el 文件尾
+#+begin_src emacs-lisp
+(provide 'me-compat)
+;;; me-compat ends here
+#+end_src
