@@ -2,6 +2,7 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
+#+property: header-args:emacs-lisp :comments link :mkdirp yes
 * early-init.el
 :properties:
 :HEADER-ARGS: :tangle early-init.el
@@ -364,7 +365,7 @@
 =core= 目录下是框架的核心配置
 ** me-bootstrap.el
 :properties:
-:HEADER-ARGS: =:tangle= core/me-bootstrap.el
+:header-args: :tangle core/me-bootstrap.el
 :end:
 =me-bootstrap.el= 设置包下载器和包安装器
 *** me-bootstrap.el 文件头
@@ -428,7 +429,7 @@
 #+end_src
 ** me-buildin.el
 :properties:
-:HEADER-ARGS: =:tangle= core/me-buildin.el
+:header-args: :tangle core/me-buildin.el
 :end:
 =me-buildin.el= 管理一些内置包
 *** me-buildin.el 文件头
@@ -462,7 +463,7 @@
 #+end_src
 ** me-compat.el
 :properties:
-:HEADER-ARGS: =:tangle= core/me-compat.el
+:header-args: :tangle core/me-compat.el
 :end:
 =me-compat.el= 向前兼容的能力
 *** me-compat.el 文件头
@@ -486,7 +487,7 @@
 #+end_src
 ** me-completion.el
 :properties:
-:HEADER-ARGS: =:tangle= core/me-completion.el
+:header-args: :tangle core/me-completion.el
 :end:
 =me-completion.el= 补全相关包
 *** me-completion.el 文件头
@@ -752,4 +753,305 @@
 #+begin_src emacs-lisp
 (provide 'me-completion)
 ;;; me-completion ends here
+#+end_src
+** me-core-ui.el
+:properties:
+:header-args: :tangle core/me-core-ui.el
+:end:
+=me-core-ui.el= 界面相关包
+*** me-core-ui.el 文件头
+#+begin_src emacs-lisp
+;;; me-core-ui.el --- MinEmacs -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+
+#+end_src
+*** me-core-ui.el 调整行号大小
+#+begin_src emacs-lisp
+ (defun +theme--tweaks-h (&optional _)
+   "Use smaller font (75% of the default) for line numbers in graphic mode."
+   (when (display-graphic-p)
+     (set-face-attribute
+      'line-number nil
+      :background (face-attribute 'default :background)
+      :height (truncate (* 0.75 (face-attribute 'default :height)))
+      :weight 'semi-light)
+     (set-face-attribute
+      'line-number-current-line nil
+      :height (truncate (* 0.75 (face-attribute 'default :height)))
+      :weight 'bold)))
+
+ ;; Apply tweaks
+ (add-hook 'after-init-hook #'+theme--tweaks-h)
+ (add-hook 'enable-theme-functions #'+theme--tweaks-h)
+
+ ;; Save enabled theme
+ (add-hook
+  'enable-theme-functions
+  (defun +theme--save-enabled-theme-h (theme)
+    "Save the enabled theme to `minemacs-theme'.
+ Useful for keeping track of the enabled theme."
+    (setq minemacs-theme theme)))
+
+#+end_src
+*** me-core-ui.el 主题相关
+#+begin_src emacs-lisp
+;; Disable previously enabled custom themes before enabling a new one.
+(advice-add
+ 'load-theme :before
+ (defun +theme--disable-previous-themes-a (&rest _)
+   "Disable previously enabled themes before enabling the new one."
+   (mapc #'disable-theme custom-enabled-themes)))
+
+(use-package modus-themes
+  :straight (:host github :repo "protesilaos/modus-themes")
+  :config
+  ;; In all of the following, WEIGHT is a symbol such as `semibold',
+  ;; `light', `bold', or anything mentioned in `modus-themes-weights'.
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-mixed-fonts nil
+        modus-themes-variable-pitch-ui nil
+        modus-themes-custom-auto-reload t
+
+        ;; Options for `modus-themes-prompts' are either nil (the
+        ;; default), or a list of properties that may include any of those
+        ;; symbols: `italic', `WEIGHT'
+        modus-themes-prompts '(semi-bold)
+
+        ;; The `modus-themes-completions' is an alist that reads two
+        ;; keys: `matches', `selection'.  Each accepts a nil value (or
+        ;; empty list) or a list of properties that can include any of
+        ;; the following (for WEIGHT read further below):
+        ;; `matches'   :: `underline', `italic', `WEIGHT'
+        ;; `selection' :: `underline', `italic', `WEIGHT'
+        modus-themes-completions
+        '((matches   . (extrabold))
+          (selection . (semibold text-also)))
+
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+
+        ;; The `modus-themes-headings' is an alist: read the manual's
+        ;; node about it or its doc string.  Basically, it supports
+        ;; per-level configurations for the optional use of
+        ;; `variable-pitch' typography, a height value as a multiple of
+        ;; the base font size (e.g. 1.5), and a `WEIGHT'.
+        modus-themes-headings
+        '((1                . (1.4))
+          (2                . (1.3))
+          (3                . (1.2))
+          (agenda-date      . (1.2))
+          (agenda-structure . (light 1.5))
+          (t                . (1.1)))
+
+        modus-themes-common-palette-overrides
+        `(;; Customize the mode-line colors
+          (bg-mode-line-active bg-blue-intense)
+          (fg-mode-line-active fg-main)
+
+          ;; From the section "Make the mode line borderless"
+          (border-mode-line-active unspecified)
+          (border-mode-line-inactive unspecified)
+
+          ;; From the section "Make matching parenthesis more or less intense"
+          (bg-paren-match bg-blue-intense)
+          (underline-paren-match unspecified)
+
+          ;; Links
+          (underline-link border)
+          (underline-link-visited border)
+          (underline-link-symbolic border)
+
+          ;; Comments are yellow, strings are green
+          (comment yellow-cooler)
+          (string green-warmer)
+
+          ;; And expand the preset here. Note that the ,@ works because we use
+          ;; the backtick for this list, instead of a straight quote.
+          ,@modus-themes-preset-overrides-faint))
+
+  ;; Load the theme of your choice.
+  (load-theme 'modus-operandi-tinted t))
+
+(use-package all-the-icons
+  :straight t
+  :config
+  ;; Show .m files as matlab/octave files
+  (setcdr (assoc "m" all-the-icons-extension-icon-alist)
+          (cdr (assoc "matlab" all-the-icons-extension-icon-alist))))
+
+(use-package doom-themes
+  :straight t)
+
+(use-package apropospriate-theme
+  :straight t)
+
+#+end_src
+*** me-core-ui.el [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]]
+#+begin_src emacs-lisp
+(use-package dashboard
+  :straight t
+  :after evil evil-collection
+  :demand t
+  :init
+  (+map! "oD" #'dashboard-open)
+  :custom
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-center-content t)
+  (dashboard-banner-ascii "MinEmacs")
+  (dashboard-banner-logo-title "Welcome to MinEmacs!")
+  (dashboard-items '((recents . 5) (projects . 5) (bookmarks . 5)))
+  (dashboard-image-banner-max-width 600)
+  (dashboard-projects-backend 'project-el)
+  (dashboard-startup-banner (concat minemacs-assets-dir "images/minemacs.png"))
+  :config
+  ;; Ensure setting the keybindings before openning the dashboard
+  (evil-collection-dashboard-setup)
+
+  ;; Avoid openning the dashboard when Emacs starts with an open file.
+  (when (zerop (length (seq-filter #'identity (mapcar #'buffer-file-name (buffer-list)))))
+    (dashboard-open)))
+
+#+end_src
+*** me-core-ui.el doom-modeline
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :straight t
+  :hook (minemacs-after-startup . doom-modeline-mode)
+  :custom
+  (doom-modeline-height 35)
+  (doom-modeline-bar-width 8)
+  (doom-modeline-time-icon nil)
+  (doom-modeline-buffer-encoding 'nondefault)
+  (doom-modeline-unicode-fallback t)
+  :config
+  ;; HACK: Add some padding to the right
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals matches follow buffer-info
+      remote-host buffer-position word-count parrot selection-info)
+    '(compilation objed-state misc-info persp-name battery grip irc mu4e gnus
+      github debug repl lsp minor-modes input-method indent-info buffer-encoding
+      major-mode process vcs checker time "  ")))
+
+#+end_src
+*** me-core-ui.el 文件尾
+#+begin_src emacs-lisp
+(provide 'me-core-ui)
+;;; me-core-ui ends here
+#+end_src
+** me-evil.el
+:properties:
+:header-args: :tangle core/me-evil.el
+:end:
+=me-evil.el= Emacs as Vim
+*** me-evil.el 文件头
+#+begin_src emacs-lisp
+;;; me-evil.el --- Emacs as Vim! -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+
+#+end_src
+*** me-evil.el pacakge =evil=
+#+begin_src emacs-lisp
+(use-package evil
+  :straight t
+  :hook (minemacs-after-startup . evil-mode)
+  :preface
+  (setq evil-want-keybinding nil)
+  :custom
+  (evil-want-C-i-jump nil)
+  (evil-want-fine-undo t)
+  (evil-want-Y-yank-to-eol t)
+  (evil-split-window-below t)
+  (evil-vsplit-window-right t)
+  (evil-kill-on-visual-paste nil)
+  (evil-respect-visual-line-mode t)
+  (evil-ex-interactive-search-highlight 'selected-window)
+  :config
+  (+map!
+    ;; buffer
+    "bN" '(evil-buffer-new :wk "New buffer")
+    ;; window
+    "ww" '(evil-window-next :wk "Next")
+    "wW" '(evil-window-prev :wk "Previous")
+    "ws" '(evil-window-split :wk "Split")
+    "wv" '(evil-window-vsplit :wk "Vertical split")
+    "wr" '(evil-window-rotate-downwards :wk "Rotate downwards")
+    "wR" '(evil-window-rotate-upwards :wk "Rotate upwards")
+    "w+" '(evil-window-increase-width :wk "Increase width")
+    "w-" '(evil-window-decrease-width :wk "Decrease width"))
+
+  ;; Use `evil-search' instead of `isearch'
+  (evil-select-search-module 'evil-search-module 'evil-search)
+
+  ;; Ask for a buffer when splitting windows
+  (with-eval-after-load 'consult
+    (dolist (fn '(evil-window-split evil-window-vsplit))
+      (advice-add
+       fn :after
+       (defun +evil--cunsult-buffer-after-window-split-a (&rest _)
+         (consult-buffer))))))
+
+#+end_src
+*** me-evil.el pacakge =evil-collection=
+#+begin_src emacs-lisp
+(use-package evil-collection
+  :straight t
+  :after evil minemacs-loaded
+  :demand t
+  :config
+  (evil-collection-init
+   (seq-filter
+    (lambda (mode)
+      (not (memq mode '(evil-mc ; Default bindings for `evil-mc' are messy
+                        mu4e ; TEMP: until `evil-collection-mu4e' gets fixed, see github.com/emacs-evil/evil-collection/issues/695
+                        elisp-mode)))) ; I don't like "gz" for `ielm', I like "gr" though
+    evil-collection-mode-list))
+
+  ;; Use "gr" to find references for elisp mode
+  (with-eval-after-load 'elisp-mode
+    (when evil-collection-want-find-usages-bindings
+      (evil-collection-define-key 'normal 'emacs-lisp-mode-map
+        "gr" 'xref-find-references)))
+
+  ;; TEMP: Fix `mu4e' evil integraion
+  (with-eval-after-load 'mu4e
+    (require 'loadhist) ; to use `feature-file'
+
+    ;; To avoid calling `evil-collection-mu4e--main-action-str'
+    (defvar evil-collection-mu4e-new-region-basic nil)
+
+    (require 'evil-collection-mu4e
+             (concat (file-name-directory (feature-file 'evil-collection))
+                     "modes/mu4e/evil-collection-mu4e.el"))
+
+    (evil-collection-mu4e-set-state)
+    (evil-collection-mu4e-set-bindings)
+
+    ;; Fix some missed up bindings
+    (defalias 'mu4e~view-quit-buffer #'mu4e-view-quit)
+
+    (add-hook 'org-mode-hook #'evil-collection-mu4e-org-set-header-to-normal-mode)
+    (add-hook 'mu4e-compose-pre-hook #'evil-collection-mu4e-org-set-header-to-insert-mode)))
+
+#+end_src
+*** me-evil.el pacakge =evil-snipe=
+#+begin_src emacs-lisp
+(use-package evil-snipe
+  :straight t
+  :hook (minemacs-after-startup . evil-snipe-mode)
+  :hook (minemacs-after-startup . evil-snipe-override-mode)
+  :custom
+  (evil-snipe-scope 'buffer)
+  (evil-snipe-smart-case t)
+  (evil-snipe-auto-scroll t))
+
+#+end_src
+*** me-evil.el 文件尾
+#+begin_src emacs-lisp
+(provide me-evil)
+;;; me-evil ends here
 #+end_src
