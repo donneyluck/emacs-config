@@ -374,7 +374,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 *** me-bootstrap.el 安装 =straight= 包下载器
 #+begin_src emacs-lisp
@@ -404,7 +403,6 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-
 #+end_src
 *** me-bootstarp.el 安装 =use-package= 包管理器
 #+begin_src emacs-lisp
@@ -420,7 +418,6 @@
  use-package-verbose minemacs-verbose
  ;; Defer loading packages by default, use `:demand' to force loading a package
  use-package-always-defer t)
-
 #+end_src
 *** me-bootstarp.el 文件尾
 #+begin_src emacs-lisp
@@ -438,7 +435,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 *** me-buildin.el buildin libraries
 #+begin_src emacs-lisp
@@ -472,7 +468,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 *** me-compat.el package [[https://github.com/emacs-compat/compat][compat]]
 #+begin_src emacs-lisp
@@ -496,7 +491,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 *** me-completion.el pacakge [[https://github.com/minad/cape/][cape]]  完成后端
 #+begin_src emacs-lisp
@@ -507,7 +501,6 @@
   :config
   (dolist (fn '(cape-file cape-ispell cape-symbol cape-keyword))
     (add-to-list 'completion-at-point-functions fn)))
-
 #+end_src
 *** me-completion.el package [[https://github.com/minad/corfu][corfu]] 完成前端
 #+begin_src emacs-lisp
@@ -535,7 +528,6 @@
       (corfu-mode 1)))
 
   (add-hook 'minibuffer-setup-hook #'+corfu-enable-in-minibuffer))
-
 #+end_src
 *** me-completion.el package [[https://elpa.gnu.org/packages/corfu.html][corfu extensions]]
 #+begin_src emacs-lisp
@@ -559,7 +551,6 @@
  (use-package corfu-terminal
    :straight t
    :hook (corfu-mode . corfu-terminal-mode))
-
 #+end_src
 *** me-completion.el package [[https://github.com/jdtsmith/kind-icon][kind-icon]] 图标和完成前缀
 #+begin_src emacs-lisp
@@ -579,7 +570,6 @@
    (kind-icon-blend-background nil) ; Use midpoint color between foreground and background colors       ("blended")?
    :config
    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
 #+end_src
 *** me-completion.el package [[https://github.com/minad/consult][consult]] 搜索和导航
 #+begin_src emacs-lisp
@@ -669,7 +659,6 @@
                (if (and (called-interactively-p) (not (minibufferp)))
                    (list (or initial (+region-or-thing-at-point)))
                  (list initial))))))))
-
 #+end_src
 *** me-completion.el package [[https://github.com/oantolin/embark][embark]] TODO:
 #+begin_src emacs-lisp
@@ -684,7 +673,6 @@
   :straight t
   :after embark consult
   :demand t)
-
 #+end_src
 *** me-completion.el package [[https://github.com/minad/marginalia][marginalia]] 旁注
 #+begin_src emacs-lisp
@@ -695,7 +683,6 @@
 (use-package all-the-icons-completion
   :straight t
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup))
-
 #+end_src
 *** me-completion.el package [[https://github.com/oantolin/orderless][orderless]] 正则匹配
 #+begin_src emacs-lisp
@@ -706,7 +693,6 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
-
 #+end_src
 *** me-completion.el package [[https://github.com/minad/vertico][vertico]] 完成UI
 #+begin_src emacs-lisp
@@ -747,7 +733,6 @@
   :hook (minibuffer-setup . vertico-repeat-save)
   :init
   (keymap-global-set "M-R" #'vertico-repeat))
-
 #+end_src
 *** me-completion.el 文件尾
 #+begin_src emacs-lisp
@@ -765,7 +750,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 *** me-core-ui.el 调整行号大小
 #+begin_src emacs-lisp
@@ -793,7 +777,6 @@
     "Save the enabled theme to `minemacs-theme'.
  Useful for keeping track of the enabled theme."
     (setq minemacs-theme theme)))
-
 #+end_src
 *** me-core-ui.el 主题相关
 #+begin_src emacs-lisp
@@ -886,7 +869,6 @@
 
 (use-package apropospriate-theme
   :straight t)
-
 #+end_src
 *** me-core-ui.el [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]]
 #+begin_src emacs-lisp
@@ -913,7 +895,6 @@
   ;; Avoid openning the dashboard when Emacs starts with an open file.
   (when (zerop (length (seq-filter #'identity (mapcar #'buffer-file-name (buffer-list)))))
     (dashboard-open)))
-
 #+end_src
 *** me-core-ui.el doom-modeline
 #+begin_src emacs-lisp
@@ -934,7 +915,6 @@
     '(compilation objed-state misc-info persp-name battery grip irc mu4e gnus
       github debug repl lsp minor-modes input-method indent-info buffer-encoding
       major-mode process vcs checker time "  ")))
-
 #+end_src
 *** me-core-ui.el 文件尾
 #+begin_src emacs-lisp
@@ -952,7 +932,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 *** me-evil.el pacakge =evil=
 #+begin_src emacs-lisp
@@ -994,7 +973,6 @@
        fn :after
        (defun +evil--cunsult-buffer-after-window-split-a (&rest _)
          (consult-buffer))))))
-
 #+end_src
 *** me-evil.el pacakge =evil-collection=
 #+begin_src emacs-lisp
@@ -1036,7 +1014,6 @@
 
     (add-hook 'org-mode-hook #'evil-collection-mu4e-org-set-header-to-normal-mode)
     (add-hook 'mu4e-compose-pre-hook #'evil-collection-mu4e-org-set-header-to-insert-mode)))
-
 #+end_src
 *** me-evil.el pacakge =evil-snipe=
 #+begin_src emacs-lisp
@@ -1048,7 +1025,38 @@
   (evil-snipe-scope 'buffer)
   (evil-snipe-smart-case t)
   (evil-snipe-auto-scroll t))
-
+#+end_src
+*** me-evil.el package =evil-numbers=
+#+begin_src emacs-lisp
+ (use-package evil-numbers
+   :straight t
+   :init
+   (+nmap!
+     "g+" #'evil-numbers/inc-at-pt
+     "g=" #'evil-numbers/inc-at-pt
+     "g-" #'evil-numbers/dec-at-pt)
+   (+vmap!
+     "g+" #'evil-numbers/inc-at-pt-incremental
+     "g=" #'evil-numbers/inc-at-pt-incremental
+     "g-" #'evil-numbers/dec-at-pt-incremental))
+#+end_src
+*** me-evil.el package =evil-nerd-commenter=
+#+begin_src emacs-lisp
+ (use-package evil-nerd-commenter
+   :straight t
+   :commands evilnc-comment-operator
+   :init
+   (+nvmap! "gc" #'evilnc-comment-operator))
+#+end_src
+*** me-evil.el pacakge =evil-escape=
+#+begin_src emacs-lisp
+ (use-package evil-escape
+   :straight t
+   :hook (evil-mode . evil-escape-mode)
+   :custom
+   ;; The default "fd" interfere with the "f" (bound to `evil-snipe-f') binding.
+   (evil-escape-key-sequence "kj")
+   (evil-escape-unordered-key-sequence t)) ; "kj" or "jk"
 #+end_src
 *** me-evil.el 文件尾
 #+begin_src emacs-lisp
