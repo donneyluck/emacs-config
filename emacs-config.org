@@ -1548,6 +1548,14 @@ or file path may exist now."
    (evil-escape-key-sequence "kj")
    (evil-escape-unordered-key-sequence t)) ; "kj" or "jk"
 #+end_src
+*** me-evil.el pacakge =evil-surround=
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :straight t
+  :demand t
+  :config
+  (global-evil-surround-mode 1))
+#+end_src
 *** me-evil.el 文件尾
 #+begin_src emacs-lisp
 (provide me-evil)
@@ -1813,4 +1821,180 @@ or file path may exist now."
 #+begin_src emacs-lisp
 (provide me-keybindings)
 ;;; me-keybindings ends here
+#+end_src
+** me-loaddefs.el
+=me-loaddefs.el= 此文件是由 =minemacs-generate-loaddefs= 收集autoload 函数
+** me-modules.el
+:properties:
+:header-args: :tangle core/me-modules.el
+:end:
+=me-modules.el= 模块划分文件
+*** me-modules.el 文件头
+#+begin_src emacs-lisp
+;;; me-modules.el -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-modules.el 核心模块
+#+begin_src emacs-lisp
+(defcustom minemacs-core-modules
+  '(me-splash        ; Simple splash screen
+    me-keybindings   ; Keybinding (general, which-key, hydra, ...)
+    me-evil          ; Emacs as Vim (evil, evil-collection, evil-escape, evil-snipe, evil-numbers, ...)
+    me-core-ui       ; Core UI (doom-themes, modus-themes, doom-modeline, ...)
+    me-completion)   ; Completion (vertico, marginalia, corfu, cape, consult, embark, ...)
+  "MinEmacs enabled core modules."
+  :group 'minemacs-core
+  :type '(repeat symbol))
+#+end_src
+*** me-modules.el 定制模块
+#+begin_src emacs-lisp
+(defcustom minemacs-modules
+  '(me-ui            ; User interface (focus, writeroom-mode, mixed-pitch, ...)
+    me-editor        ; Editing (yasnippet, smartparens, unicode-fonts, ligature, ...)
+    me-daemon        ; Emacs daemon tweaks
+    me-undo          ; Better undoing (undo-fu, undo-fu-session, vundo, ...)
+    me-multi-cursors ; Multi-cursors editing (iedit, evil-mc, evil-iedit-state, ...)
+    me-vc            ; Version control (magit, forge, core-review, diff-hl, ...)
+    me-project       ; Project management (project, projectile, consult-projectile, treemacs-projectile, ...)
+    me-prog          ; Programming stuff (tree-sitter, eglot, eldoc, eldoc-box, apheleia, editorconfig, ...)
+    me-checkers      ; Static checkers (flymake, flymake-easy, ...)
+    me-debug         ; Debugging tools (gdb-mi, realgud, disaster, ...)
+    ;; me-lsp        ; LSP and DAP (lsp-mode, dap-mode, consult-lsp, lsp-pyright, ccls, ...)
+    me-lisp          ; Lisps development (parinfer-rust, sly, macrostep, geiser, elisp, helpful, eros, ...)
+    ;; me-embedded   ; Embedded systems (arduino, openocd, bitbake, vhdl-mode, ...)
+    ;; me-robot      ; Robotics stuff (ros, robot-mode, ...)
+    me-data          ; Data file formats (csv, yaml, toml, json, plantuml-mode, ...)
+    ;; me-math       ; Mathematics (maxima, ess, ein, julia-mode, octave, ...)
+    ;; me-modeling   ; Modeling tools (scad-mode, ...)
+    me-org           ; Org-mode for life (org, org-contrib, org-modern, org-appear, ...)
+    me-extra         ; Extra features (better-jumper, crux, ...)
+    me-notes         ; Notes & Zettelkasten (org-roam, consult-org-roam, ...)
+    me-eaf           ; EAF apps (browser, jupyter, file-sender, ...)
+    ;; me-email      ; Email (mu4e, mu4e-alert, org-msg, ...)
+    ;; me-rss        ; News feed (elfeed, ...)
+    ;; me-lifestyle  ; *Very* opinionated lifestyle packages (awqat, ...)
+    me-docs          ; Documents (pdf-tools, nov, ...)
+    me-latex         ; LaTeX (auctex, auctex-latexmk, reftex, bibtex, ...)
+    ;; me-biblio     ; Bibliography & citations (org-cite, citar, zotxt, ...)
+    me-natural-langs ; Natural language stuff (spell-fu, go-translate, eglot-ltex, ...)
+    me-files         ; Files and directories (dirvish, treemacs, vlf, ...)
+    me-tools         ; System tools (tramp, vterm, tldr, ssh-deploy, docker, ...)
+    me-tty           ; Emacs from terminal (xt-mouse, xclip, ...)
+    ;; me-fun        ; Games and funny packages (xkcd, speed-type, ...)
+    ;; me-media      ; Multimedia (empv, emms, ...)
+    ;; me-workspaces ; Workspace separation (tabspaces, tab-bar, ...). NOTE: This is a WIP
+    me-binary        ; Display binary files in hex or decompile them (hexl, ...) ...
+    me-window)       ; Frame & window tweaks
+  "MinEmacs enabled modules."
+  :group 'minemacs-core
+  :type '(repeat symbol))
+#+end_src
+*** me-modules.el 文件尾
+#+begin_src emacs-lisp
+(provide me-modules)
+;;; me-modules ends here
+#+end_src
+** me-splash.el
+:properties:
+:header-args: :tangle core/me-splash.el
+:end:
+=me-splash.el= 下载包过程中简易界面 参考 [[github.com/rougier/emacs-splash][emacs-splash]]
+*** me-splash.el 文件头
+#+begin_src emacs-lisp
+;;; me-splash.el -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-splash.el 界面定制
+#+begin_src emacs-lisp
+(setq inhibit-startup-screen t)
+(defvar minemacs-splash-buffer-name "*minemacs-splash*")
+
+(defun minemacs-splash ()
+  "MinEmacs splash screen"
+  ;; If there are buffer associated with filenames, we don't show splash screen.
+  (when (zerop (length (seq-filter #'identity (mapcar #'buffer-file-name (buffer-list)))))
+    (let* ((buffer (get-buffer-create minemacs-splash-buffer-name))
+           (height (- (window-body-height nil) 1))
+           (padding-center (min 5 (- (/ height 3) 1)))
+           (padding-bottom (min 2 (- height (/ height 3) 3))))
+      (with-current-buffer buffer
+        (erase-buffer)
+        ;; Buffer local settings
+        (setq-local cursor-type nil
+                    vertical-scroll-bar nil
+                    horizontal-scroll-bar nil)
+
+        ;; Vertical padding to center
+        (insert-char ?\n padding-center)
+
+        ;; Central text
+        (insert-char ?\s 10)
+        (insert (propertize "MinEmacs" 'face 'bold))
+        (insert-char ?\n)
+        (insert-char ?\s 10)
+        (insert (propertize
+                 (format "Running GNU Emacs %s%s"
+                         emacs-version
+                         (if emacs-repository-version
+                             (format " (%s)" (substring emacs-repository-version 0 10))
+                           ""))
+                 'face 'shadow))
+
+        ;; Bootstraping
+        (unless (file-exists-p (concat minemacs-local-dir "straight/repos/straight.el/bootstrap.el"))
+          (insert-char ?\n)
+          (insert-char ?\s 10)
+          (insert (propertize "You are running MinEmacs for the first time."
+                              'face 'warning))
+          (insert-char ?\n)
+          (insert-char ?\s 10)
+          (insert (propertize "Please wait while MinEmacs installs the required packages."
+                              'face 'warning)))
+
+        ;; Vertical padding to bottom
+        (insert-char ?\n padding-bottom)
+
+        ;; Copyright text
+        (insert-char ?\n)
+        (insert-char ?\s 10)
+        (insert (propertize "Minimal Emacs configuration for daily use" 'face 'shadow))
+        (insert-char ?\n)
+        (insert-char ?\s 10)
+        (insert-text-button "github.com/abougouffa/minemacs"
+                            'action (lambda (_) (browse-url "https://github.com/abougouffa/minemacs"))
+                            'help-echo "Visit MinEmacs repo"
+                            'follow-link t)
+        (insert-char ?\n)
+
+        (goto-char 0)
+        (read-only-mode t)
+
+        (local-set-key (kbd "<escape>") (lambda () (interactive) (minemacs-splash-kill)))
+        (local-set-key (kbd "q") (lambda () (interactive) (minemacs-splash-kill)))
+        (local-set-key (kbd "<mouse-1>") 'mouse-set-point)
+        (local-set-key (kbd "<mouse-2>") 'operate-this-button)
+
+        (display-buffer-same-window buffer nil)))))
+
+(defun minemacs-splash-kill ()
+  (when (get-buffer minemacs-splash-buffer-name)
+    (kill-buffer minemacs-splash-buffer-name)))
+
+;; Display splash screen
+(minemacs-splash)
+
+;; Close splash screen automatically after Emacs gets loaded
+(add-hook
+ 'emacs-startup-hook
+ (defun +minemacs-splash--kill-h ()
+   (run-at-time 0.5 nil #'minemacs-splash-kill)))
+#+end_src
+*** me-splash.el 文件尾
+#+begin_src emacs-lisp
+(provide me-splash)
+;;; me-splash ends here
 #+end_src
