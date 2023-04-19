@@ -1998,3 +1998,248 @@ or file path may exist now."
 (provide me-splash)
 ;;; me-splash ends here
 #+end_src
+** me-vars.el
+:properties:
+:header-args: :tangle core/me-vars.el
+:end:
+=me-vars.el= 一些自定义变量
+*** me-vars.el 文件头
+#+begin_src emacs-lisp
+;;; me-vars.el -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-vars.el 变量定义
+#+begin_src emacs-lisp
+;;; MinEmacs directories
+
+(defgroup minemacs nil
+  "MinEmacs specific functionalities.")
+
+(defgroup minemacs-core nil
+  "MinEmacs core tweaks."
+  :group 'minemacs)
+
+(defgroup minemacs-ui nil
+  "MinEmacs UI tweaks."
+  :group 'minemacs)
+
+(defgroup minemacs-edit nil
+  "MinEmacs editor tweaks."
+  :group 'minemacs)
+
+(defgroup minemacs-prog nil
+  "MinEmacs programming stuff."
+  :group 'minemacs)
+
+(defgroup minemacs-keybinding nil
+  "MinEmacs keybinding."
+  :group 'minemacs)
+
+(defgroup minemacs-utils nil
+  "MinEmacs utility functions."
+  :group 'minemacs)
+
+(defconst minemacs-config-dir
+  (file-name-as-directory
+   (or (getenv "MINEMACS_DIR")
+       (getenv "MINEMACSDIR")
+       "~/.minemacs.d/"))
+  "MinEmacs user customization directory.")
+
+(defconst minemacs-debug
+  (and (or (getenv "MINEMACS_DEBUG") init-file-debug) t)
+  "MinEmacs is started in debug mode.")
+
+(defconst minemacs-verbose
+  (and (or (getenv "MINEMACS_VERBOSE") minemacs-debug) t)
+  "MinEmacs is started in verbose mode.")
+
+(defconst minemacs-not-lazy
+  (or (daemonp) (and (getenv "MINEMACS_NOT_LAZY") t))
+  "Load lazy packages (minemacs-lazy-hook) immediately.")
+
+(defcustom minemacs-msg-level
+  (let ((level (string-to-number (or (getenv "MINEMACS_MSG_LEVEL") ""))))
+    (cond (minemacs-verbose 4)
+          ((> level 0) level)
+          (t 1)))
+  "Level of printed messages.
+1 - `+error!'
+2 - `+info!'
+3 - `+log!'
+4 - `+debug!'"
+  :group 'minemacs-core
+  :type '(choice
+          (const :tag "Error" 1)
+          (const :tag "Info" 2)
+          (const :tag "Log" 3)
+          (const :tag "Debug" 4)))
+
+;; Derive the root directory from this file path
+(defconst minemacs-root-dir
+  (abbreviate-file-name
+   (file-name-directory
+    (directory-file-name
+     (file-name-directory (file-truename load-file-name))))))
+(defconst minemacs-core-dir (concat minemacs-root-dir "core/"))
+(defconst minemacs-assets-dir (concat minemacs-root-dir "assets/"))
+(defconst minemacs-elisp-dir (concat minemacs-root-dir "elisp/"))
+(defconst minemacs-modules-dir (concat minemacs-root-dir "modules/"))
+(defconst minemacs-extras-dir (concat minemacs-modules-dir "extras/"))
+(defconst minemacs-local-dir (concat minemacs-root-dir "local/"))
+(defconst minemacs-cache-dir (concat minemacs-local-dir "cache/"))
+(defconst minemacs-loaddefs-file (concat minemacs-core-dir "me-loaddefs.el"))
+
+(defconst os/linux (and (memq system-type '(gnu gnu/linux)) t))
+(defconst os/bsd (and (memq system-type '(darwin berkeley-unix gnu/kfreebsd)) t))
+(defconst os/win (and (memq system-type '(cygwin windows-nt ms-dos)) t))
+(defconst os/mac (eq system-type 'darwin))
+
+;; Should return x86_64, aarch64, armhf, ...
+(defconst sys/arch (intern (car (split-string system-configuration "-"))))
+
+(defconst emacs/features
+  (mapcar #'intern
+          (mapcar (apply-partially #'string-replace "_" "-")
+                  (mapcar #'downcase (split-string system-configuration-features))))
+  "List of symbols representing Emacs' enabled features.
+Compiled from the `system-configuration-features'.")
+
+(defcustom minemacs-fonts nil
+  "Fonts to use within MinEmacs."
+  :group 'minemacs-ui
+  :type '(plist
+          (:font-family string)
+          (:font-size natnum)
+          (:unicode-font-family string)
+          (:variable-pitch-font-family string)
+          (:variable-pitch-font-size natnum)))
+
+(defcustom minemacs-leader-key "SPC"
+  "MinEmacs leader key."
+  :group 'minemacs-keybinding
+  :type 'string)
+
+(defcustom minemacs-localleader-key "SPC m"
+  "MinEmacs local leader (a.k.a. mode specific) key sequence."
+  :group 'minemacs-keybinding
+  :type 'string)
+
+(defcustom minemacs-global-leader-prefix "C-SPC"
+  "MinEmacs general leader key."
+  :group 'minemacs-keybinding
+  :type 'string)
+
+(defcustom minemacs-global-mode-prefix "C-SPC m"
+  "MinEmacs general local leader (a.k.a. mode specific) key sequence."
+  :group 'minemacs-keybinding
+  :type 'string)
+
+(defcustom minemacs-theme 'doom-one-light
+  "The theme of MinEmacs."
+  :group 'minemacs-ui
+  :type 'symbol)
+
+(defcustom minemacs-after-set-fonts-hook nil
+  "Runs after setting MinEmacs fonts, runs at the end of `+set-fonts'."
+  :group 'minemacs-ui
+  :type 'hook)
+
+(defcustom minemacs-after-load-theme-hook nil
+  "Runs after loading MinEmacs theme, runs at the end of `+load-theme'."
+  :group 'minemacs-ui
+  :type 'hook)
+
+(defcustom minemacs-after-startup-hook nil
+  "This hook will be run after loading Emacs.
+
+MinEmacs hooks will be run in this order:
+1. `minemacs-after-startup-hook'
+2. `minemacs-lazy-hook'"
+  :group 'minemacs-core
+  :type 'hook)
+
+(defcustom minemacs-lazy-hook nil
+  "This hook will be run after loading Emacs, with laziness.
+
+MinEmacs hooks will be run in this order:
+1. `minemacs-after-startup-hook'
+2. `minemacs-lazy-hook'"
+  :group 'minemacs-core
+  :type 'hook)
+
+;; Setup default fonts (depending on the OS)
+(let ((mono-font (cond (os/linux "monospace")
+                       (os/win "Lucida Console")
+                       (os/mac "monospace")))
+      (varp-font (cond (os/linux "monospace")
+                       (os/win "Tahoma")
+                       (os/mac "monospace"))))
+  (defconst minemacs-default-fonts
+    `(:font-family ,mono-font
+      :font-size 13
+      :unicode-font-family nil
+      :variable-pitch-font-family ,varp-font
+      :variable-pitch-font-size 13)
+    "Default fonts of MinEmacs."))
+
+(defcustom +env-save-vars
+  '("PATH" "MANPATH" "CMAKE_PREFIX_PATH" "PKG_CONFIG_PATH" "LSP_USE_PLISTS")
+  "List of the environment variables to saved by `+env-save'.
+You need to run Emacs from terminal to get the environment variables.
+MinEmacs then save them when calling `+env-save' to be used in GUI sessions as well."
+  :group 'minemacs-core
+  :type '(repeat string))
+#+end_src
+*** me-vars.el 文件尾
+#+begin_src emacs-lisp
+(provide me-vars)
+;;; me-vars ends here
+#+end_src
+** me-use-package-pin-ref.el
+:properties:
+:header-args: :tangle core/me-use-package-pin-ref.el
+:end:
+=me-use-package-pin-ref.el= 使用确定版本的包
+[[https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases][How do I pin package versions or use only tagged releases?]]
+*** me-use-package-pin-ref.el 文件头
+#+begin_src emacs-lisp
+;;; me-use-package-pin-ref.el --- Extend use-package to allow straight-x package pinning -*- lexical-   binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-use-package-pin-ref.el 扩展use-package支持固定版本的包
+#+begin_src emacs-lisp
+ (with-eval-after-load 'straight
+   ;; Add a profile (and lockfile) for stable package revisions.
+   (add-to-list 'straight-profiles '(pinned . "pinned.el"))
+   (require 'straight-x))
+
+ ;; Allow pinning versions from `use-package' using the `:pin-ref' keyword
+ (with-eval-after-load 'use-package-core
+   (add-to-list 'use-package-keywords :pin-ref)
+
+   (defun use-package-normalize/:pin-ref (_name-symbol keyword args)
+     (use-package-only-one (symbol-name keyword) args
+       (lambda (_label arg)
+         (cond
+          ((stringp arg) arg)
+          ((symbolp arg) (symbol-name arg))
+          (t (use-package-error ":pin-ref wants a commit hash or a ref."))))))
+
+   (defun use-package-handler/:pin-ref (name-symbol _keyword ref rest state)
+     (let ((body (use-package-process-keywords name-symbol rest state)))
+       (if (null ref)
+           body
+         `((let ((straight-current-profile 'pinned))
+            (push '(,(symbol-name name-symbol) . ,ref) straight-x-pinned-packages)
+            ,(macroexp-progn body)))))))
+#+end_src
+*** me-use-package-pin-ref.el 文件尾
+#+begin_src emacs-lisp
+(provide me-use-package-pin-ref)
+;;; me-use-package-pin-ref ends here
+#+end_src
