@@ -2,7 +2,7 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
-#+property: header-args:emacs-lisp :comments link :mkdirp yes
+#+property: header-args:emacs-lisp :comments no :mkdirp yes
 * early-init.el
 :properties:
 :HEADER-ARGS: :tangle early-init.el
@@ -2273,4 +2273,45 @@ Used to synchronize loading some other stuff after loading Emacs
 #+begin_src emacs-lisp
 (provide minemacs-loaded)
 ;;; minemacs-loaded ends here
+#+end_src
+** minemacs-lazy.el
+=minemacs-lazy.el= 惰性加载hook
+Virtual module loaded when idle after `minemacs-loaded'.
+Used to synchronize loading some other stuff after loading Emacs.
+*** minemacs-lazy.el 文件头
+#+begin_src emacs-lisp
+;;; minemacs-lazy.el -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** minemacs-lazy.el 同步加载一些其他东西
+#+begin_src emacs-lisp
+ ;; The hooks in `minemacs-lazy-hook' are loaded incrementally when Emacs goes
+ ;; idle, but when `minemacs-not-lazy' is set to t, they will be all loaded at
+ ;; once.
+
+ ;; Run hooks
+ (when minemacs-lazy-hook
+   ;; Reverse the order to follow the order in which modules are loaded. Make
+   ;; sure `gcmh-mode' is the last to be called. The `gc-cons-threshold' has been
+   ;; set in "early-init.el" to a ridiculously high value to reduce the number of
+   ;; garbage collections at startup, it will be overwritten by `gcmh-mode', so
+   ;; we defer loading it to the end to maximize the benefit.
+   (setq minemacs-lazy-hook (append (delq 'gcmh-mode (reverse minemacs-lazy-hook)) '(gcmh-mode)))
+   (if minemacs-not-lazy
+       (progn ; If `minemacs-no-lazy' is bound and true, force loading lazy hooks immediately
+         (+log! "Loading %d lazy packages immediately."
+                (length minemacs-lazy-hook))
+         (run-hooks 'minemacs-lazy-hook))
+     (+log! "Loading %d lazy packages incrementally." (length minemacs-lazy-hook))
+     ;; Run hooks one by one, as a FIFO.
+     (apply #'+eval-when-idle (append '(1) minemacs-lazy-hook))))
+
+ (+log! "Providing `minemacs-lazy'.")
+#+end_src
+*** minemacs-lazy.el 文件尾
+#+begin_src emacs-lisp
+(provide minemacs-lazy)
+;;; minemacs-lazy ends here
 #+end_src
