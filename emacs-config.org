@@ -3149,3 +3149,19 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 #+begin_src emacs-lisp
 ;;; +io.el ends here
 #+end_src
+** +emacs.el
+:properties:
+:header-args: :tangle elisp/+emacs.el
+:end:
+*** +emacs.el 文件头
+#+begin_src emacs-lisp
+;;; +emacs.el --- emacs -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** +emacs.el
+*** +emacs.el 文件尾
+#+begin_src emacs-lisp
+;;; +emacs.el ends here
+#+end_src
