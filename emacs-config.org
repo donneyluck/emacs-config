@@ -3308,3 +3308,519 @@ prefix or universal argument, it waits for a moment (defined by
 #+begin_src emacs-lisp
 ;;; +emacs.el ends here
 #+end_src
+** +keybinding.el
+:properties:
+:header-args: :tangle elisp/+keybinding.el
+:end:
+*** +keybinding.el 文件头
+#+begin_src emacs-lisp
+;;; +keybinding.el --- +keybinding -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** +keybinding.el 按键相关宏
+#+begin_src emacs-lisp
+;; PERF+HACK: At some point, MinEmacs startup become too slow, specially when
+;; initializing `general' and `evil'. After trying several configurations, I
+;; figured out that deferring `general' solves the issue. However, deferring
+;; `general' means that we cannot define the keybindings when loading other
+;; packages, i.e. before `general' gets loaded and the MinEmacs definers (i.e.
+;; `+minemacs--internal-map!', `+minemacs--internal-map-local!', ...) are made
+;; available. We overcome this by defining these macros to define the
+;; keybindings by wrapping the actual definition in a `with-eval-after-load'
+;; block to be evaluated only after `general' gets loaded and configured and the
+;; definers are ready (See `me-keybindings').
+;;;###autoload
+(defmacro +map! (&rest args)
+  "A wrapper around `+minemacs--internal-map!'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (+minemacs--internal-map! ,@args)))
+
+;;;###autoload
+(defmacro +map-local! (&rest args)
+  "A wrapper around `+minemacs--internal-map-local!'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (+minemacs--internal-map-local! ,@args)))
+
+;; Wrappers around `general's VIM like definers, needs `general-evil-setup' to
+;; be executed (See `me-keybindings')
+;;;###autoload
+(defmacro +nmap! (&rest args)
+  "A wrapper around `general-nmap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-nmap ,@args)))
+
+;;;###autoload
+(defmacro +vmap! (&rest args)
+  "A wrapper around `general-vmap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-vmap ,@args)))
+
+;;;###autoload
+(defmacro +mmap! (&rest args)
+  "A wrapper around `general-mmap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-mmap ,@args)))
+
+;;;###autoload
+(defmacro +imap! (&rest args)
+  "A wrapper around `general-imap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-imap ,@args)))
+
+;;;###autoload
+(defmacro +emap! (&rest args)
+  "A wrapper around `general-emap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-emap ,@args)))
+
+;;;###autoload
+(defmacro +omap! (&rest args)
+  "A wrapper around `general-omap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-omap ,@args)))
+
+;;;###autoload
+(defmacro +rmap! (&rest args)
+  "A wrapper around `general-rmap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-rmap ,@args)))
+
+;;;###autoload
+(defmacro +iemap! (&rest args)
+  "A wrapper around `general-iemap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-iemap ,@args)))
+
+;;;###autoload
+(defmacro +nvmap! (&rest args)
+  "A wrapper around `general-nvmap'.
+It is deferred until `general' gets loaded and configured."
+  (declare (indent defun))
+  `(with-eval-after-load 'me-general-ready
+    (general-nvmap ,@args)))
+#+end_src
+*** +keybinding.el 文件尾
+#+begin_src emacs-lisp
+;;; +keybinding.el ends here
+#+end_src
+** +minemacs.el
+:properties:
+:header-args: :tangle elisp/+minemacs.el
+:end:
+=minemacs.el= 一些宏和方法 简化配置
+*** +minemacs.el 文件头
+#+begin_src emacs-lisp
+;;; +minemacs.el --- +keybinding -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** +minemacs.el =log=
+#+begin_src emacs-lisp
+;;;###autoload
+(defmacro +error! (msg &rest vars)
+  "Log error MSG and VARS using `message'."
+  (when (>= minemacs-msg-level 1)
+    `(apply #'message (list (concat "[MinEmacs:Error] " ,msg) ,@vars))))
+
+;;;###autoload
+(defmacro +info! (msg &rest vars)
+  "Log info MSG and VARS using `message'."
+  (when (>= minemacs-msg-level 2)
+    `(let ((inhibit-message t))
+      (apply #'message (list (concat "[MinEmacs:Info] " ,msg) ,@vars)))))
+
+;;;###autoload
+(defmacro +log! (msg &rest vars)
+  "Log MSG and VARS using `message' when `minemacs-verbose' is non-nil."
+  (when (>= minemacs-msg-level 3)
+    `(let ((inhibit-message t))
+      (apply #'message (list (concat "[MinEmacs:Log] " ,msg) ,@vars)))))
+
+;;;###autoload
+(defmacro +debug! (msg &rest vars)
+  "Log error MSG and VARS using `message'."
+  (when (>= minemacs-msg-level 4)
+    `(let ((inhibit-message t))
+      (apply #'message (list (concat "[MinEmacs:Debug] " ,msg) ,@vars)))))
+#+end_src
+*** +minemacs.el =featurep=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +emacs-features-p (&rest feats)
+  "Is features FEATS are enabled in this Emacs build."
+  (cl-every (lambda (feat) (memq feat emacs/features)) feats))
+#+end_src
+*** +minemacs.el =inhibit-message=
+#+begin_src emacs-lisp
+;;;###autoload
+(defmacro +fn-inhibit-messages! (fn &optional no-message-log)
+  "Add an advice around the function FN to suppress messages in echo area.
+If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
+  (let ((advice-fn (make-symbol (format "+%s--inhibit-messages-a" fn))))
+    `(advice-add
+      ',fn :around
+      (defun ,advice-fn (origfn &rest args)
+       (let ((message-log-max (unless ,no-message-log message-log-max)))
+        (with-temp-message (or (current-message) "")
+         (+log! "Inhibiting messages of %s" ,(symbol-name fn))
+         (apply origfn args)))))))
+
+;;;###autoload
+(defmacro +shutup! (&rest body)
+  "Suppress new messages temporarily in the echo area and the `*Messages*' buffer while BODY is evaluated."
+  (if (not minemacs-verbose)
+      `(let ((message-log-max nil))
+        (with-temp-message (or (current-message) "") ,@body))
+    `(progn ,@body)))
+
+;;;###autoload
+(defmacro +suppress! (&rest body)
+  "Suppress new messages temporarily in the echo area while BODY is evaluated."
+  (if (not minemacs-verbose)
+      `(with-temp-message (or (current-message) "") ,@body)
+    `(progn ,@body)))
+#+end_src
+*** +minemacs.el =convert to interactive=
+#+begin_src emacs-lisp
+;;;###autoload
+(defmacro +cmdfy! (&rest body)
+  "Convert BODY to an interactive command."
+  `(lambda ()
+     (interactive)
+     ,@body))
+#+end_src
+*** +minemacs.el =set-fonts=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +set-fonts ()
+  "Set Emacs' fonts from `minemacs-fonts'."
+  (interactive)
+  ;; TODO: use (font-family-list) to check if the font is available
+  (custom-set-faces
+   `(default
+     ((t (:font ,(format "%s %d"
+                  (or (plist-get minemacs-fonts :font-family)
+                   (plist-get minemacs-default-fonts :font-family))
+                  (or (plist-get minemacs-fonts :font-size)
+                   (plist-get minemacs-default-fonts :font-size)))))))
+   `(fixed-pitch
+     ((t (:inherit (default)))))
+   `(fixed-pitch-serif
+     ((t (:inherit (default)))))
+   `(variable-pitch
+     ((t (:font ,(format "%s %d"
+                  (or (plist-get minemacs-fonts :variable-pitch-font-family)
+                   (plist-get minemacs-default-fonts :variable-pitch-font-family))
+                  (or (plist-get minemacs-fonts :variable-pitch-font-size)
+                   (plist-get minemacs-default-fonts :variable-pitch-font-size))))))))
+  ;; Run hooks
+  (run-hooks 'minemacs-after-set-fonts-hook))
+#+end_src
+*** +minemacs.el =load-theme=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +load-theme ()
+  "Load Emacs' theme from `minemacs-theme'."
+  (interactive)
+  (when minemacs-theme
+    (+log! "Loading user theme: %s" minemacs-theme)
+    ;; Fallback to built-in `tsdh-light' when `minemacs-theme' is not available.
+    (unless (ignore-errors (load-theme minemacs-theme t))
+      (+error! "Cannot load theme \"%s\", falling back to \"tsdh-light\"." minemacs-theme)
+      (load-theme 'tsdh-light t)))
+  ;; Run hooks
+  (run-hooks 'minemacs-after-load-theme-hook))
+#+end_src
+*** +minemacs.el =eval-when-idle=
+*** +minemacs.el =deferred=
+#+begin_src emacs-lisp
+;;;###autoload
+(defmacro +deferred! (&rest body)
+  "Run BODY after Emacs gets loaded, a.k.a. after `minemacs-loaded'."
+  `(with-eval-after-load 'minemacs-loaded
+    ,@body))
+
+;;;###autoload
+(defmacro +deferred-when! (condition &rest body)
+  "Like `+deferred!', with BODY executed only if CONDITION is non-nil."
+  (declare (indent 1))
+  `(when ,condition (+deferred! ,@body)))
+
+;;;###autoload
+(defmacro +deferred-unless! (condition &rest body)
+  "Like `+deferred!', with BODY executed only if CONDITION is nil."
+  (declare (indent 1))
+  `(unless ,condition (+deferred! ,@body)))
+
+;;;###autoload
+(defmacro +deferred-or-immediate! (condition &rest body)
+  "Like `+deferred!', with BODY deferred if CONDITION is non-nil, otherwise it acts like `progn'."
+  (declare (indent 1))
+  `(if ,condition (+deferred! ,@body) (progn ,@body)))
+#+end_src
+*** +minemacs.el =lazy=
+#+begin_src emacs-lisp
+;;;###autoload
+(defmacro +lazy! (&rest body)
+  "Run BODY as a lazy block (see `minemacs-lazy')."
+  `(with-eval-after-load 'minemacs-lazy
+    (+eval-when-idle-for! 1.0
+     ,@body)))
+
+;;;###autoload
+(defmacro +lazy-when! (condition &rest body)
+  "Like `+lazy!', with BODY executed only if CONDITION is non-nil."
+  (declare (indent 1))
+  `(when ,condition (+lazy! ,@body)))
+
+;;;###autoload
+(defmacro +lazy-unless! (condition &rest body)
+  "Like `+lazy!', with BODY executed only if CONDITION is nil."
+  (declare (indent 1))
+  `(unless ,condition (+lazy! ,@body)))
+
+;;;###autoload
+(defmacro +lazy-or-immediate! (condition &rest body)
+  "Like `+lazy!', with BODY deferred if CONDITION is non nil, otherwise it acts like `progn'."
+  (declare (indent 1))
+  `(if ,condition (+lazy! ,@body) (progn ,@body)))
+#+end_src
+*** +minemacs.el =after-load=
+#+begin_src emacs-lisp
+;;;###autoload
+(defmacro +after-load! (features &rest body)
+  "Execute BODY after FEATURES have been loaded."
+  (declare (indent 1))
+  (let ((features (if (+quoted features) (+unquote features) (eval features))))
+    (if (symbolp features)
+        `(with-eval-after-load ',features ,@body)
+      (let ((feature (car features)))
+        (cond
+         ((memq feature '(:or :any))
+          (macroexp-progn
+           (cl-loop
+            for next in (cdr features)
+            collect `(with-eval-after-load ',(+unquote next) ,@body))))
+         ((memq feature '(:and :all))
+          (dolist (next (reverse (cdr features)) (car body))
+            (setq body `((with-eval-after-load ',(+unquote next) ,@body)))))
+         (t `(+after-load! '(:all ,@features) ,@body)))))))
+#+end_src
+*** +minemacs.el =hook=
+#+begin_src emacs-lisp
+;; Adapted from: github.com/d12frosted/environment
+;;;###autoload
+(defmacro +hook-with-delay! (hook secs function &optional depth local)
+  "Add the FUNCTION to the value of HOOK.
+The FUNCTION is delayed to be evaluated in SECS once HOOK is
+triggered.
+DEPTH and LOCAL are passed as is to `add-hook'."
+  (let* ((f-name (make-symbol (format "%s-on-%s-delayed-%ds-h" (+unquote function) (+unquote hook) secs)))
+         (f-doc (format "Call `%s' in %d seconds" (symbol-name (+unquote function)) secs)))
+    `(eval-when-compile
+       (defun ,f-name () ,f-doc
+        (run-with-idle-timer ,secs nil ,function))
+       (add-hook ,hook #',f-name ,depth ,local))))
+
+(defvar +hook-once-num 0)
+
+;;;###autoload
+(defmacro +hook-once! (hook &rest body)
+  "Hook BODY in HOOK, it runs only once."
+  (declare (indent 1))
+  (let ((hook (+unquote hook))
+        (fn-name (intern (format "+hook-once--function-%d-h" (cl-incf +hook-once-num)))))
+    `(add-hook
+      ',hook
+      (defun ,fn-name ()
+       ,(macroexp-progn body)
+       (remove-hook ',hook ',fn-name)))))
+#+end_src
+*** +minemacs.el =complie-function=
+#+begin_src emacs-lisp
+;; Adapted from: Doom Emacs
+;;;###autoload
+(defun +compile-functions (&rest fns)
+  "Queue FNS to be byte/natively-compiled after a brief delay."
+  (dolist (fn fns)
+    (+eval-when-idle!
+      (or (and (featurep 'native-compile)
+               (or (subr-native-elisp-p (indirect-function fn))
+                   ;; Do not log to `comp-log-buffer-name'
+                   (cl-letf (((symbol-function 'comp-log-to-buffer) #'ignore))
+                     (+shutup! (ignore-errors (native-compile fn))))))
+          (byte-code-function-p fn)
+          (let (byte-compile-warnings)
+            (+shutup! (byte-compile fn)))))))
+#+end_src
+*** +minemacs.el =env load & save=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +env-save ()
+  "Load environment variables of the current session to the file
+  \".emacs.d/local/system-env.el\"."
+  (interactive)
+  (with-temp-buffer
+    (insert ";; -*- mode: emacs-lisp; no-byte-compile: t; no-native-compile: t; -*-\n\n")
+    (dolist (env-var +env-save-vars)
+      (when-let ((var-val (getenv env-var)))
+        (when (equal "PATH" env-var)
+          (insert
+           (format
+            "\n;; Helper function\n%s\n"
+            '(defun +add-to-path (path)
+              (unless (member path exec-path)
+               (add-to-list 'exec-path path)))))
+          (insert "\n;; Adding PATH content to `exec-path'\n")
+          (dolist (path (parse-colon-path var-val))
+            (when path
+              (insert
+               (format
+                "(+add-to-path \"%s\")\n"
+                path path))))
+          (insert "\n"))
+        (insert
+         (format "(setenv \"%s\" \"%s\")\n" env-var var-val))))
+    (write-file (concat minemacs-local-dir "system-env.el"))))
+
+;;;###autoload
+(defun +env-load ()
+  "Load environment variables from the file saved in
+  \".emacs.d/local/system-env.el\" if available."
+  (interactive)
+  (let ((env-file (concat minemacs-local-dir "system-env.el")))
+    (when (file-exists-p env-file)
+      (+load env-file))))
+#+end_src
+*** +minemacs.el =ignore-root=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +ignore-root (&rest roots)
+  "Add ROOTS to ignored projects, recentf, etc."
+  (dolist (root roots)
+    (with-eval-after-load 'recentf
+      (add-to-list 'recentf-exclude root))))
+#+end_src
+*** +minemacs.el 文件尾
+#+begin_src emacs-lisp
+;;; +minemacs.el ends here
+#+end_src
+** WAIT netextender.el
+=netextender.el= 程序netextender的封装
+暂时用不到  可以学习一下如何和命令行程序交互
+:properties:
+:header-args: :tangle elisp/netextender.el
+:end:
+*** netextender.el 文件头
+#+begin_src emacs-lisp
+;;; netextender.el --- +keybinding -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** netextender.el =netextender=
+#+begin_src emacs-lisp
+(defvar netextender-process-name "netextender")
+(defvar netextender-buffer-name " *NetExtender*")
+
+(defgroup minemacs-netextender nil
+  "MinEmacs NetExtender."
+  :group 'minemacs)
+
+(defcustom netextender-passphrase-file "~/.ssh/sslvpn.gpg"
+  "GPG encrypted NetExtender connection parameters."
+  :group 'minemacs-netextender
+  :type 'file)
+
+(defcustom netextender-command '("~/.local/bin/netextender")
+  "Custom NetExtender launcher."
+  :group 'minemacs-netextender
+  :type '(choice string file))
+
+;; If the command doesn't exist, generate it.
+(unless (file-exists-p (car netextender-command))
+  (setq netextender-command (cons (make-temp-file "netextender") (cdr netextender-command)))
+  (set-file-modes (car netextender-command) #o755) ;; Make it executable
+  (with-temp-buffer
+    (insert
+     (format "#!/bin/bash
+
+if ! command -v netExtender &> /dev/null; then
+  echo \"netExtender not found, installing from AUR using 'yay'\"
+  yay -S netextender
+fi
+
+MY_LOGIN_PARAMS_FILE=\"%s\"
+
+echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-tty -d \"${MY_LOGIN_PARAMS_FILE}\")"
+             (expand-file-name netextender-passphrase-file)))
+    (write-file (car netextender-command))))
+
+(defun netextender-check-system ()
+  "Return non-nil if system setup is OK."
+  (let* ((pppd-command "/usr/sbin/pppd")
+         (pppd-modes (file-modes pppd-command)))
+    ;; pppd must be run as root (via setuid)
+    (if (and pppd-modes (zerop (logand (lsh 1 11) pppd-modes))) ;; Check if the setuid bit isn't set
+        (prog1 nil ;; return nil
+          (message "pppd needs root permissions, please set the setuid bit of %s." pppd-command))
+      t)))
+
+;;;###autoload
+(defun netextender-start ()
+  "Launch a NetExtender VPN session."
+  (interactive)
+  (if (netextender-check-system)
+      (unless (get-process netextender-process-name)
+        (if (make-process :name netextender-process-name
+                          :buffer netextender-buffer-name
+                          :command netextender-command)
+            (message "Started NetExtender VPN session.")
+          (user-error "Cannot start NetExtender.")))
+    (user-error "Cannot start a netExtender VPN session.")))
+
+(defun netextender-kill ()
+  "Kill the created NetExtender VPN session."
+  (interactive)
+  (let ((netextender-process (get-process netextender-process-name)))
+    (if netextender-process
+        (if (kill-process netextender-process)
+            (message "Killed NetExtender VPN session.")
+          (user-error "Cannot kill NetExtender."))
+      (message "No running NetExtender session."))))
+
+;;;###autoload
+(defun netextender-toggle ()
+  "Toggle connection to NetExtender."
+  (interactive)
+  (if (get-process netextender-process-name)
+      (netextender-kill)
+    (netextender-start)))
+#+end_src
+*** netextender.el 文件尾
+#+begin_src emacs-lisp
+;;; netextender.el ends here
+#+end_src
