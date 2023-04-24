@@ -2,7 +2,6 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
-#+property: header-args:emacs-lisp :comments no :mkdirp yes
 * early-init.el
 :properties:
 :HEADER-ARGS: :tangle early-init.el
@@ -2412,14 +2411,20 @@ Used to synchronize loading some other stuff after loading Emacs
 =minemacs-lazy.el= 惰性加载hook
 Virtual module loaded when idle after `minemacs-loaded'.
 Used to synchronize loading some other stuff after loading Emacs.
-*** minemacs-lazy.el =header=
-#+begin_src emacs-lisp
+#+name: minemacs-lazy.el
+#+begin_src emacs-lisp :tangle core/minemacs-lazy.el :mkdirp yes :noweb yes
 ;;; minemacs-lazy.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
+
+<<minemacs-lazy-load>>
+
+(provide minemacs-lazy)
+;;; minemacs-lazy ends here
 #+end_src
-*** minemacs-lazy.el 同步加载一些其他东西
+
+#+name: minemacs-lazy-load
 #+begin_src emacs-lisp
  ;; The hooks in `minemacs-lazy-hook' are loaded incrementally when Emacs goes
  ;; idle, but when `minemacs-not-lazy' is set to t, they will be all loaded at
@@ -2444,11 +2449,7 @@ Used to synchronize loading some other stuff after loading Emacs.
 
  (+log! "Providing `minemacs-lazy'.")
 #+end_src
-*** minemacs-lazy.el =tail=
-#+begin_src emacs-lisp
-(provide minemacs-lazy)
-;;; minemacs-lazy ends here
-#+end_src
+
 * elisp/
 ** +binary.el
 :properties:
