@@ -72,7 +72,7 @@
 :HEADER-ARGS: :tangle init.el
 :end:
 =init.el= 是Emacs的主要配置文件。
-** init.el 文件头
+** init.el =header=
 #+begin_src emacs-lisp
 ;; init.el --- MinEmacs core initialization file -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -357,18 +357,18 @@
 (+log! "Loaded init.el")
 
 #+end_src
-** init.el 文件尾
+** init.el =tail=
 #+begin_src emacs-lisp
 ;;; init.el ends here
 #+end_src
-* core
+* core/
 =core= 目录下是框架的核心配置
 ** me-backports-29.el
 :properties:
 :header-args: :tangle core/me-backports-29.el
 :end:
 =me-backports-29.el= 一些emacs29的函数
-*** me-backports-29.el 文件头
+*** me-backports-29.el =header=
 #+begin_src emacs-lisp
 ;;; me-backports-29.el --- Some Emacs 29 functionalities ported back to Emacs 28 -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -492,7 +492,7 @@ plain variables.  This means that `setopt' will execute any
 (defalias 'string-split #'split-string)
 (defalias 'loaddefs-generate #'make-directory-autoloads)
 #+end_src
-*** me-backports-29.el 文件尾
+*** me-backports-29.el =tail=
 #+begin_src emacs-lisp
 (provide me-backports-29)
 ;;; me-backports-29.el ends here
@@ -502,7 +502,7 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-bootstrap.el
 :end:
 =me-bootstrap.el= 设置包下载器和包安装器
-*** me-bootstrap.el 文件头
+*** me-bootstrap.el =header=
 #+begin_src emacs-lisp
 ;; me-bootstrap.el --- Bootstrap packages (straight & use-package) -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -553,7 +553,7 @@ plain variables.  This means that `setopt' will execute any
  ;; Defer loading packages by default, use `:demand' to force loading a package
  use-package-always-defer t)
 #+end_src
-*** me-bootstarp.el 文件尾
+*** me-bootstarp.el =tail=
 #+begin_src emacs-lisp
 (provide 'me-bootstrap)
 ;;; me-bootstrap.el ends here
@@ -563,7 +563,7 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-buildin.el
 :end:
 =me-buildin.el= 管理一些内置包
-*** me-buildin.el 文件头
+*** me-buildin.el =header=
 #+begin_src emacs-lisp
 ;;; me-builtin.el --- Customization of some of Emacs' builtin libraries -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -586,7 +586,7 @@ plain variables.  This means that `setopt' will execute any
   :straight (:type built-in))
 
 #+end_src
-*** me-buildin.el 文件尾
+*** me-buildin.el =tail=
 #+begin_src emacs-lisp
 (provide 'me-buildin)
 ;;; me-buildin ends here
@@ -596,7 +596,7 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-compat.el
 :end:
 =me-compat.el= 向前兼容的能力
-*** me-compat.el 文件头
+*** me-compat.el =header=
 #+begin_src emacs-lisp
 ;;; me-compat.el --- Emacs forward compatibility layer -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -609,7 +609,7 @@ plain variables.  This means that `setopt' will execute any
   :straight t
   :demand t)
 #+end_src
-*** me-compat.el 文件尾
+*** me-compat.el =tail=
 #+begin_src emacs-lisp
 (provide 'me-compat)
 ;;; me-compat ends here
@@ -619,7 +619,7 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-completion.el
 :end:
 =me-completion.el= 补全相关包
-*** me-completion.el 文件头
+*** me-completion.el =header=
 #+begin_src emacs-lisp
 ;;; completion.el --- Completion packages -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -868,7 +868,7 @@ plain variables.  This means that `setopt' will execute any
   :init
   (keymap-global-set "M-R" #'vertico-repeat))
 #+end_src
-*** me-completion.el 文件尾
+*** me-completion.el =tail=
 #+begin_src emacs-lisp
 (provide 'me-completion)
 ;;; me-completion ends here
@@ -878,7 +878,7 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-core-ui.el
 :end:
 =me-core-ui.el= 界面相关包
-*** me-core-ui.el 文件头
+*** me-core-ui.el =header=
 #+begin_src emacs-lisp
 ;;; me-core-ui.el --- MinEmacs -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -1050,7 +1050,7 @@ plain variables.  This means that `setopt' will execute any
       github debug repl lsp minor-modes input-method indent-info buffer-encoding
       major-mode process vcs checker time "  ")))
 #+end_src
-*** me-core-ui.el 文件尾
+*** me-core-ui.el =tail=
 #+begin_src emacs-lisp
 (provide 'me-core-ui)
 ;;; me-core-ui ends here
@@ -1059,7 +1059,7 @@ plain variables.  This means that `setopt' will execute any
 :properties:
 :header-args: :tangle core/me-defaults.el
 :end:
-*** me-defaults.el 文件头
+*** me-defaults.el =header=
 #+begin_src emacs-lisp
 ;;; me-defaults.el --- MinEmacs defaults for Emacs -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -1540,7 +1540,7 @@ or file path may exist now."
   ;; Global SubWord mode
   (global-subword-mode 1))
 #+end_src
-*** me-defaults.el 文件尾
+*** me-defaults.el =tail=
 #+begin_src emacs-lisp
 (provide 'me-defaults)
 ;;; me-defaults ends here
@@ -1550,7 +1550,7 @@ or file path may exist now."
 :header-args: :tangle core/me-evil.el
 :end:
 =me-evil.el= Emacs as Vim
-*** me-evil.el 文件头
+*** me-evil.el =header=
 #+begin_src emacs-lisp
 ;;; me-evil.el --- Emacs as Vim! -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -1690,7 +1690,7 @@ or file path may exist now."
   :config
   (global-evil-surround-mode 1))
 #+end_src
-*** me-evil.el 文件尾
+*** me-evil.el =tail=
 #+begin_src emacs-lisp
 (provide me-evil)
 ;;; me-evil ends here
@@ -1700,7 +1700,7 @@ or file path may exist now."
 :header-args: :tangle core/me-gc.el
 :end:
 =me-gc.el=  garbage collection 垃圾回收
-*** me-gc.el 文件头
+*** me-gc.el =header=
 #+begin_src emacs-lisp
 ;;; me-gc.el --- garbage collection -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -1724,7 +1724,7 @@ or file path may exist now."
    (gcmh-high-cons-threshold
     (* 1024 1024 (if (string-suffix-p "64" (symbol-name sys/arch)) 256 16))))
 #+end_src
-*** me-gc.el 文件尾
+*** me-gc.el =tail=
 #+begin_src emacs-lisp
 (provide me-gc)
 ;;; me-gc ends here
@@ -1734,7 +1734,7 @@ or file path may exist now."
 :header-args: :tangle core/me-keybindings.el
 :end:
 =me-keybindings.el= 按键相关包
-*** me-keybindings.el 文件头
+*** me-keybindings.el =header=
 #+begin_src emacs-lisp
 ;;; me-keybindings.el --- Default keybindings -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -1951,7 +1951,7 @@ or file path may exist now."
 (use-package hydra
    :straight t)
 #+end_src
-*** me-keybindings.el 文件尾
+*** me-keybindings.el =tail=
 #+begin_src emacs-lisp
 (provide me-keybindings)
 ;;; me-keybindings ends here
@@ -1963,7 +1963,7 @@ or file path may exist now."
 :header-args: :tangle core/me-modules.el
 :end:
 =me-modules.el= 模块划分文件
-*** me-modules.el 文件头
+*** me-modules.el =header=
 #+begin_src emacs-lisp
 ;;; me-modules.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2025,7 +2025,7 @@ or file path may exist now."
   :group 'minemacs-core
   :type '(repeat symbol))
 #+end_src
-*** me-modules.el 文件尾
+*** me-modules.el =tail=
 #+begin_src emacs-lisp
 (provide me-modules)
 ;;; me-modules ends here
@@ -2035,7 +2035,7 @@ or file path may exist now."
 :header-args: :tangle core/me-splash.el
 :end:
 =me-splash.el= 下载包过程中简易界面 参考 [[github.com/rougier/emacs-splash][emacs-splash]]
-*** me-splash.el 文件头
+*** me-splash.el =header=
 #+begin_src emacs-lisp
 ;;; me-splash.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2127,7 +2127,7 @@ or file path may exist now."
  (defun +minemacs-splash--kill-h ()
    (run-at-time 0.5 nil #'minemacs-splash-kill)))
 #+end_src
-*** me-splash.el 文件尾
+*** me-splash.el =tail=
 #+begin_src emacs-lisp
 (provide me-splash)
 ;;; me-splash ends here
@@ -2137,7 +2137,7 @@ or file path may exist now."
 :header-args: :tangle core/me-vars.el
 :end:
 =me-vars.el= 一些自定义变量
-*** me-vars.el 文件头
+*** me-vars.el =header=
 #+begin_src emacs-lisp
 ;;; me-vars.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2327,7 +2327,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
   :group 'minemacs-core
   :type '(repeat string))
 #+end_src
-*** me-vars.el 文件尾
+*** me-vars.el =tail=
 #+begin_src emacs-lisp
 (provide me-vars)
 ;;; me-vars ends here
@@ -2338,7 +2338,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 :end:
 =me-use-package-pin-ref.el= 使用确定版本的包
 [[https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases][How do I pin package versions or use only tagged releases?]]
-*** me-use-package-pin-ref.el 文件头
+*** me-use-package-pin-ref.el =header=
 #+begin_src emacs-lisp
 ;;; me-use-package-pin-ref.el --- Extend use-package to allow straight-x package pinning -*- lexical-   binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2372,7 +2372,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
             (push '(,(symbol-name name-symbol) . ,ref) straight-x-pinned-packages)
             ,(macroexp-progn body)))))))
 #+end_src
-*** me-use-package-pin-ref.el 文件尾
+*** me-use-package-pin-ref.el =tail=
 #+begin_src emacs-lisp
 (provide me-use-package-pin-ref)
 ;;; me-use-package-pin-ref ends here
@@ -2380,7 +2380,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 ** minemacs-loaded.el
 =minemacs-loaded.el=  Virtual module loaded at end of init.el (after custom-vars.el)
 Used to synchronize loading some other stuff after loading Emacs
-*** minemacs-loaded.el 文件头
+*** minemacs-loaded.el =header=
 #+begin_src emacs-lisp
 ;;; minemacs-loaded.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2403,7 +2403,7 @@ Used to synchronize loading some other stuff after loading Emacs
 
  (+log! "Providing `minemacs-loaded'.")
 #+end_src
-*** minemacs-loaded.el 文件尾
+*** minemacs-loaded.el =tail=
 #+begin_src emacs-lisp
 (provide minemacs-loaded)
 ;;; minemacs-loaded ends here
@@ -2412,7 +2412,7 @@ Used to synchronize loading some other stuff after loading Emacs
 =minemacs-lazy.el= 惰性加载hook
 Virtual module loaded when idle after `minemacs-loaded'.
 Used to synchronize loading some other stuff after loading Emacs.
-*** minemacs-lazy.el 文件头
+*** minemacs-lazy.el =header=
 #+begin_src emacs-lisp
 ;;; minemacs-lazy.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2444,17 +2444,17 @@ Used to synchronize loading some other stuff after loading Emacs.
 
  (+log! "Providing `minemacs-lazy'.")
 #+end_src
-*** minemacs-lazy.el 文件尾
+*** minemacs-lazy.el =tail=
 #+begin_src emacs-lisp
 (provide minemacs-lazy)
 ;;; minemacs-lazy ends here
 #+end_src
-* elisp
+* elisp/
 ** +binary.el
 :properties:
 :header-args: :tangle elisp/+binary.el
 :end:
-*** +binary.el 文件头
+*** +binary.el =header=
 #+begin_src emacs-lisp
 ;;; +binary.el --- binary -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2555,7 +2555,7 @@ is binary, activate `hexl-mode'."
   (add-to-list 'magic-fallback-mode-alist '(+binary-objdump-buffer-p . objdump-disassemble-mode) t)
   (add-to-list 'magic-fallback-mode-alist '(+binary-hexl-buffer-p . +binary-hexl-mode-maybe) t))
 #+end_src
-*** +binary.el 文件尾
+*** +binary.el =tail=
 #+begin_src emacs-lisp
 ;;; binary ends here
 #+end_src
@@ -2563,7 +2563,7 @@ is binary, activate `hexl-mode'."
 :properties:
 :header-args: :tangle elisp/+buffer.el
 :end:
-*** +buffer.el 文件头
+*** +buffer.el =header=
 #+begin_src emacs-lisp
 ;;; +buffer.el --- binary -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -2741,7 +2741,7 @@ When available, use \"fortune\" to add a random quote."
     ;; Set initial scratch message
     (setq initial-scratch-message (buffer-string))))
 #+end_src
-*** +buffer.el 文件尾
+*** +buffer.el =tail=
 #+begin_src emacs-lisp
 ;;; buffer ends here
 #+end_src
@@ -2753,7 +2753,7 @@ This allows me to mount my private directory encrypted using ecryptfs-utils.
 It is a port of "ecryptfs-mount-private" shell command. It uses extracts the
 encryption key from a GPG encrypted file containting the ecryptfs password.
 The decryption of the password is performed using Emacs' `epg'.
-*** ecryptfs.el 文件头
+*** ecryptfs.el =header=
 *** ecryptfs.el 私有文件夹加密解密
 #+begin_src emacs-lisp
 (require 'epg)
@@ -2853,7 +2853,7 @@ The decryption of the password is performed using Emacs' `epg'.
       (message "Unmounted private directory successfully.")
     (user-error "Cannot unmount the private directory, seems to be already unmounted.")))
 #+end_src
-*** ecryptfs.el 文件尾
+*** ecryptfs.el =tail=
 #+begin_src emacs-lisp
 ;;; ecryptfs.el ends here
 #+end_src
@@ -2861,7 +2861,7 @@ The decryption of the password is performed using Emacs' `epg'.
 :properties:
 :header-args: :tangle elisp/+io.el
 :end:
-*** +io.el 文件头
+*** +io.el =header=
 #+begin_src emacs-lisp
 ;;; +io.el --- io -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -3145,7 +3145,7 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
                "--browser-executable-path" browse-url-chromium-program
                url out-file))))
 #+end_src
-*** +io.el 文件尾
+*** +io.el =tail=
 #+begin_src emacs-lisp
 ;;; +io.el ends here
 #+end_src
@@ -3153,7 +3153,7 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 :properties:
 :header-args: :tangle elisp/+emacs.el
 :end:
-*** +emacs.el 文件头
+*** +emacs.el =header=
 #+begin_src emacs-lisp
 ;;; +emacs.el --- emacs -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -3304,7 +3304,7 @@ prefix or universal argument, it waits for a moment (defined by
     (cl-letf (((symbol-function 'webjump-read-string) #'+webjump-read-string-with-initial-query))
       (webjump))))
 #+end_src
-*** +emacs.el 文件尾
+*** +emacs.el =tail=
 #+begin_src emacs-lisp
 ;;; +emacs.el ends here
 #+end_src
@@ -3312,7 +3312,7 @@ prefix or universal argument, it waits for a moment (defined by
 :properties:
 :header-args: :tangle elisp/+keybinding.el
 :end:
-*** +keybinding.el 文件头
+*** +keybinding.el =header=
 #+begin_src emacs-lisp
 ;;; +keybinding.el --- +keybinding -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -3421,7 +3421,7 @@ It is deferred until `general' gets loaded and configured."
   `(with-eval-after-load 'me-general-ready
     (general-nvmap ,@args)))
 #+end_src
-*** +keybinding.el 文件尾
+*** +keybinding.el =tail=
 #+begin_src emacs-lisp
 ;;; +keybinding.el ends here
 #+end_src
@@ -3430,7 +3430,7 @@ It is deferred until `general' gets loaded and configured."
 :header-args: :tangle elisp/+minemacs.el
 :end:
 =minemacs.el= 一些宏和方法 简化配置
-*** +minemacs.el 文件头
+*** +minemacs.el =header=
 #+begin_src emacs-lisp
 ;;; +minemacs.el --- +keybinding -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -3724,7 +3724,7 @@ DEPTH and LOCAL are passed as is to `add-hook'."
     (with-eval-after-load 'recentf
       (add-to-list 'recentf-exclude root))))
 #+end_src
-*** +minemacs.el 文件尾
+*** +minemacs.el =tail=
 #+begin_src emacs-lisp
 ;;; +minemacs.el ends here
 #+end_src
@@ -3734,7 +3734,7 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 :properties:
 :header-args: :tangle elisp/netextender.el
 :end:
-*** netextender.el 文件头
+*** netextender.el =header=
 #+begin_src emacs-lisp
 ;;; netextender.el --- +keybinding -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -3820,7 +3820,7 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
       (netextender-kill)
     (netextender-start)))
 #+end_src
-*** netextender.el 文件尾
+*** netextender.el =tail=
 #+begin_src emacs-lisp
 ;;; netextender.el ends here
 #+end_src
@@ -3828,7 +3828,7 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
 :properties:
 :header-args: :tangle elisp/project.el
 :end:
-*** +project.el 文件头
+*** +project.el =header=
 #+begin_src emacs-lisp
 ;;; +project.el --- project -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -3880,7 +3880,7 @@ When DIR is not detected as a project, ask to force it to be by adding a
   (let ((default-directory (project-root (project-current t))))
     (call-interactively #'gdb)))
 #+end_src
-*** +project.el 文件尾
+*** +project.el =tail=
 #+begin_src emacs-lisp
 ;;; +project.el ends here
 #+end_src
@@ -3888,7 +3888,7 @@ When DIR is not detected as a project, ask to force it to be by adding a
 :properties:
 :header-args: :tangle elisp/primitives.el
 :end:
-*** +primitives.el 文件头
+*** +primitives.el =header=
 #+begin_src emacs-lisp
 ;;; +primitives.el --- primitives -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
@@ -4065,7 +4065,178 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
   (lambda (&rest args2)
     (apply fun (append args2 args))))
 #+end_src
-*** +primitives.el 文件尾
+*** +primitives.el =tail=
 #+begin_src emacs-lisp
 ;;; +primitives.el ends here
 #+end_src
+** +systemd.el
+:properties:
+:header-args: :tangle elisp/systemd.el
+:end:
+=+systemd.el= 启动 关闭 检查 服务状态 --user
+*** +systemd.el =header=
+#+begin_src emacs-lisp
+;;; +systemd.el --- systemd wrapper -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** +systemd.el =systemd wrapper=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +systemd-running-p (service)
+  "Check if the systemd SERVICE is running."
+  (zerop (call-process "systemctl" nil nil nil "--user" "is-active" "--quiet" service ".service")))
+
+;;;###autoload
+(defun +systemd-command (service command &optional pre-fn post-fn)
+  "Call systemd with COMMAND and SERVICE."
+  (when pre-fn (funcall pre-fn))
+  (let ((success (zerop (call-process "systemctl" nil nil nil "--user" command service ".service"))))
+    (unless success
+      (user-error "[systemd]: Failed on calling '%s' on service %s.service." command service))
+    (when post-fn (funcall post-fn success))
+    success))
+
+;;;###autoload
+(defun +systemd-start (service &optional pre-fn post-fn)
+  "Start systemd SERVICE."
+  (+systemd-command service "start" pre-fn post-fn))
+
+;;;###autoload
+(defun +systemd-stop (service &optional pre-fn post-fn)
+  "Stops the systemd SERVICE."
+  (+systemd-command service "stop" pre-fn post-fn))
+#+end_src
+*** +systemd.el =tail=
+#+begin_src emacs-lisp
+;;; +systemd.el ends here
+#+end_src
+** +unix.el
+:properties:
+:header-args: :tangle elisp/unix.el
+:end:
+*** +unix.el =header=
+#+begin_src emacs-lisp
+;;; +unix.el --- unix cmd wrapper -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** +unix.el =unix cmd wrapper=
+#+begin_src emacs-lisp
+;; From: emacswiki.org/emacs/download/misc-cmds.el
+(defun +read-shell-file-command (command)
+  "Prompt for shell COMMAND, using current buffer's file as default arg.
+If buffer is not associated with a file, you are prompted for a file.
+COMMAND is a symbol."
+  (let ((file (or (buffer-file-name) (read-file-name "File: "))))
+    (setq file (and file (file-name-nondirectory file))
+          command (format "%s  " command)) ; Convert to string.
+    (read-from-minibuffer
+     "" (cons (concat command (and file  (concat " " file))) (length command)))))
+
+;;;###autoload
+(defun +chmod-this-file (cmd)
+  "Execute Unix command `chmod'.  Current buffer's file is default arg.
+CMD is the command to execute (interactively, `chmod')."
+  (interactive (list (+read-shell-file-command 'chmod)))
+  (shell-command cmd))
+
+;;;###autoload
+(defun +chgrp-this-file (cmd)
+  "Execute Unix command `chgrp'.  Current buffer's file is default arg.
+CMD is the command to execute (interactively, `chgrp')."
+  (interactive (list (+read-shell-file-command 'chgrp)))
+  (shell-command cmd))
+
+;;;###autoload
+(defun +chown-this-file (cmd)
+  "Execute Unix command `chown'.  Current buffer's file is default arg.
+CMD is the command to execute (interactively, `chown')."
+  (interactive (list (+read-shell-file-command 'chown)))
+  (shell-command cmd))
+#+end_src
+*** +unix.el =tail=
+#+begin_src emacs-lisp
+;;; +unix.el ends here
+#+end_src
+** valgrind.el
+:properties:
+:header-args: :tangle elisp/valgrind.el
+:end:
+*** valgrind.el =header=
+#+begin_src emacs-lisp
+;;; valgrind.el --- valgrind wrapper -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** valgrind.el =valgrind wrapper=
+#+begin_src emacs-lisp
+(require 'compile)
+
+(defgroup valgrind nil
+  "Run valgrind as inferior of Emacs, parse error messages."
+  :group 'tools
+  :group 'processes)
+
+(defcustom valgrind-command "valgrind --leak-check=full "
+  "*Last shell command used to run valgrind; default for next valgrind run.
+Sometimes it is useful for files to supply local values for this variable.
+You might also use mode hooks to specify it in certain modes, like this:
+  (add-hook 'c-mode-hook
+    (lambda ()
+      (unless (or (file-exists-p \"makefile\")
+                  (file-exists-p \"Makefile\"))
+        (set (make-local-variable 'valgrind-command)
+             (concat \"make -k \"
+                     (file-name-sans-extension buffer-file-name))))))"
+  :type 'string
+  :group 'valgrind)
+
+;; History of compile commands.
+(defvar valgrind-history nil)
+
+;; Integration with `savehist'
+(with-eval-after-load 'savehist
+  (add-to-list 'savehist-additional-variables 'valgrind-history))
+
+;;;###autoload
+(defun valgrind (command)
+  "Run valgrind.
+Runs COMMAND, a shell command, in a separate process asynchronously
+with output going to the buffer `*valgrind*'.
+You can then use the command \\[next-error] to find the next error message
+and move to the source code that caused it."
+  (interactive
+   (if (or compilation-read-command current-prefix-arg)
+       (list (read-from-minibuffer "Valgrind command: "
+                                   (eval valgrind-command) nil nil
+                                   '(valgrind-history . 1)))
+     (list (eval valgrind-command))))
+  (let ((default-directory (or (project-root (project-current)) default-directory)))
+    (unless (equal command (eval valgrind-command))
+      (setq valgrind-command command))
+    (compilation-start command nil (lambda (mode) "*valgrind*"))))
+
+
+(provide 'valgrind)
+#+end_src
+*** valgrind.el =tail=
+#+begin_src emacs-lisp
+;;; valgrind.el ends here
+#+end_src
+* modules/
+=modules= 目录下是各个模块
+** extras/
+** obsolete/
+** me-biblio.el
+:properties:
+:header-args: :tangle modules/me-biblio.el
+:end:
+=me-biblio.el= bibliography
+*** me-biblio.el header
+*** me-biblio.el package oc
+*** me-biblio.el pacakge zotxt
+*** me-biblio.el tail
