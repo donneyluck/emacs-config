@@ -2,6 +2,7 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
+#+property: header-args:emacs-lisp :comments no :mkdirp yes :noweb yes
 * early-init.el
 :properties:
 :HEADER-ARGS: :tangle early-init.el
@@ -2412,7 +2413,7 @@ Used to synchronize loading some other stuff after loading Emacs
 Virtual module loaded when idle after `minemacs-loaded'.
 Used to synchronize loading some other stuff after loading Emacs.
 #+name: minemacs-lazy.el
-#+begin_src emacs-lisp :tangle core/minemacs-lazy.el :mkdirp yes :noweb yes
+#+begin_src emacs-lisp :tangle core/minemacs-lazy.el
 ;;; minemacs-lazy.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
