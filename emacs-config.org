@@ -2019,7 +2019,7 @@ or file path may exist now."
     ;; me-fun        ; Games and funny packages (xkcd, speed-type, ...)
     ;; me-media      ; Multimedia (empv, emms, ...)
     ;; me-workspaces ; Workspace separation (tabspaces, tab-bar, ...). NOTE: This is a WIP
-    me-binary        ; Display binary files in hex or decompile them (hexl, ...) ...
+    ;; me-binary        ; Display binary files in hex or decompile them (hexl, ...) ...
     me-window)       ; Frame & window tweaks
   "MinEmacs enabled modules."
   :group 'minemacs-core
@@ -4239,12 +4239,151 @@ and move to the source code that caused it."
 =modules= 目录下是各个模块
 ** extras/
 ** obsolete/
-** me-biblio.el
+** [X] me-biblio.el
 :properties:
 :HEAD-args: :tangle modules/me-biblio.el
 :end:
-=me-biblio.el= bibliography
-*** me-biblio.el HEAD
-*** me-biblio.el package oc
-*** me-biblio.el pacakge zotxt
-*** me-biblio.el TAIL
+=me-biblio.el= bibliography 用来做文献引用
+*** me-biblio.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-biblio.el --- bibliography -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-biblio.el package =oc=
+#+begin_src emacs-lisp
+(use-package oc
+  :straight (:type built-in)
+  :after org
+  :demand t
+  :custom
+  (org-cite-export-processors '((latex biblatex) (t csl)))
+  (org-support-shift-select t)
+  :config
+  (+map-local! :keymaps 'org-mode-map
+    "C" #'org-cite-insert))
+
+(use-package oc-csl
+  :straight (:type built-in)
+  :after oc
+  :demand t)
+
+(use-package oc-natbib
+  :straight (:type built-in)
+  :after oc
+  :demand t)
+
+(use-package oc-biblatex
+  :straight (:type built-in)
+  :after oc
+  :demand t)
+#+end_src
+*** me-biblio.el pacakge =zotxt=
+#+begin_src emacs-lisp
+(use-package zotxt
+  :straight t
+  :preface
+  (defconst +zotero-available-p (executable-find "zotero"))
+  :when +zotero-available-p
+  :init
+  (+map-local! :keymaps 'org-mode-map
+    "z" #'org-zotxt-mode)
+  (+map-local! :keymaps 'markdown-mode-map
+    "z" #'zotxt-citekey-mode))
+#+end_src
+*** me-biblio.el package =citar=
+#+begin_src emacs-lisp
+(use-package citar
+  :straight t
+  :after oc
+  :demand t
+  :custom
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-symbol-separator "  ")
+  :config
+  (defun +citar--set-symbols ()
+    (setq citar-symbols
+          `((file ,(all-the-icons-octicon "file-pdf"      :face 'error) . " ")
+            (note ,(all-the-icons-octicon "file-text"     :face 'warning) . " ")
+            (link ,(all-the-icons-octicon "link-external" :face 'org-link) . " "))))
+
+  ;; Properly setup citar-symbols
+  (if (display-graphic-p)
+      (+citar--set-symbols)
+    (add-hook
+     'server-after-make-frame-hook
+     (defun +citar--set-symbols-once-h ()
+       (when (display-graphic-p)
+         (+citar--set-symbols)
+         (remove-hook 'server-after-make-frame-hook
+                      #'+citar--set-symbols-once-h))))))
+
+(use-package citar-org-roam
+  :straight t
+  :after citar org-roam
+  :demand t
+  :commands +org-roam-node-from-cite
+  :config
+  ;; Modified form: jethrokuan.github.io/org-roam-guide/
+  (defun +org-roam-node-from-cite (entry-key)
+    (interactive (list (citar-select-ref)))
+    (let ((title (citar-format--entry
+                  "${author editor} (${date urldate}) :: ${title}"
+                  (citar-get-entry entry-key))))
+      (org-roam-capture- :templates
+                         `(("r" "reference" plain
+                            "%?"
+                            :if-new (file+head "references/${citekey}.org"
+                                     ,(concat
+                                       ":properties:\n"
+                                       ":roam_refs: [cite:@${citekey}]\n"
+                                       ":end:\n"
+                                       "#+title: ${title}\n"))
+                            :immediate-finish t
+                            :unnarrowed t))
+                         :info (list :citekey entry-key)
+                         :node (org-roam-node-create :title title)
+                         :props '(:finalize find-file))))
+  (citar-org-roam-mode 1))
+
+(use-package citar-embark
+  :straight t
+  :after citar embark
+  :demand t
+  :config
+  (citar-embark-mode 1))
+#+end_src
+*** me-biblio.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-biblio)
+;;; me-biblio.el ends here
+#+end_src
+** [X] me-binary.el
+:properties:
+:HEAD-args: :tangle modules/me-binary.el
+:end:
+=me-binary.el= 二进制一些信息的查看
+*** me-binary.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-binary.el --- Stuff to work with binary files -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-binary.el 加载 =+binary-setup-modes=
+#+begin_src emacs-lisp
+;; +binary-* are autoloaded
+(+deferred!
+ ;; BUG: Loading continuously on `dirvish'.
+ ;; BUG: Showing up randomly on `tramp' files.
+ (setq +binary-objdump-enable nil)
+ (+binary-setup-modes))
+#+end_src
+*** me-binary.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-binary)
+;;; me-binary.el ends here
+#+end_src
