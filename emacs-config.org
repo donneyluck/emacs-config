@@ -3736,7 +3736,7 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 #+begin_src emacs-lisp
 ;;; +minemacs.el ends here
 #+end_src
-** WAIT netextender.el
+** [✘] netextender.el
 =netextender.el= 程序netextender的封装
 暂时用不到  可以学习一下如何和命令行程序交互
 :properties:
@@ -4239,7 +4239,7 @@ and move to the source code that caused it."
 =modules= 目录下是各个模块
 ** extras/
 ** obsolete/
-** [X] me-biblio.el
+** [✘] me-biblio.el
 :properties:
 :HEAD-args: :tangle modules/me-biblio.el
 :end:
@@ -4361,7 +4361,7 @@ and move to the source code that caused it."
 (provide 'me-biblio)
 ;;; me-biblio.el ends here
 #+end_src
-** [X] me-binary.el
+** [✘] me-binary.el
 :properties:
 :HEAD-args: :tangle modules/me-binary.el
 :end:
