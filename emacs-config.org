@@ -2,7 +2,7 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
-#+property: HEAD-args:emacs-lisp :comments no :mkdirp yes :noweb yes
+#+property: head-args:emacs-lisp :comments no :mkdirp yes :noweb yes
 * early-init.el
 :properties:
 :HEAD-ARGS: :tangle early-init.el
@@ -78,7 +78,6 @@
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
-
 #+end_src
 ** init.el 版本检测
 #+begin_src emacs-lisp
@@ -90,7 +89,6 @@
 (let ((min-ver "28.0"))
   (when (and (version< emacs-version min-ver) (not (getenv "MINEMACS_IGNORE_VERSION_CHECK")))
     (error "Emacs v%s is not supported, MinEmacs requires v%s or higher" emacs-version min-ver)))
-
 #+end_src
 ** init.el 提高启动速度
 #+begin_src emacs-lisp
@@ -110,7 +108,6 @@
           (append file-name-handler-alist
                   (get 'file-name-handler-alist 'original-value)))))
  101)
-
 #+end_src
 ** init.el 载入定义的vars
 #+begin_src emacs-lisp
@@ -152,7 +149,6 @@
 ;; some new features when configuring them.
 (when (< emacs-major-version 29)
   (+load minemacs-modules-dir "me-backports-29.el"))
-
 #+end_src
 ** init.el =debug-on-error=
 #+begin_src emacs-lisp
@@ -214,14 +210,7 @@
 (+load minemacs-loaddefs-file)
 
 #+end_src
-** init.el load init-tweak.el
-#+begin_src emacs-lisp
-;; Load user init tweaks from "$MINEMACSDIR/init-tweaks.el" when available
-;; (let ((user-init-tweaks (concat minemacs-config-dir "init-tweaks.el")))
-;;   (when (file-exists-p user-init-tweaks)
-;;     (+load user-init-tweaks)))
-
-#+end_src
+** [✘] init.el load init-tweak.el
 ** init.el load environment vars
 #+begin_src emacs-lisp
 ;; HACK: When Emacs is launched from the terminal (in GNU/Linux), it inherits
@@ -365,7 +354,7 @@
 =core= 目录下是框架的核心配置
 ** me-backports-29.el
 :properties:
-:HEAD-args: :tangle core/me-backports-29.el
+:head-args: :tangle core/me-backports-29.el
 :end:
 =me-backports-29.el= 一些emacs29的函数
 *** me-backports-29.el =HEAD=
@@ -499,7 +488,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-bootstrap.el
 :properties:
-:HEAD-args: :tangle core/me-bootstrap.el
+:head-args: :tangle core/me-bootstrap.el
 :end:
 =me-bootstrap.el= 设置包下载器和包安装器
 *** me-bootstrap.el =HEAD=
@@ -560,7 +549,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-buildin.el
 :properties:
-:HEAD-args: :tangle core/me-buildin.el
+:head-args: :tangle core/me-buildin.el
 :end:
 =me-buildin.el= 管理一些内置包
 *** me-buildin.el =HEAD=
@@ -584,7 +573,6 @@ plain variables.  This means that `setopt' will execute any
 
 (use-package let-alist
   :straight (:type built-in))
-
 #+end_src
 *** me-buildin.el =TAIL=
 #+begin_src emacs-lisp
@@ -593,7 +581,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-compat.el
 :properties:
-:HEAD-args: :tangle core/me-compat.el
+:head-args: :tangle core/me-compat.el
 :end:
 =me-compat.el= 向前兼容的能力
 *** me-compat.el =HEAD=
@@ -616,7 +604,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-completion.el
 :properties:
-:HEAD-args: :tangle core/me-completion.el
+:head-args: :tangle core/me-completion.el
 :end:
 =me-completion.el= 补全相关包
 *** me-completion.el =HEAD=
@@ -875,7 +863,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-core-ui.el
 :properties:
-:HEAD-args: :tangle core/me-core-ui.el
+:head-args: :tangle core/me-core-ui.el
 :end:
 =me-core-ui.el= 界面相关包
 *** me-core-ui.el =HEAD=
@@ -1057,7 +1045,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-defaults.el
 :properties:
-:HEAD-args: :tangle core/me-defaults.el
+:head-args: :tangle core/me-defaults.el
 :end:
 *** me-defaults.el =HEAD=
 #+begin_src emacs-lisp
@@ -1547,7 +1535,7 @@ or file path may exist now."
 #+end_src
 ** me-evil.el
 :properties:
-:HEAD-args: :tangle core/me-evil.el
+:head-args: :tangle core/me-evil.el
 :end:
 =me-evil.el= Emacs as Vim
 *** me-evil.el =HEAD=
@@ -1697,7 +1685,7 @@ or file path may exist now."
 #+end_src
 ** me-gc.el
 :properties:
-:HEAD-args: :tangle core/me-gc.el
+:head-args: :tangle core/me-gc.el
 :end:
 =me-gc.el=  garbage collection 垃圾回收
 *** me-gc.el =HEAD=
@@ -1731,7 +1719,7 @@ or file path may exist now."
 #+end_src
 ** me-keybindings.el
 :properties:
-:HEAD-args: :tangle core/me-keybindings.el
+:head-args: :tangle core/me-keybindings.el
 :end:
 =me-keybindings.el= 按键相关包
 *** me-keybindings.el =HEAD=
@@ -1960,7 +1948,7 @@ or file path may exist now."
 =me-loaddefs.el= 此文件是由 =minemacs-generate-loaddefs= 收集autoload 函数
 ** me-modules.el
 :properties:
-:HEAD-args: :tangle core/me-modules.el
+:head-args: :tangle core/me-modules.el
 :end:
 =me-modules.el= 模块划分文件
 *** me-modules.el =HEAD=
@@ -2032,7 +2020,7 @@ or file path may exist now."
 #+end_src
 ** me-splash.el
 :properties:
-:HEAD-args: :tangle core/me-splash.el
+:head-args: :tangle core/me-splash.el
 :end:
 =me-splash.el= 下载包过程中简易界面 参考 [[github.com/rougier/emacs-splash][emacs-splash]]
 *** me-splash.el =HEAD=
@@ -2134,7 +2122,7 @@ or file path may exist now."
 #+end_src
 ** me-vars.el
 :properties:
-:HEAD-args: :tangle core/me-vars.el
+:head-args: :tangle core/me-vars.el
 :end:
 =me-vars.el= 一些自定义变量
 *** me-vars.el =HEAD=
@@ -2334,7 +2322,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 ** me-use-package-pin-ref.el
 :properties:
-:HEAD-args: :tangle core/me-use-package-pin-ref.el
+:head-args: :tangle core/me-use-package-pin-ref.el
 :end:
 =me-use-package-pin-ref.el= 使用确定版本的包
 [[https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases][How do I pin package versions or use only tagged releases?]]
@@ -2380,7 +2368,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 
 ** minemacs-loaded.el
 :properties:
-:HEAD-args: :tangle core/minemacs-loaded.el
+:head-args: :tangle core/minemacs-loaded.el
 :end:
 =minemacs-loaded.el=  Virtual module loaded at end of init.el (after custom-vars.el)
 Used to synchronize loading some other stuff after loading Emacs
@@ -2415,7 +2403,7 @@ Used to synchronize loading some other stuff after loading Emacs
 
 ** minemacs-lazy.el
 :properties:
-:HEAD-args: :tangle core/minemacs-lazy.el
+:head-args: :tangle core/minemacs-lazy.el
 :end:
 =minemacs-lazy.el= 惰性加载hook
 Virtual module loaded when idle after `minemacs-loaded'.
@@ -2460,7 +2448,7 @@ Used to synchronize loading some other stuff after loading Emacs.
 * elisp/
 ** +binary.el
 :properties:
-:HEAD-args: :tangle elisp/+binary.el
+:head-args: :tangle elisp/+binary.el
 :end:
 *** +binary.el =HEAD=
 #+begin_src emacs-lisp
@@ -2569,7 +2557,7 @@ is binary, activate `hexl-mode'."
 #+end_src
 ** +buffer.el
 :properties:
-:HEAD-args: :tangle elisp/+buffer.el
+:head-args: :tangle elisp/+buffer.el
 :end:
 *** +buffer.el =HEAD=
 #+begin_src emacs-lisp
@@ -2755,7 +2743,7 @@ When available, use \"fortune\" to add a random quote."
 #+end_src
 ** ecryptfs.el
 :properties:
-:HEAD-args: :tangle elisp/+ecryptfs.el
+:head-args: :tangle elisp/+ecryptfs.el
 :end:
 This allows me to mount my private directory encrypted using ecryptfs-utils.
 It is a port of "ecryptfs-mount-private" shell command. It uses extracts the
@@ -2867,7 +2855,7 @@ The decryption of the password is performed using Emacs' `epg'.
 #+end_src
 ** +io.el
 :properties:
-:HEAD-args: :tangle elisp/+io.el
+:head-args: :tangle elisp/+io.el
 :end:
 *** +io.el =HEAD=
 #+begin_src emacs-lisp
@@ -3159,7 +3147,7 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 #+end_src
 ** +emacs.el
 :properties:
-:HEAD-args: :tangle elisp/+emacs.el
+:head-args: :tangle elisp/+emacs.el
 :end:
 *** +emacs.el =HEAD=
 #+begin_src emacs-lisp
@@ -3318,7 +3306,7 @@ prefix or universal argument, it waits for a moment (defined by
 #+end_src
 ** +keybinding.el
 :properties:
-:HEAD-args: :tangle elisp/+keybinding.el
+:head-args: :tangle elisp/+keybinding.el
 :end:
 *** +keybinding.el =HEAD=
 #+begin_src emacs-lisp
@@ -3435,7 +3423,7 @@ It is deferred until `general' gets loaded and configured."
 #+end_src
 ** +minemacs.el
 :properties:
-:HEAD-args: :tangle elisp/+minemacs.el
+:head-args: :tangle elisp/+minemacs.el
 :end:
 =minemacs.el= 一些宏和方法 简化配置
 *** +minemacs.el =HEAD=
@@ -3740,7 +3728,7 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 =netextender.el= 程序netextender的封装
 暂时用不到  可以学习一下如何和命令行程序交互
 :properties:
-:HEAD-args: :tangle elisp/netextender.el
+:head-args: :tangle elisp/netextender.el
 :end:
 *** netextender.el =HEAD=
 #+begin_src emacs-lisp
@@ -3834,7 +3822,7 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
 #+end_src
 ** +project.el
 :properties:
-:HEAD-args: :tangle elisp/project.el
+:head-args: :tangle elisp/project.el
 :end:
 *** +project.el =HEAD=
 #+begin_src emacs-lisp
@@ -3894,7 +3882,7 @@ When DIR is not detected as a project, ask to force it to be by adding a
 #+end_src
 ** +primitives.el
 :properties:
-:HEAD-args: :tangle elisp/primitives.el
+:head-args: :tangle elisp/primitives.el
 :end:
 *** +primitives.el =HEAD=
 #+begin_src emacs-lisp
@@ -4078,10 +4066,10 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 ;;; +primitives.el ends here
 #+end_src
 ** +systemd.el
-:properties:
-:HEAD-args: :tangle elisp/systemd.el
-:end:
 =+systemd.el= 启动 关闭 检查 服务状态 --user
+:properties:
+:head-args: :tangle elisp/systemd.el
+:end:
 *** +systemd.el =HEAD=
 #+begin_src emacs-lisp
 ;;; +systemd.el --- systemd wrapper -*- lexical-binding: t; -*-
@@ -4122,7 +4110,7 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 #+end_src
 ** +unix.el
 :properties:
-:HEAD-args: :tangle elisp/unix.el
+:head-args: :tangle elisp/unix.el
 :end:
 *** +unix.el =HEAD=
 #+begin_src emacs-lisp
@@ -4171,7 +4159,7 @@ CMD is the command to execute (interactively, `chown')."
 #+end_src
 ** valgrind.el
 :properties:
-:HEAD-args: :tangle elisp/valgrind.el
+:head-args: :tangle elisp/valgrind.el
 :end:
 *** valgrind.el =HEAD=
 #+begin_src emacs-lisp
@@ -4241,7 +4229,7 @@ and move to the source code that caused it."
 ** obsolete/
 ** [✘] me-biblio.el
 :properties:
-:HEAD-args: :tangle modules/me-biblio.el
+:head-args: :tangle modules/me-biblio.el
 :end:
 =me-biblio.el= bibliography 用来做文献引用
 *** me-biblio.el =HEAD=
@@ -4363,12 +4351,12 @@ and move to the source code that caused it."
 #+end_src
 ** [✘] me-binary.el
 :properties:
-:HEAD-args: :tangle modules/me-binary.el
+:head-args: :tangle modules/me-binary.el
 :end:
 =me-binary.el= 二进制一些信息的查看
 *** me-binary.el =HEAD=
 #+begin_src emacs-lisp
-;;; me-binary.el --- Stuff to work with binary files -*- lexical-binding: t; -*-
+;;; me-binary.el --- stuff to work with binary files -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gamil.com
 ;;; Commentary:
 ;;; Code:
@@ -4386,4 +4374,212 @@ and move to the source code that caused it."
 #+begin_src emacs-lisp
 (provide 'me-binary)
 ;;; me-binary.el ends here
+#+end_src
+** [✔] me-checkers.el
+:properties:
+:head-args: :tangle modules/me-checkers.el
+:end:
+*** me-checkers.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-checkers.el --- syntax checking -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-checkers.el package =flymake=
+#+begin_src emacs-lisp
+(use-package flymake
+  :straight (:type built-in)
+  :init
+  (+map! "tf" #'flymake-mode)
+  :custom
+  (flymake-fringe-indicator-position 'right-fringe)
+  (flymake-error-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-error))
+  (flymake-warning-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-warning))
+  (flymake-note-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-info))
+  :config
+  (+map-local! :keymaps 'flymake-mode-map
+    "f"  '(nil :wk "flymake")
+    "fn" #'flymake-goto-next-error
+    "fN" #'flymake-goto-prev-error
+    "fs" #'flymake-start
+    "fb" #'flymake-show-buffer-diagnostics
+    "fp" #'flymake-show-project-diagnostics)
+
+  ;; Use the session's load-path with flymake
+  (setq elisp-flymake-byte-compile-load-path load-path)
+  ;; Larger right frings
+  (set-fringe-style '(8 . 13))
+
+  ;; Better fringe bitmaps
+  (when (fboundp 'define-fringe-bitmap)
+    (define-fringe-bitmap '+flymake-bitmap-arrow
+      [#b11111000
+       #b01111100
+       #b00111110
+       #b00011111
+       #b00111110
+       #b01111100
+       #b11111000])
+    (define-fringe-bitmap '+flymake-bitmap-arrow-hi-res
+      [#b01111000000
+       #b00111100000
+       #b00011110000
+       #b00001111000
+       #b00000111100
+       #b00000011110
+       #b00000011110
+       #b00000111100
+       #b00001111000
+       #b00011110000
+       #b00111100000
+       #b01111000000]
+      nil 13)
+    (define-fringe-bitmap '+flymake-bitmap-left-arrow-hi-res
+      [#b00000011110
+       #b00000111100
+       #b00001111000
+       #b00011110000
+       #b00111100000
+       #b01111000000
+       #b01111000000
+       #b00111100000
+       #b00011110000
+       #b00001111000
+       #b00000111100
+       #b00000011110]
+      nil 13)))
+
+(use-package flymake-easy
+  :straight t)
+#+end_src
+*** me-checkers.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-checkers)
+;;; me-checkers.el ends here
+#+end_src
+** [✔] me-daemon.el
+:properties:
+:head-args: :tangle modules/me-daemon.el
+:end:
+*** me-daemon.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-daemon.el --- daemon -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-daemon.el =email (mu4e)=
+#+begin_src emacs-lisp
+;; Email (mu4e)
+(+lazy-when! (memq 'me-email minemacs-modules)
+  (when (require 'mu4e nil t)
+    (unless (mu4e-running-p)
+      (+info! "Starting `mu4e' in background.")
+      (let ((inhibit-message t))
+        (mu4e t)))))
+#+end_src
+*** me-daemon.el =rss (elfeed)=
+#+begin_src emacs-lisp
+;; RSS (elfeed)
+(+lazy-when! (memq 'me-rss minemacs-modules)
+  (run-at-time
+   (* 60 5) ;; 5min
+   (* 60 60) ;; 1h
+   (lambda ()
+     (+info! "Updating RSS feed.")
+     (let ((inhibit-message t))
+       (elfeed-update)))))
+#+end_src
+*** me-daemon.el =emacs server=
+#+begin_src emacs-lisp
+;; When we start in a non-daemon Emacs, we start a server whe Emacs is idle.
+(+lazy-unless! (daemonp)
+  (require 'server) ; For using `server-running-p'
+  (unless (server-running-p)
+    (let ((inhibit-message t))
+      (+info! "Starting Emacs daemon in background.")
+      (server-start nil t))))
+
+;; Reload theme when creating a frame on the daemon
+(add-hook
+ 'server-after-make-frame-hook
+ (defun +daemon--reload-theme-h ()
+   (load-theme minemacs-theme t)))
+
+(+hook-once! server-after-make-frame-hook
+  (when (and (display-graphic-p)
+             (bound-and-true-p display-battery-mode))
+    (display-battery-mode -1)
+    (display-battery-mode 1)))
+#+end_src
+*** me-daemon.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-daemon)
+;;; me-daemon.el ends here
+#+end_src
+** [✔] me-data.el
+:properties:
+:head-args: :tangle modules/me-data.el
+:end:
+=me-data.el= 一些配置文件相关包(csv, yaml, xml, graphviz, ...)
+*** me-data.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-data.el --- Data and visualizaion formats (csv, yaml, xml, graphviz, ...) -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gamil.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-data.el =csv-mode=
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :straight t
+  :mode "\\.csv\\'"
+  :config
+  (+map-local! :keymaps 'csv-mode-map
+    "r" #'+csv-rainbow
+    "a" #'csv-align-fields
+    "u" #'csv-unalign-fields
+    "s" #'csv-sort-fields
+    "S" #'csv-sort-numeric-fields
+    "k" #'csv-kill-fields
+    "t" #'csv-transpose)
+
+  ;; Adapted from: reddit.com/r/emacs/comments/26c71k/comment/chq2r8m
+  (defun +csv-rainbow (&optional separator)
+    "Colorize CSV columns."
+    (interactive (list (when current-prefix-arg (read-char "Separator: "))))
+    (require 'color)
+    (font-lock-mode 1)
+    (let* ((separator (or separator ?\,))
+           (n (count-matches (string separator) (point-at-bol) (point-at-eol)))
+           (colors (cl-loop for i from 0 to 1.0 by (/ 2.0 n)
+                            collect (apply #'color-rgb-to-hex
+                                           (color-hsl-to-rgb i 0.3 0.5)))))
+      (cl-loop for i from 2 to (1+ n) by 2
+               for c in colors
+               for r = (format "^\\([^%c\n]*[%c\n]\\)\\{%d\\}" separator separator i)
+               do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c))))))))))
+#+end_src
+*** me-data.el =yaml-mode=
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :straight t
+  :mode "Procfile\\'")
+
+(use-package yaml-pro
+  :straight t
+  :hook (yaml-mode . yaml-pro-mode)
+  :hook (yaml-ts-mode . yaml-pro-ts-mode))
+#+end_src
+*** me-data.el =toml-mode=
+#+begin_src emacs-lisp
+(use-package toml-mode
+  :straight t
+  :mode "\\.toml\\'")
+#+end_src
+*** me-data.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-data)
+;;; me-data.el ends here
 #+end_src
