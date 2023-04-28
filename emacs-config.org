@@ -225,7 +225,6 @@
 ;; Emacs sessions (launched either from terminal or from GUI) by calling the
 ;; `+env-load' command.
 (+env-load) ; Load environment variables when available.
-
 #+end_src
 ** init.el load =packages= and =user =customization=
 #+begin_src emacs-lisp
@@ -638,6 +637,7 @@ plain variables.  This means that `setopt' will execute any
   (corfu-cycle t) ; Allows cycling through candidates
   (corfu-min-width 25)
   (corfu-auto-delay 0.2)
+  (corfu-exclude-modes '(org-mode markdown-mode))
   :config
   (with-eval-after-load 'evil
     (define-key corfu-map (kbd "C-j") #'corfu-next)
@@ -4578,6 +4578,22 @@ and move to the source code that caused it."
   :straight t
   :mode "\\.toml\\'")
 #+end_src
+*** me-data.el =json-mode=
+#+begin_src emacs-lisp
+(use-package json-mode
+  :straight t
+  :mode "\\.js\\(?:on\\|[hl]int\\(?:rc\\)?\\)\\'"
+  :config
+  (+map-local! :keymaps 'json-mode-map
+    "p" #'json-mode-show-path
+    "t" #'json-toggle-boolean
+    "d" #'json-mode-kill-path
+    "x" #'json-nullify-sexp
+    "+" #'json-increment-number-at-point
+    "-" #'json-decrement-number-at-point
+    "f" #'json-mode-beautify))
+#+end_src
+*** me-data.el =graphviz-dot-mode=
 *** me-data.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-data)

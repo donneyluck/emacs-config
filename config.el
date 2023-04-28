@@ -96,14 +96,15 @@
 
 ;; Module: `me-org' -- Package: `org'
 (with-eval-after-load 'org
+  (setq org-hide-emphasis-markers t) ;; 隐藏折叠时生成的长黑条
   ;; Set Org-mode directory
   (setq org-directory "~/Org/" ; let's put files here
         org-default-notes-file (concat org-directory "inbox.org"))
   ;; Customize Org stuff
-  ;; (setq org-todo-keywords
-  ;;       '((sequence "IDEA(i)" "TODO(t)" "NEXT(n)" "PROJ(p)" "STRT(s)" "WAIT(w)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")
-  ;;         (sequence "[ ](T)" "[-](S)" "|" "[X](D)")
-  ;;         (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
+  (setq org-todo-keywords
+        '((sequence "IDEA(i)" "TODO(t)" "NEXT(n)" "PROJ(p)" "STRT(s)" "WAIT(w)" "HOLD(h)" "|" "DONE(d)" "KILL(k)")
+          (sequence "[ ](T)" "[✔](R)" "|" "[✘](W)")
+          (sequence "|" "OKAY(o)" "YES(y)" "NO(n)")))
 
   (setq org-export-headline-levels 5)
 
@@ -175,46 +176,51 @@
   :config)
 
 
-;; (defun g-screenshot-on-buffer-creation ()
-;;   (setq display-fill-column-indicator-column nil)
-;;   (setq line-spacing nil))
+(defun g-screenshot-on-buffer-creation ()
+  (setq display-fill-column-indicator-column nil)
+  (setq line-spacing nil))
 
-;; (use-package screenshot
-;;   :straight (:type git :host github :repo "tecosaur/screenshot")
+(use-package screenshot
+  :straight (:type git :host github :repo "tecosaur/screenshot")
 
-;;   :config
-;;   (setq screenshot-line-numbers-p nil)
+  :config
+  (setq screenshot-line-numbers-p nil)
 
-;;   (setq screenshot-min-width 80)
-;;   (setq screenshot-max-width 80)
-;;   (setq screenshot-truncate-lines-p nil)
+  (setq screenshot-min-width 120)
+  (setq screenshot-max-width 300)
+  (setq screenshot-truncate-lines-p nil)
 
-;;   (setq screenshot-text-only-p nil)
+  (setq screenshot-text-only-p nil)
 
-;;   (setq screenshot-font-family "Berkeley Mono")
-;;   (setq screenshot-font-size 10)
+  (setq screenshot-font-size 10)
 
-;;   (setq screenshot-border-width 16)
-;;   (setq screenshot-radius 0)
+  (setq screenshot-border-width 16)
+  ;;(setq screenshot-radius 0)
 
-;;   (setq screenshot-shadow-radius 0)
-;;   (setq screenshot-shadow-offset-horizontal 0)
-;;   (setq screenshot-shadow-offset-vertical 0)
+  ;; (setq screenshot-shadow-radius 0)
+  ;; (setq screenshot-shadow-offset-horizontal 0)
+  ;; (setq screenshot-shadow-offset-vertical 0)
 
-;;   :hook
-;;   ((screenshot-buffer-creation-hook . g-screenshot-on-buffer-creation)))
+  :hook
+  ((screenshot-buffer-creation . g-screenshot-on-buffer-creation)))
 ;;(use-package screenshot
 ;;  :straight (:host github :repo "donneyluck/screenshot")
 ;;  :config (setq screenshot-upload-fn "curl -F'file=@%s' https://0x0.st 2>/dev/null"))
-(setq-default major-mode org-mode)
+(setq-default major-mode 'org-mode)
 
 (with-eval-after-load 'org
   (setq org-export-in-background nil))
 
 (setq project-ignores '("*.meta" "*.prefab" "*.dll" "*.png" "*.asset"))
 
-(use-package screenshot
-  :after minemacs-loaded
-  :demand t
-  :straight (:host github :repo "donneyluck/screenshot")
-  :config (setq screenshot-upload-fn "upload %s 2>/dev/null"))
+;; 获取当前主题的背景色
+(defun get-theme-background-color ()
+  (cdr (assoc 'background-color (frame-parameters))))
+
+(defun set-org-block-end-line-color ()
+  "Set org-src-block face background color to current theme's background color."
+  (interactive)
+  (let ((background-color (get-theme-background-color))) ; 获取当前主题的背景色
+    (set-face-attribute 'org-block-end-line nil :background background-color))) ; 设置 org-src-block face 的背景色属性
+
+(advice-add 'consult-theme :after (lambda (&rest args) (set-org-block-end-line-color)))
