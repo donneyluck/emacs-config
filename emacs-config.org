@@ -2,10 +2,10 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
-#+property: head-args:emacs-lisp :comments no :mkdirp yes :noweb yes
+#+property: header-args:emacs-lisp :comments link :mkdirp yes
 * early-init.el
 :properties:
-:HEAD-ARGS: :tangle early-init.el
+:header-args: :tangle early-init.el
 :end:
 =early-init.el= 在Emacs刚启动，还未加载主要配置文件时的配置文件。
 #+begin_src emacs-lisp
@@ -69,7 +69,7 @@
 #+end_src
 * init.el
 :properties:
-:HEAD-ARGS: :tangle init.el
+:header-args: :tangle init.el
 :end:
 =init.el= 是Emacs的主要配置文件。
 ** init.el =HEAD=
@@ -210,7 +210,7 @@
 (+load minemacs-loaddefs-file)
 
 #+end_src
-** [✘] init.el load init-tweak.el
+** NO init.el load init-tweak.el
 ** init.el load environment vars
 #+begin_src emacs-lisp
 ;; HACK: When Emacs is launched from the terminal (in GNU/Linux), it inherits
@@ -353,7 +353,7 @@
 =core= 目录下是框架的核心配置
 ** me-backports-29.el
 :properties:
-:head-args: :tangle core/me-backports-29.el
+:header-args: :tangle core/me-backports-29.el
 :end:
 =me-backports-29.el= 一些emacs29的函数
 *** me-backports-29.el =HEAD=
@@ -487,7 +487,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-bootstrap.el
 :properties:
-:head-args: :tangle core/me-bootstrap.el
+:header-args: :tangle core/me-bootstrap.el
 :end:
 =me-bootstrap.el= 设置包下载器和包安装器
 *** me-bootstrap.el =HEAD=
@@ -548,7 +548,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-buildin.el
 :properties:
-:head-args: :tangle core/me-buildin.el
+:header-args: :tangle core/me-buildin.el
 :end:
 =me-buildin.el= 管理一些内置包
 *** me-buildin.el =HEAD=
@@ -580,7 +580,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-compat.el
 :properties:
-:head-args: :tangle core/me-compat.el
+:header-args: :tangle core/me-compat.el
 :end:
 =me-compat.el= 向前兼容的能力
 *** me-compat.el =HEAD=
@@ -603,7 +603,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-completion.el
 :properties:
-:head-args: :tangle core/me-completion.el
+:header-args: :tangle core/me-completion.el
 :end:
 =me-completion.el= 补全相关包
 *** me-completion.el =HEAD=
@@ -863,7 +863,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-core-ui.el
 :properties:
-:head-args: :tangle core/me-core-ui.el
+:header-args: :tangle core/me-core-ui.el
 :end:
 =me-core-ui.el= 界面相关包
 *** me-core-ui.el =HEAD=
@@ -1045,7 +1045,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 ** me-defaults.el
 :properties:
-:head-args: :tangle core/me-defaults.el
+:header-args: :tangle core/me-defaults.el
 :end:
 *** me-defaults.el =HEAD=
 #+begin_src emacs-lisp
@@ -1535,7 +1535,7 @@ or file path may exist now."
 #+end_src
 ** me-evil.el
 :properties:
-:head-args: :tangle core/me-evil.el
+:header-args: :tangle core/me-evil.el
 :end:
 =me-evil.el= Emacs as Vim
 *** me-evil.el =HEAD=
@@ -1685,7 +1685,7 @@ or file path may exist now."
 #+end_src
 ** me-gc.el
 :properties:
-:head-args: :tangle core/me-gc.el
+:header-args: :tangle core/me-gc.el
 :end:
 =me-gc.el=  garbage collection 垃圾回收
 *** me-gc.el =HEAD=
@@ -1719,7 +1719,7 @@ or file path may exist now."
 #+end_src
 ** me-keybindings.el
 :properties:
-:head-args: :tangle core/me-keybindings.el
+:header-args: :tangle core/me-keybindings.el
 :end:
 =me-keybindings.el= 按键相关包
 *** me-keybindings.el =HEAD=
@@ -1948,7 +1948,7 @@ or file path may exist now."
 =me-loaddefs.el= 此文件是由 =minemacs-generate-loaddefs= 收集autoload 函数
 ** me-modules.el
 :properties:
-:head-args: :tangle core/me-modules.el
+:header-args: :tangle core/me-modules.el
 :end:
 =me-modules.el= 模块划分文件
 *** me-modules.el =HEAD=
@@ -2020,7 +2020,7 @@ or file path may exist now."
 #+end_src
 ** me-splash.el
 :properties:
-:head-args: :tangle core/me-splash.el
+:header-args: :tangle core/me-splash.el
 :end:
 =me-splash.el= 下载包过程中简易界面 参考 [[github.com/rougier/emacs-splash][emacs-splash]]
 *** me-splash.el =HEAD=
@@ -2122,7 +2122,7 @@ or file path may exist now."
 #+end_src
 ** me-vars.el
 :properties:
-:head-args: :tangle core/me-vars.el
+:header-args: :tangle core/me-vars.el
 :end:
 =me-vars.el= 一些自定义变量
 *** me-vars.el =HEAD=
@@ -2322,7 +2322,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 ** me-use-package-pin-ref.el
 :properties:
-:head-args: :tangle core/me-use-package-pin-ref.el
+:header-args: :tangle core/me-use-package-pin-ref.el
 :end:
 =me-use-package-pin-ref.el= 使用确定版本的包
 [[https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases][How do I pin package versions or use only tagged releases?]]
@@ -2368,7 +2368,7 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 
 ** minemacs-loaded.el
 :properties:
-:head-args: :tangle core/minemacs-loaded.el
+:header-args: :tangle core/minemacs-loaded.el
 :end:
 =minemacs-loaded.el=  Virtual module loaded at end of init.el (after custom-vars.el)
 Used to synchronize loading some other stuff after loading Emacs
@@ -2403,7 +2403,7 @@ Used to synchronize loading some other stuff after loading Emacs
 
 ** minemacs-lazy.el
 :properties:
-:head-args: :tangle core/minemacs-lazy.el
+:header-args: :tangle core/minemacs-lazy.el
 :end:
 =minemacs-lazy.el= 惰性加载hook
 Virtual module loaded when idle after `minemacs-loaded'.
@@ -2448,7 +2448,7 @@ Used to synchronize loading some other stuff after loading Emacs.
 * elisp/
 ** +binary.el
 :properties:
-:head-args: :tangle elisp/+binary.el
+:header-args: :tangle elisp/+binary.el
 :end:
 *** +binary.el =HEAD=
 #+begin_src emacs-lisp
@@ -2557,7 +2557,7 @@ is binary, activate `hexl-mode'."
 #+end_src
 ** +buffer.el
 :properties:
-:head-args: :tangle elisp/+buffer.el
+:header-args: :tangle elisp/+buffer.el
 :end:
 *** +buffer.el =HEAD=
 #+begin_src emacs-lisp
@@ -2743,7 +2743,7 @@ When available, use \"fortune\" to add a random quote."
 #+end_src
 ** ecryptfs.el
 :properties:
-:head-args: :tangle elisp/+ecryptfs.el
+:header-args: :tangle elisp/+ecryptfs.el
 :end:
 This allows me to mount my private directory encrypted using ecryptfs-utils.
 It is a port of "ecryptfs-mount-private" shell command. It uses extracts the
@@ -2855,7 +2855,7 @@ The decryption of the password is performed using Emacs' `epg'.
 #+end_src
 ** +io.el
 :properties:
-:head-args: :tangle elisp/+io.el
+:header-args: :tangle elisp/+io.el
 :end:
 *** +io.el =HEAD=
 #+begin_src emacs-lisp
@@ -3147,7 +3147,7 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 #+end_src
 ** +emacs.el
 :properties:
-:head-args: :tangle elisp/+emacs.el
+:header-args: :tangle elisp/+emacs.el
 :end:
 *** +emacs.el =HEAD=
 #+begin_src emacs-lisp
@@ -3306,7 +3306,7 @@ prefix or universal argument, it waits for a moment (defined by
 #+end_src
 ** +keybinding.el
 :properties:
-:head-args: :tangle elisp/+keybinding.el
+:header-args: :tangle elisp/+keybinding.el
 :end:
 *** +keybinding.el =HEAD=
 #+begin_src emacs-lisp
@@ -3423,7 +3423,7 @@ It is deferred until `general' gets loaded and configured."
 #+end_src
 ** +minemacs.el
 :properties:
-:head-args: :tangle elisp/+minemacs.el
+:header-args: :tangle elisp/+minemacs.el
 :end:
 =minemacs.el= 一些宏和方法 简化配置
 *** +minemacs.el =HEAD=
@@ -3728,7 +3728,7 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 =netextender.el= 程序netextender的封装
 暂时用不到  可以学习一下如何和命令行程序交互
 :properties:
-:head-args: :tangle elisp/netextender.el
+:header-args: :tangle elisp/netextender.el
 :end:
 *** netextender.el =HEAD=
 #+begin_src emacs-lisp
@@ -3822,7 +3822,7 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
 #+end_src
 ** +project.el
 :properties:
-:head-args: :tangle elisp/project.el
+:header-args: :tangle elisp/project.el
 :end:
 *** +project.el =HEAD=
 #+begin_src emacs-lisp
@@ -3882,7 +3882,7 @@ When DIR is not detected as a project, ask to force it to be by adding a
 #+end_src
 ** +primitives.el
 :properties:
-:head-args: :tangle elisp/primitives.el
+:header-args: :tangle elisp/primitives.el
 :end:
 *** +primitives.el =HEAD=
 #+begin_src emacs-lisp
@@ -4068,7 +4068,7 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 ** +systemd.el
 =+systemd.el= 启动 关闭 检查 服务状态 --user
 :properties:
-:head-args: :tangle elisp/systemd.el
+:header-args: :tangle elisp/systemd.el
 :end:
 *** +systemd.el =HEAD=
 #+begin_src emacs-lisp
@@ -4110,7 +4110,7 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 #+end_src
 ** +unix.el
 :properties:
-:head-args: :tangle elisp/unix.el
+:header-args: :tangle elisp/unix.el
 :end:
 *** +unix.el =HEAD=
 #+begin_src emacs-lisp
@@ -4159,7 +4159,7 @@ CMD is the command to execute (interactively, `chown')."
 #+end_src
 ** valgrind.el
 :properties:
-:head-args: :tangle elisp/valgrind.el
+:header-args: :tangle elisp/valgrind.el
 :end:
 *** valgrind.el =HEAD=
 #+begin_src emacs-lisp
@@ -4227,9 +4227,9 @@ and move to the source code that caused it."
 =modules= 目录下是各个模块
 ** extras/
 ** obsolete/
-** [✘] me-biblio.el
+** NO me-biblio.el
 :properties:
-:head-args: :tangle modules/me-biblio.el
+:header-args: :tangle modules/me-biblio.el
 :end:
 =me-biblio.el= bibliography 用来做文献引用
 *** me-biblio.el =HEAD=
@@ -4349,9 +4349,9 @@ and move to the source code that caused it."
 (provide 'me-biblio)
 ;;; me-biblio.el ends here
 #+end_src
-** [✘] me-binary.el
+** NO me-binary.el
 :properties:
-:head-args: :tangle modules/me-binary.el
+:header-args: :tangle modules/me-binary.el
 :end:
 =me-binary.el= 二进制一些信息的查看
 *** me-binary.el =HEAD=
@@ -4375,9 +4375,9 @@ and move to the source code that caused it."
 (provide 'me-binary)
 ;;; me-binary.el ends here
 #+end_src
-** [✔] me-checkers.el
+** me-checkers.el
 :properties:
-:head-args: :tangle modules/me-checkers.el
+:header-args: :tangle modules/me-checkers.el
 :end:
 *** me-checkers.el =HEAD=
 #+begin_src emacs-lisp
@@ -4458,9 +4458,9 @@ and move to the source code that caused it."
 (provide 'me-checkers)
 ;;; me-checkers.el ends here
 #+end_src
-** [✔] me-daemon.el
+** me-daemon.el
 :properties:
-:head-args: :tangle modules/me-daemon.el
+:header-args: :tangle modules/me-daemon.el
 :end:
 *** me-daemon.el =HEAD=
 #+begin_src emacs-lisp
@@ -4518,9 +4518,9 @@ and move to the source code that caused it."
 (provide 'me-daemon)
 ;;; me-daemon.el ends here
 #+end_src
-** [✔] me-data.el
+** me-data.el
 :properties:
-:head-args: :tangle modules/me-data.el
+:header-args: :tangle modules/me-data.el
 :end:
 =me-data.el= 一些配置文件相关包(csv, yaml, xml, graphviz, ...)
 *** me-data.el =HEAD=
@@ -4593,7 +4593,127 @@ and move to the source code that caused it."
     "-" #'json-decrement-number-at-point
     "f" #'json-mode-beautify))
 #+end_src
-*** me-data.el =graphviz-dot-mode=
+*** NO me-data.el =graphviz-dot-mode=
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode
+  :straight (graphviz-dot-mode :files ("graphviz-dot-mode.el" "texinfo"))
+  :custom
+  (graphviz-dot-view-command "xdot %s")
+  (graphviz-dot-preview-extension "svg")
+  :config
+  (+map-local! :keymaps 'graphviz-dot-mode-map
+    "p" #'graphviz-dot-preview
+    "P" #'graphviz-dot-view
+    "l" #'graphviz-turn-on-live-preview
+    "L" #'graphviz-turn-off-live-preview)
+  (+eglot-register 'graphviz-dot-mode '("dot-language-server" "--stdio")))
+#+end_src
+*** me-data.el =nxml=
+#+begin_src emacs-lisp
+(use-package nxml-mode
+  :straight (:type built-in)
+  :config
+  (+eglot-register '(nxml-mode xml-mode) "lemminx"))
+#+end_src
+*** me-data.el =plantuml-mode=
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :straight t
+  :mode "\\.plantuml\\'"
+  :hook (plantuml-mode . +plantuml-mode-setup)
+  :custom
+  (plantuml-jar-path (concat minemacs-local-dir "plantuml/plantuml.jar"))
+  (plantuml-indent-level 2)
+  :config
+  (setq
+   plantuml-default-exec-mode
+   (cond
+    ;; Prefer the system's executable when available
+    ((executable-find plantuml-executable-path) 'executable)
+    ;; Then, use the JAR if it exists or try to download it
+    ((let ((ret (or (file-exists-p plantuml-jar-path)
+                    (and (not noninteractive) (ignore-errors (plantuml-download-jar))))))
+       (or (eq ret t) (and (stringp ret) (not (string-equal ret "Aborted.")))))
+     'jar)
+    ;; Fall back to the server configured at `plantuml-server-url'
+    'server))
+
+  ;; Define `capf' function, based on `plantuml-complete-symbol'
+  (defun +plantuml-completion-at-point ()
+    "Perform symbol-at-pt completion on word before cursor."
+    (when (derived-mode-p 'plantuml-mode) ; do not fire up on other modes
+      (let* ((end-pos (point))
+             (sym-at-pt (or (thing-at-point 'symbol) ""))
+             (max-match (try-completion sym-at-pt plantuml-kwdList)))
+        (unless (null max-match)
+          (list (- end-pos (length sym-at-pt))
+                end-pos
+                (if (eq max-match t)
+                    (list keyword)
+                  (all-completions sym-at-pt plantuml-kwdList)))))))
+
+  ;; Add support for `capf'
+  (defun +plantuml-mode-setup ()
+    (add-to-list 'completion-at-point-functions #'+plantuml-completion-at-point))
+
+  (+map-local! :keymaps 'plantuml-mode-map
+    "p" #'plantuml-preview-buffer
+    "P" #'plantuml-preview
+    "d" `(,(+cmdfy!
+            (if plantuml-mode-debug-enabled
+                (plantuml-disable-debug)
+              (plantuml-enable-debug)))
+          :wk "Toggle debug")))
+#+end_src
+*** NO me-data.el =mermaid-mode=
+#+begin_src emacs-lisp
+(use-package mermaid-mode
+  :straight t
+  :config
+  (+map-local! :keymaps 'mermaid-mode-map
+    "c" 'mermaid-compile
+    "f" 'mermaid-compile-file
+    "b" 'mermaid-compile-buffer
+    "r" 'mermaid-compile-region
+    "b" 'mermaid-open-browser
+    "d" 'mermaid-open-doc))
+
+(use-package ob-mermaid
+  :straight (:host github :repo "arnm/ob-mermaid")
+  :after ob
+  :demand t
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (append org-babel-load-languages '((mermaid . t)))))
+#+end_src
+*** NO me-data.el =d2-mode=
+#+begin_src emacs-lisp
+(use-package d2-mode
+  :straight t
+  :mode "\\.d2\\'"
+  :config
+  (+map-local! :keymaps 'd2-mode-map
+    "cc" #'d2-compile
+    "cf" #'d2-compile-file
+    "cb" #'d2-compile-buffer
+    "cr" #'d2-compile-region
+    "cF" #'d2-compile-file-and-browse
+    "cB" #'d2-compile-buffer-and-browse
+    "cR" #'d2-compile-region-and-browse
+    "o"  #'d2-open-browser
+    "v"  #'d2-view-current-svg
+    "h"  #'d2-open-doc))
+
+(use-package ob-d2
+  :straight t
+  :after ob
+  :demand t
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (append org-babel-load-languages '((d2 . t)))))
+#+end_src
 *** me-data.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-data)

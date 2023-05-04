@@ -4,23 +4,6 @@
 ;;;https://github.com/lujun9972/emacs-document/blob/master/elisp-common/emacs-script%E4%B8%AD%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91.org
 (require 'org)
 (setq org-id-locations '(""))
-(defun my/org-babel-tangle-file-with-progress (file)
-  "Tangle the specified Org Mode file with automatic progress report."
-  (interactive "fFile to tangle: ")
-  (let ((progress-reporter (make-progress-reporter "Tangling..." 0 100))
-        (num-done 0)
-        (num-total 100))
-    (unwind-protect
-        (progn
-          (setq org-babel-tangle-progress-callback
-                (lambda (num-done num-total)
-                  (progress-reporter-update progress-reporter
-                                            (* 100.0 (/ num-done num-total)))
-                  (setq num-done num-done)
-                  (setq num-total num-total)
-                  (when (= num-done num-total)
-                    (progress-reporter-done progress-reporter))))
-          (org-babel-tangle-file file))
-      (progress-reporter-done progress-reporter))))
-      ;;(setq org-confirm-babel-evaluate nil)
-(my/org-babel-tangle-file-with-progress "emacs-config.org")
+(message "Tanging ...")
+(org-babel-tangle-file "emacs-config.org")
+(message "Tanging done") 
