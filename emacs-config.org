@@ -5587,3 +5587,55 @@ very large file大文件游览
 (provide 'me-files)
 ;;; me-files.el ends here
 #+end_src
+** me-fun.el
+:properties:
+:header-args: :tangle modules/me-fun.el
+:end:
+*** me-fun.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-fun.el --- Some funny stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-fun.el xkcd
+xkcd漫画阅读
+#+begin_src emacs-lisp
+(use-package xkcd
+  :straight t
+  :init
+  (+map! "ox" #'xkcd)
+  :custom
+  (xkcd-cache-dir (+directory-ensure minemacs-local-dir "xkcd/"))
+  (xkcd-cache-latest (concat minemacs-local-dir "xkcd/latest"))
+  :config
+  (+nvmap! :keymaps 'xkcd-mode-map
+    "j" #'xkcd-next
+    "k" #'xkcd-prev
+    "l" #'xkcd-get-latest
+    "L" #'xkcd-get-latest-cached
+    "<right>" #'xkcd-next
+    "<left>" #'xkcd-prev
+    "o" #'xkcd-open-browser
+    "O" #'xkcd-open-explanation-browser
+    "r" #'xkcd-rand
+    "y" #'xkcd-copy-link)
+  (+ignore-root xkcd-cache-dir))
+#+end_src
+*** me-fun.el speed-type
+
+#+begin_src emacs-lisp
+(use-package speed-type
+  :straight t)
+#+end_src
+*** me-fun.el [[https://github.com/zkry/asm-blox][asm-blow]]
+asm-blox是一款受WebAssembly Text格式（WAT）启发的编程游戏。在这个游戏中，你需要按照给定的规则，使用汇编语言编写程序，将一些小方块（称为“blox”）移动到指定的位置。游戏提供了多个级别，每个级别会逐步增加难度。除了编写程序之外，你还可以尝试修改游戏中的其他内容（例如方块的数量、大小、颜色等），来探索它们对游戏规则的影响。此外，asm-blox还提供了一个在线编辑器，使得编写和测试代码变得非常方便。
+#+begin_src emacs-lisp
+(use-package asm-blox
+  :straight t)
+#+end_src
+*** me-fun.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-fun)
+;;; me-fun.el ends here
+#+end_src
