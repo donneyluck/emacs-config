@@ -2,7 +2,7 @@
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview
-#+property: header-args:emacs-lisp :comments link :mkdirp yes
+#+property: header-args:emacs-lisp :comments no :mkdirp yes
 * early-init.el
 :properties:
 :header-args: :tangle early-init.el
@@ -6077,7 +6077,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-lsp.el
+*** WAIT me-lsp.el
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :straight t
@@ -6237,4 +6237,344 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 #+begin_src emacs-lisp
 (provide me-lsp)
 ;;; me-lsp.el ends here
+#+end_src
+** me-math.el
+:properties:
+:header-args: :tangle modules/me-math.el
+:end:
+*** me-math.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-math.el --- Mathematics stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-math.el maxima
++ Maxima是一个计算机代数系统,可以用于符号计算 数值计算 绘图和数据可视化等各种数学应用,它是一个免费的开源软件
++ iMaxima是Maxima的一个前端界面，它基于Emacs并提供了图形界面，方便用户进行符号计算
+#+begin_src emacs-lisp
+(defconst +maxima-path-p "/usr/share/emacs/site-lisp/maxima/")
+(defconst +maxima-available-p (and (executable-find "maxima")
+                                   (file-directory-p +maxima-path-p)))
+(use-package maxima
+  :load-path +maxima-path-p
+  :when +maxima-available-p
+  :mode ("\\.ma[cx]\\'" . maxima-mode)
+  :interpreter ("maxima" . maxima-mode)
+  :commands inferior-maxima-mode
+  :custom
+  (maxima-display-maxima-buffer nil))
+
+(use-package imaxima
+  :load-path +maxima-path-p
+  :when +maxima-available-p
+  :commands imaxima imath-mode
+  :hook (imaxima-startup . maxima-inferior-mode) ; To get syntax highlighting
+  :custom
+  (imaxima-use-maxima-mode-flag nil))
+#+end_src
+*** WAIT me-math.el mark
+#+begin_src emacs-lisp
+(use-package math-preview ; Needed by ein to render equations
+  :straight t)
+
+(use-package ein
+  :straight t
+  :mode ("\\.ipynb\\'" . ein:ipynb-mode)
+  :custom
+  (ein:output-area-inlined-images t)
+  :init
+  (+map! :infix "o"
+    "j" '(nil :wk "ein")
+    "jr" #'ein:run
+    "jl" #'ein:login
+    "jf" #'ein:file-open
+    "jn" #'ein:notebook-open)
+  :config
+  (+map-local! :keymaps 'ein:ipynb-mode-map
+    "o" #'ein:process-find-file-callback
+    "O" #'ein:process-open-notebook
+    "r" #'ein:gat-run-remote
+    "l" #'ein:gat-run-local)
+
+  (setq-default ein:markdown-enable-math t)
+
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages 'org-babel-load-languages (append org-babel-load-languages '((ein . t))))
+    (setq org-src-lang-modes (append org-src-lang-modes '(("ein-python" . python) ("ein-r" . r) ("ein-julia" . julia))))))
+
+(use-package julia-mode
+  :straight t)
+
+(use-package ess
+  :straight t)
+
+(use-package ess-view
+  :straight t)
+
+(use-package ess-R-data-view
+  :straight t)
+
+(use-package poly-R
+  :straight t)
+
+(use-package octave
+  :straight (:type built-in)
+  :mode ("\\.m\\'" . octave-mode)
+  :config
+  (defun +octave-eval-last-sexp ()
+    "Evaluate Octave sexp before point and print value into current buffer."
+    (interactive)
+    (inferior-octave t)
+    (let ((print-escape-newlines nil)
+          (opoint (point)))
+      (prin1
+       (save-excursion
+         (forward-sexp -1)
+         (inferior-octave-send-list-and-digest
+          (list (concat (buffer-substring-no-properties (point) opoint) "\n")))
+         (mapconcat 'identity inferior-octave-output-list "\n")))))
+
+  (with-eval-after-load 'eros
+    (defun +eros-octave-eval-last-sexp ()
+      "Wrapper for `+octave-eval-last-sexp' that overlays results."
+      (interactive)
+      (eros--eval-overlay
+       (+octave-eval-last-sexp)
+       (point)))
+
+    (+map-local! :keymaps 'octave-mode-map
+      "e"  '(nil :wk "eval")
+      "ee" #'+eros-octave-eval-last-sexp)))
+#+end_src
+*** me-math.el =TAIL=
+#+begin_src emacs-lisp
+(provide me-math)
+;;; me-math.el ends here
+#+end_src
+** me-media.el
+:properties:
+:header-args: :tangle modules/me-media.el
+:end:
+*** me-media.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-media.el --- Multimedia stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-media.el empv
+empv 是一款 Emacs 下的音乐播放器，可以播放本地音乐文件和网络音乐资源，支持多种音频格式。empv 的特点是使用简单，快捷键容易记忆，并支持集成到 Emacs 窗口中。empv 可以使用 Emacs Lisp 的方式进行配置，例如自定义快捷键、主题等。empv 依赖于其他工具，例如 MPlayer、mpv 等。
+#+begin_src emacs-lisp
+(use-package empv
+  :straight (:host github :repo "isamert/empv.el")
+  :preface
+  (defconst +mpv-available-p (executable-find "mpv"))
+  :when +mpv-available-p
+  :init
+  (+map! :infix "o"
+    "v"  '(nil :wk "empv")
+    "vp" '(empv-play :wk "Play")
+    "vy" '(consult-empv-youtube :wk "Seach Youtube")
+    "vr" '(empv-play-radio :wk "Play radio")
+    "vs" '(empv-playtlist-save-to-file :wk "Save current playlist")
+    "vD" '(+empv-download-playtlist-files :wk "Download current's playlist files"))
+  :custom
+  ;; See: docs.invidious.io/instances/
+  (empv-invidious-instance "https://invidious.projectsegfau.lt/api/v1")
+  (empv-audio-dir "~/Music")
+  (empv-video-dir "~/Videos")
+  (empv-max-directory-search-depth 6)
+  (empv-radio-log-file (expand-file-name "logged-radio-songs.org" org-directory))
+  (empv-audio-file-extensions '("webm" "mp3" "ogg" "wav" "m4a" "flac" "aac" "opus"))
+  :config
+  (defun +empv--dl-playlist (playlist &optional dist)
+    (let ((default-directory
+           (or dist
+               (let ((d (expand-file-name "empv-downloads" empv-audio-dir)))
+                 (unless (file-directory-p d) (mkdir d t)) d)))
+          (vids (seq-filter
+                 #'identity ;; Filter nils
+                 (mapcar
+                  (lambda (item)
+                    (when-let
+                        ((vid (when (string-match
+                                     (rx (seq "watch?v=" (group-n 1 (one-or-more (or alnum "_" "-")))))
+                                     item)
+                                (match-string 1 item))))
+                      vid))
+                  playlist)))
+          (proc-name "empv-yt-dlp"))
+      (unless (zerop (length vids))
+        (message "Downloading %d songs to %s" (length vids) default-directory)
+        (when (get-process proc-name)
+          (kill-process proc-name))
+        (make-process :name proc-name
+                      :buffer (format "*%s*" proc-name)
+                      :command (append
+                                (list
+                                 (executable-find "yt-dlp")
+                                 "--no-abort-on-error"
+                                 "--no-colors"
+                                 "--extract-audio"
+                                 "--no-progress"
+                                 "-f" "bestaudio")
+                                vids)
+                      :sentinel (lambda (prc event)
+                                  (when (string= event "finished\n")
+                                    (message "Finished downloading playlist files!")))))))
+
+  (defun +empv-download-playtlist-files (&optional path)
+    (interactive "DSave download playlist files to: ")
+    (empv--playlist-apply #'+empv--dl-playlist path)))
+#+end_src
+*** me-media.el emms
+emms 是 Emacs 多媒体系统（Emacs Multimedia System）的缩写，是 Emacs 中一个用于播放和管理音频和视频文件的工具。其支持多种媒体文件格式，包括 Ogg、MP3、FLAC、WAV、MIDI、OGM、MPEG、AVI、FLV 等。用户可以通过 Emacs 命令界面来浏览自己的音乐和视频文件集合，并且进行播放、暂停、停止等基本操作。EMMS 还提供了一个交互式搜索功能，用户可以通过搜索关键字来查找自己的音乐和视频文件，并且进行播放操作。除此之外，EMMS 还支持 ID3 标签编辑和一些可定制的选项。
+#+begin_src emacs-lisp
+(use-package emms
+  :straight t)
+#+end_src
+*** me-media.el =TAIL=
+#+begin_src emacs-lisp
+(provide me-media)
+;;; me-media.el ends here
+#+end_src
+** [✘] me-modeling.el
+:properties:
+:header-args: :tangle no
+:end:
+*** me-modeling.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-modeling.el --- Mechanical modeling stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-modeling.el
+#+begin_src emacs-lisp
+(use-package scad-mode
+  :straight t
+  :config
+  (+map-local! :keymaps 'scad-mode-map
+    "p" #'scad-preview)
+
+  (with-eval-after-load 'all-the-icons
+    (add-to-list
+     'all-the-icons-extension-icon-alist
+     '("scad" all-the-icons-fileicon "openscad" :height 0.9 :face all-the-icons-yellow)))
+
+  (with-eval-after-load 'apheleia-formatters
+    (push '(scad-mode . clang-format) apheleia-mode-alist))
+
+  (+eglot-register 'scad-mode '("openscad-lsp" "--stdio")))
+
+(use-package modelica-mode
+  :straight t
+  :mode "\\.mo\\'")
+#+end_src
+*** me-modeling.el =TAIL=
+#+begin_src emacs-lisp
+(provide me-modeling)
+;;; me-modeling.el ends here
+#+end_src
+** me-multi-cursors.el
+:properties:
+:header-args: :tangle modules/me-multi-cursors.el
+:end:
+多光标解决方案
+*** me-multi-cursors.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-multi-cursors.el --- Programming stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-multi-cursors.el iedit
+可以在多个位置同时编辑的包。它可以用来一次性编辑一个文件中的多个位置，或者在多个文件中同时编辑某些文本
+#+begin_src emacs-lisp
+(use-package iedit
+  :straight t
+  :after minemacs-lazy
+  :demand t
+  :preface
+  (+fn-inhibit-messages! iedit-update-key-bindings))
+
+(use-package evil-iedit-state
+  :straight t
+  :after iedit evil
+  :demand t
+  :config
+  ;; Use the `iedit' key to trigger `evil-iedit-state/iedit-mode'.
+  (define-key global-map iedit-toggle-key-default #'evil-iedit-state/iedit-mode))
+#+end_src
+*** me-multi-cursors.el
++ evil-mc 的主要功能是在一个 Emacs 缓冲区中使用多个光标，用于在多个地方进行同时编辑。它的设计初衷是模仿 Sublime Text 中的多光标功能。evil-mc 可以使用类似于 Sublime Text 中的快捷键来添加或删除光标，以及在多个光标之间切换。它还支持在多个缓冲区之间进行多光标编辑，并提供了一些用于自定义光标样式的选项。
++ evil-multiedit 的主要功能是进行文本匹配和替换，以及删除或插入一些文本。它的设计初衷是提供类似于 Sublime Text 的多选编辑和替换的功能。evil-multiedit 提供了一些可以用于匹配和选定多个文本区域的快捷键。它还支持使用正则表达式和 Emacs Lisp 表达式进行文本匹配和替换。
+#+begin_src emacs-lisp
+(use-package evil-mc
+  :straight t
+  :hook (minemacs-after-startup . global-evil-mc-mode)
+  :config
+  ;; Use "gz" instead of "gr", this last is mapped to `xref-find-references' in
+  ;; some programming modes.
+  (evil-define-key* '(normal visual) evil-mc-key-map (kbd "gr") nil)
+  (evil-define-key* '(normal visual) evil-mc-key-map (kbd "gz") evil-mc-cursors-map)
+
+  ;; Add support to repeat these commands when prefixed with a number
+  (dolist (cmd '(evil-mc-make-and-goto-first-cursor evil-mc-make-and-goto-last-cursor
+                 evil-mc-make-and-goto-prev-cursor evil-mc-make-and-goto-next-cursor
+                 evil-mc-skip-and-goto-prev-cursor evil-mc-skip-and-goto-next-cursor
+                 evil-mc-make-and-goto-prev-match evil-mc-make-and-goto-next-match
+                 evil-mc-skip-and-goto-prev-match evil-mc-skip-and-goto-next-match))
+    (advice-add
+     cmd :around
+     (lambda (fn)
+       (dotimes (i (if (integerp current-prefix-arg) current-prefix-arg 1))
+         (funcall fn)))))
+
+  ;; Custom commands to execute with `evil-mc'
+  (setq
+   evil-mc-custom-known-commands
+   '((backward-kill-word (:default . evil-mc-execute-default-call-with-count))
+     (evil-escape (:default . evil-mc-execute-default-evil-normal-state))
+     (evil-delete-back-to-indentation (:default . evil-mc-execute-default-call))
+     (undo-fu-only-redo (:default . evil-mc-execute-default-redo))
+     (undo-fu-only-undo (:default . evil-mc-execute-default-undo))
+     (corfu-complete (:default . evil-mc-execute-default-complete))
+     (evil-numbers/dec-at-pt-incremental (:default . evil-mc-execute-default-call-with-count))
+     (evil-numbers/inc-at-pt-incremental (:default . evil-mc-execute-default-call-with-count))
+     (evil-org-delete (:default . evil-mc-execute-default-evil-delete))
+     (ess-smart-comma (:default . evil-mc-execute-call))
+     (evil-digit-argument-or-evil-beginning-of-visual-line
+      (:default . evil-mc-execute-default-call)
+      (visual . evil-mc-execute-visual-call)))))
+
+(use-package me-evil-mc-evil-escape
+  :after evil-mc evil-escape
+  :demand t)
+
+(use-package evil-multiedit
+  :straight t
+  :after iedit evil
+  :demand t
+  :init
+  (+nvmap! :infix "g"
+    "ze" '(nil :wk "evil-multiedit")
+    "zem" #'evil-multiedit-match-all
+    "zed" #'evil-multiedit-match-and-next
+    "zeD" #'evil-multiedit-match-and-prev
+    "zes" #'evil-multiedit-match-symbol-and-next
+    "zeS" #'evil-multiedit-match-symbol-and-prev
+    "zen" #'evil-multiedit-next
+    "zeN" #'evil-multiedit-prev
+    "zet" #'evil-multiedit-toggle-or-restrict-region
+    "zeT" #'evil-multiedit-toggle-marker-here
+    "zeq" #'evil-multiedit-abort)
+  :config
+  (evil-multiedit-default-keybinds))
+#+end_src
+*** me-multi-cursors.el =TAIL=
+#+begin_src emacs-lisp
+(provide me-multi-cursors)
+;;; me-multi-cursors.el ends here
 #+end_src
