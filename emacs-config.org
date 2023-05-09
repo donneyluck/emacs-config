@@ -653,45 +653,45 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 *** me-completion.el package [[https://elpa.gnu.org/packages/corfu.html][corfu extensions]]
 #+begin_src emacs-lisp
- (use-package corfu-popupinfo
-   :hook (corfu-mode . corfu-popupinfo-mode)
-   :custom
-   (corfu-popupinfo-delay 0.1)
-   (corfu-popupinfo-max-height 15)
-   :config
-   (define-key corfu-map (kbd "M-p") #'corfu-popupinfo-scroll-down)
-   (define-key corfu-map (kbd "M-n") #'corfu-popupinfo-scroll-up)
-   (define-key corfu-map (kbd "M-d") #'corfu-popupinfo-toggle))
+(use-package corfu-popupinfo
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay 0.1)
+  (corfu-popupinfo-max-height 15)
+  :config
+  (define-key corfu-map (kbd "M-p") #'corfu-popupinfo-scroll-down)
+  (define-key corfu-map (kbd "M-n") #'corfu-popupinfo-scroll-up)
+  (define-key corfu-map (kbd "M-d") #'corfu-popupinfo-toggle))
 
- (use-package corfu-history
-   :hook (corfu-mode . corfu-history-mode)
-   :config
-   (unless (bound-and-true-p savehist-mode)
-     (savehist-mode 1))
-   (add-to-list 'savehist-additional-variables 'corfu-history))
+(use-package corfu-history
+  :hook (corfu-mode . corfu-history-mode)
+  :config
+  (unless (bound-and-true-p savehist-mode)
+    (savehist-mode 1))
+  (add-to-list 'savehist-additional-variables 'corfu-history))
 
- (use-package corfu-terminal
-   :straight t
-   :hook (corfu-mode . corfu-terminal-mode))
+(use-package corfu-terminal
+  :straight t
+  :hook (corfu-mode . corfu-terminal-mode))
 #+end_src
 *** me-completion.el package [[https://github.com/jdtsmith/kind-icon][kind-icon]] 图标和完成前缀
 #+begin_src emacs-lisp
 (use-package kind-icon
-   :straight t
-   :after corfu
-   :demand t
-   :custom
-   (kind-icon-default-style '(:padding 0
-                              :stroke 0
-                              :margin 0
-                              :radius 0
-                              :height 0.8
-                              :scale 1.05)) ; Fix the scaling/height
-   (kind-icon-use-icons (+emacs-features-p 'rsvg)) ; Use icons only in Emacs built with SVG support
-   (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face          background
-   (kind-icon-blend-background nil) ; Use midpoint color between foreground and background colors       ("blended")?
-   :config
-   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  :straight t
+  :after corfu
+  :demand t
+  :custom
+  (kind-icon-default-style '(:padding 0
+                             :stroke 0
+                             :margin 0
+                             :radius 0
+                             :height 0.8
+                             :scale 1.05)) ; Fix the scaling/height
+  (kind-icon-use-icons (+emacs-features-p 'rsvg)) ; Use icons only in Emacs built with SVG support
+  (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face          background
+  (kind-icon-blend-background nil) ; Use midpoint color between foreground and background colors       ("blended")?
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
 *** me-completion.el package [[https://github.com/minad/consult][consult]] 搜索和导航
 #+begin_src emacs-lisp
@@ -875,30 +875,30 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 *** me-core-ui.el 调整行号大小
 #+begin_src emacs-lisp
- (defun +theme--tweaks-h (&optional _)
-   "Use smaller font (75% of the default) for line numbers in graphic mode."
-   (when (display-graphic-p)
-     (set-face-attribute
-      'line-number nil
-      :background (face-attribute 'default :background)
-      :height (truncate (* 0.75 (face-attribute 'default :height)))
-      :weight 'semi-light)
-     (set-face-attribute
-      'line-number-current-line nil
-      :height (truncate (* 0.75 (face-attribute 'default :height)))
-      :weight 'bold)))
+(defun +theme--tweaks-h (&optional _)
+  "Use smaller font (75% of the default) for line numbers in graphic mode."
+  (when (display-graphic-p)
+    (set-face-attribute
+     'line-number nil
+     :background (face-attribute 'default :background)
+     :height (truncate (* 0.75 (face-attribute 'default :height)))
+     :weight 'semi-light)
+    (set-face-attribute
+     'line-number-current-line nil
+     :height (truncate (* 0.75 (face-attribute 'default :height)))
+     :weight 'bold)))
 
- ;; Apply tweaks
- (add-hook 'after-init-hook #'+theme--tweaks-h)
- (add-hook 'enable-theme-functions #'+theme--tweaks-h)
+;; Apply tweaks
+(add-hook 'after-init-hook #'+theme--tweaks-h)
+(add-hook 'enable-theme-functions #'+theme--tweaks-h)
 
- ;; Save enabled theme
- (add-hook
-  'enable-theme-functions
-  (defun +theme--save-enabled-theme-h (theme)
-    "Save the enabled theme to `minemacs-theme'.
- Useful for keeping track of the enabled theme."
-    (setq minemacs-theme theme)))
+;; Save enabled theme
+(add-hook
+ 'enable-theme-functions
+ (defun +theme--save-enabled-theme-h (theme)
+   "Save the enabled theme to `minemacs-theme'.
+Useful for keeping track of the enabled theme."
+   (setq minemacs-theme theme)))
 #+end_src
 *** me-core-ui.el 主题相关
 #+begin_src emacs-lisp
@@ -1056,11 +1056,11 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 *** me-defaults.el gun广告关闭
 #+begin_src emacs-lisp
- ;; Inhibit startup message in echo area the brutal way!
- ;; The `inhibit-startup-echo-area-message' variable is very restrictive, there
- ;; is only one unique way of setting it right!
- ;; See: reddit.com/r/emacs/comments/6e9o4o/comment/di8q1t5
- (fset 'display-startup-echo-area-message #'ignore)
+;; Inhibit startup message in echo area the brutal way!
+;; The `inhibit-startup-echo-area-message' variable is very restrictive, there
+;; is only one unique way of setting it right!
+;; See: reddit.com/r/emacs/comments/6e9o4o/comment/di8q1t5
+(fset 'display-startup-echo-area-message #'ignore)
 #+end_src
 *** me-defaults.el 编码UTF-8
 #+begin_src emacs-lisp
@@ -1640,35 +1640,35 @@ or file path may exist now."
 #+end_src
 *** me-evil.el package =evil-numbers=
 #+begin_src emacs-lisp
- (use-package evil-numbers
-   :straight t
-   :init
-   (+nmap!
-     "g+" #'evil-numbers/inc-at-pt
-     "g=" #'evil-numbers/inc-at-pt
-     "g-" #'evil-numbers/dec-at-pt)
-   (+vmap!
-     "g+" #'evil-numbers/inc-at-pt-incremental
-     "g=" #'evil-numbers/inc-at-pt-incremental
-     "g-" #'evil-numbers/dec-at-pt-incremental))
+(use-package evil-numbers
+  :straight t
+  :init
+  (+nmap!
+    "g+" #'evil-numbers/inc-at-pt
+    "g=" #'evil-numbers/inc-at-pt
+    "g-" #'evil-numbers/dec-at-pt)
+  (+vmap!
+    "g+" #'evil-numbers/inc-at-pt-incremental
+    "g=" #'evil-numbers/inc-at-pt-incremental
+    "g-" #'evil-numbers/dec-at-pt-incremental))
 #+end_src
 *** me-evil.el package =evil-nerd-commenter=
 #+begin_src emacs-lisp
- (use-package evil-nerd-commenter
-   :straight t
-   :commands evilnc-comment-operator
-   :init
-   (+nvmap! "gc" #'evilnc-comment-operator))
+(use-package evil-nerd-commenter
+  :straight t
+  :commands evilnc-comment-operator
+  :init
+  (+nvmap! "gc" #'evilnc-comment-operator))
 #+end_src
 *** me-evil.el pacakge =evil-escape=
 #+begin_src emacs-lisp
- (use-package evil-escape
-   :straight t
-   :hook (evil-mode . evil-escape-mode)
-   :custom
-   ;; The default "fd" interfere with the "f" (bound to `evil-snipe-f') binding.
-   (evil-escape-key-sequence "kj")
-   (evil-escape-unordered-key-sequence t)) ; "kj" or "jk"
+(use-package evil-escape
+  :straight t
+  :hook (evil-mode . evil-escape-mode)
+  :custom
+  ;; The default "fd" interfere with the "f" (bound to `evil-snipe-f') binding.
+  (evil-escape-key-sequence "kj")
+  (evil-escape-unordered-key-sequence t)) ; "kj" or "jk"
 #+end_src
 *** me-evil.el pacakge =evil-surround=
 #+begin_src emacs-lisp
@@ -1697,20 +1697,20 @@ or file path may exist now."
 #+end_src
 *** me-gc.el package gcmh
 #+begin_src emacs-lisp
- (use-package gcmh
-   :straight t
-   :hook (minemacs-lazy . gcmh-mode)
-   :custom
-   ;; Set the delay to 20s instead of the default 15. I tried using `auto', but
-   ;; with the default 20 of `gcmh-auto-idle-delay-factor', it triggers GC each
-   ;; 1s on my machine. Setting the factor to a higher value should solve the
-   ;; issue on my machine, but I don't think it is right to assume it will work
-   ;; the same way on other machines. So we switch back to a fixed delay of 20s.
-   (gcmh-idle-delay 20)
-   ;; The default `gcmh's 1GB is probably too high. We set it to 256MB on 64bit
-   ;; systems, or 16MB on 32bit ones.
-   (gcmh-high-cons-threshold
-    (* 1024 1024 (if (string-suffix-p "64" (symbol-name sys/arch)) 256 16))))
+(use-package gcmh
+  :straight t
+  :hook (minemacs-lazy . gcmh-mode)
+  :custom
+  ;; Set the delay to 20s instead of the default 15. I tried using `auto', but
+  ;; with the default 20 of `gcmh-auto-idle-delay-factor', it triggers GC each
+  ;; 1s on my machine. Setting the factor to a higher value should solve the
+  ;; issue on my machine, but I don't think it is right to assume it will work
+  ;; the same way on other machines. So we switch back to a fixed delay of 20s.
+  (gcmh-idle-delay 20)
+  ;; The default `gcmh's 1GB is probably too high. We set it to 256MB on 64bit
+  ;; systems, or 16MB on 32bit ones.
+  (gcmh-high-cons-threshold
+   (* 1024 1024 (if (string-suffix-p "64" (symbol-name sys/arch)) 256 16))))
 #+end_src
 *** me-gc.el =TAIL=
 #+begin_src emacs-lisp
@@ -1731,34 +1731,34 @@ or file path may exist now."
 #+end_src
 *** me-keybindings.el package =which-key=
 #+begin_src emacs-lisp
- (use-package which-key
-   :straight t
-   :hook (minemacs-after-startup . which-key-mode)
-   :custom
-   (which-key-idle-delay 1.0)
-   (which-key-idle-secondary-delay nil)
-   (which-key-ellipsis "..")
-   (which-key-prefix-prefix "+")
-   (which-key-sort-order 'which-key-key-order-alpha)
-   (which-key-min-display-lines 3)
-   (which-key-max-display-columns nil)
-   ;; Allow a key binding to be modified by multiple rules in
-   ;; `which-key-replacement-alist'
-   (which-key-allow-multiple-replacements t)
-   :config
-   (setq
+(use-package which-key
+  :straight t
+  :hook (minemacs-after-startup . which-key-mode)
+  :custom
+  (which-key-idle-delay 1.0)
+  (which-key-idle-secondary-delay nil)
+  (which-key-ellipsis "..")
+  (which-key-prefix-prefix "+")
+  (which-key-sort-order 'which-key-key-order-alpha)
+  (which-key-min-display-lines 3)
+  (which-key-max-display-columns nil)
+  ;; Allow a key binding to be modified by multiple rules in
+  ;; `which-key-replacement-alist'
+  (which-key-allow-multiple-replacements t)
+  :config
+  (setq
+   which-key-replacement-alist
+   (append
     which-key-replacement-alist
-    (append
-     which-key-replacement-alist
-     (list
-      '(("\\`g z" . "\\`evil-\\(?:mc\\|multiedit\\)-\\(.*\\)")    . (nil . "⌶·\\1"))
-      '(("\\`g c" . "\\`evilnc-\\(.*\\)")                         . (nil . "#·\\1"))
-      '(("\\`g" . "\\`[Ii]nfo[-:]?\\(?:a-\\)?\\(.*\\)")           . (nil . "ɩ·\\1"))
-      '(("\\`SPC TAB" . "\\`tabspaces-\\(.*\\)")                  . (nil . "⭾·\\1"))
-      '(("\\`SPC p" . "\\`\\+?\\(?:consult-\\)?project-\\(.*\\)") . (nil . "🅟·\\1"))
-      '(("" . "\\`evil[-:]?\\(?:a-\\)?\\(.*\\)")                  . (nil . "ɛ·\\1")))))
-   ;; Setup `which-key' integration with the minibuffer
-   (which-key-setup-minibuffer))
+    (list
+     '(("\\`g z" . "\\`evil-\\(?:mc\\|multiedit\\)-\\(.*\\)")    . (nil . "⌶·\\1"))
+     '(("\\`g c" . "\\`evilnc-\\(.*\\)")                         . (nil . "#·\\1"))
+     '(("\\`g" . "\\`[Ii]nfo[-:]?\\(?:a-\\)?\\(.*\\)")           . (nil . "ɩ·\\1"))
+     '(("\\`SPC TAB" . "\\`tabspaces-\\(.*\\)")                  . (nil . "⭾·\\1"))
+     '(("\\`SPC p" . "\\`\\+?\\(?:consult-\\)?project-\\(.*\\)") . (nil . "🅟·\\1"))
+     '(("" . "\\`evil[-:]?\\(?:a-\\)?\\(.*\\)")                  . (nil . "ɛ·\\1")))))
+  ;; Setup `which-key' integration with the minibuffer
+  (which-key-setup-minibuffer))
 #+end_src
 *** me-keybindings.el package =general=
 #+begin_src emacs-lisp
@@ -1937,7 +1937,7 @@ or file path may exist now."
 *** me-keybindings.el package =hydra=
 #+begin_src emacs-lisp
 (use-package hydra
-   :straight t)
+  :straight t)
 #+end_src
 *** me-keybindings.el =TAIL=
 #+begin_src emacs-lisp
@@ -2335,30 +2335,30 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 *** me-use-package-pin-ref.el 扩展use-package支持固定版本的包
 #+begin_src emacs-lisp
- (with-eval-after-load 'straight
-   ;; Add a profile (and lockfile) for stable package revisions.
-   (add-to-list 'straight-profiles '(pinned . "pinned.el"))
-   (require 'straight-x))
+(with-eval-after-load 'straight
+  ;; Add a profile (and lockfile) for stable package revisions.
+  (add-to-list 'straight-profiles '(pinned . "pinned.el"))
+  (require 'straight-x))
 
- ;; Allow pinning versions from `use-package' using the `:pin-ref' keyword
- (with-eval-after-load 'use-package-core
-   (add-to-list 'use-package-keywords :pin-ref)
+;; Allow pinning versions from `use-package' using the `:pin-ref' keyword
+(with-eval-after-load 'use-package-core
+  (add-to-list 'use-package-keywords :pin-ref)
 
-   (defun use-package-normalize/:pin-ref (_name-symbol keyword args)
-     (use-package-only-one (symbol-name keyword) args
-       (lambda (_label arg)
-         (cond
-          ((stringp arg) arg)
-          ((symbolp arg) (symbol-name arg))
-          (t (use-package-error ":pin-ref wants a commit hash or a ref."))))))
+  (defun use-package-normalize/:pin-ref (_name-symbol keyword args)
+    (use-package-only-one (symbol-name keyword) args
+      (lambda (_label arg)
+        (cond
+         ((stringp arg) arg)
+         ((symbolp arg) (symbol-name arg))
+         (t (use-package-error ":pin-ref wants a commit hash or a ref."))))))
 
-   (defun use-package-handler/:pin-ref (name-symbol _keyword ref rest state)
-     (let ((body (use-package-process-keywords name-symbol rest state)))
-       (if (null ref)
-           body
-         `((let ((straight-current-profile 'pinned))
-            (push '(,(symbol-name name-symbol) . ,ref) straight-x-pinned-packages)
-            ,(macroexp-progn body)))))))
+  (defun use-package-handler/:pin-ref (name-symbol _keyword ref rest state)
+    (let ((body (use-package-process-keywords name-symbol rest state)))
+      (if (null ref)
+          body
+        `((let ((straight-current-profile 'pinned))
+           (push '(,(symbol-name name-symbol) . ,ref) straight-x-pinned-packages)
+           ,(macroexp-progn body)))))))
 #+end_src
 *** me-use-package-pin-ref.el =TAIL=
 #+begin_src emacs-lisp
@@ -2381,19 +2381,19 @@ Used to synchronize loading some other stuff after loading Emacs
 #+end_src
 *** minemacs-loaded.el 同步加载一些其他东西
 #+begin_src emacs-lisp
- ;; Run hooks
- (when minemacs-after-startup-hook
-   (setq minemacs-after-startup-hook (reverse minemacs-after-startup-hook))
-   (+log! "Running %d `minemacs-after-startup-hook' hooks."
-          (length minemacs-after-startup-hook))
-   (run-hooks 'minemacs-after-startup-hook))
+;; Run hooks
+(when minemacs-after-startup-hook
+  (setq minemacs-after-startup-hook (reverse minemacs-after-startup-hook))
+  (+log! "Running %d `minemacs-after-startup-hook' hooks."
+         (length minemacs-after-startup-hook))
+  (run-hooks 'minemacs-after-startup-hook))
 
- (if minemacs-not-lazy
-     (require 'minemacs-lazy)
-   (+eval-when-idle-for! 2
-     (require 'minemacs-lazy)))
+(if minemacs-not-lazy
+    (require 'minemacs-lazy)
+  (+eval-when-idle-for! 2
+    (require 'minemacs-lazy)))
 
- (+log! "Providing `minemacs-loaded'.")
+(+log! "Providing `minemacs-loaded'.")
 #+end_src
 *** minemacs-loaded.el =TAIL=
 #+begin_src emacs-lisp
@@ -2417,28 +2417,28 @@ Used to synchronize loading some other stuff after loading Emacs.
 #+end_src
 *** minemacs-lazy.el =lazy hook=
 #+begin_src emacs-lisp
- ;; The hooks in `minemacs-lazy-hook' are loaded incrementally when Emacs goes
- ;; idle, but when `minemacs-not-lazy' is set to t, they will be all loaded at
- ;; once.
+;; The hooks in `minemacs-lazy-hook' are loaded incrementally when Emacs goes
+;; idle, but when `minemacs-not-lazy' is set to t, they will be all loaded at
+;; once.
 
- ;; Run hooks
- (when minemacs-lazy-hook
-   ;; Reverse the order to follow the order in which modules are loaded. Make
-   ;; sure `gcmh-mode' is the last to be called. The `gc-cons-threshold' has been
-   ;; set in "early-init.el" to a ridiculously high value to reduce the number of
-   ;; garbage collections at startup, it will be overwritten by `gcmh-mode', so
-   ;; we defer loading it to the end to maximize the benefit.
-   (setq minemacs-lazy-hook (append (delq 'gcmh-mode (reverse minemacs-lazy-hook)) '(gcmh-mode)))
-   (if minemacs-not-lazy
-       (progn ; If `minemacs-no-lazy' is bound and true, force loading lazy hooks immediately
-         (+log! "Loading %d lazy packages immediately."
-                (length minemacs-lazy-hook))
-         (run-hooks 'minemacs-lazy-hook))
-     (+log! "Loading %d lazy packages incrementally." (length minemacs-lazy-hook))
-     ;; Run hooks one by one, as a FIFO.
-     (apply #'+eval-when-idle (append '(1) minemacs-lazy-hook))))
+;; Run hooks
+(when minemacs-lazy-hook
+  ;; Reverse the order to follow the order in which modules are loaded. Make
+  ;; sure `gcmh-mode' is the last to be called. The `gc-cons-threshold' has been
+  ;; set in "early-init.el" to a ridiculously high value to reduce the number of
+  ;; garbage collections at startup, it will be overwritten by `gcmh-mode', so
+  ;; we defer loading it to the end to maximize the benefit.
+  (setq minemacs-lazy-hook (append (delq 'gcmh-mode (reverse minemacs-lazy-hook)) '(gcmh-mode)))
+  (if minemacs-not-lazy
+      (progn ; If `minemacs-no-lazy' is bound and true, force loading lazy hooks immediately
+        (+log! "Loading %d lazy packages immediately."
+               (length minemacs-lazy-hook))
+        (run-hooks 'minemacs-lazy-hook))
+    (+log! "Loading %d lazy packages incrementally." (length minemacs-lazy-hook))
+    ;; Run hooks one by one, as a FIFO.
+    (apply #'+eval-when-idle (append '(1) minemacs-lazy-hook))))
 
- (+log! "Providing `minemacs-lazy'.")
+(+log! "Providing `minemacs-lazy'.")
 #+end_src
 *** minemacs-lazy.el TAIL
 #+begin_src emacs-lisp
@@ -3517,11 +3517,11 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   ;; TODO: use (font-family-list) to check if the font is available
   (custom-set-faces
    `(default
-     ((t (:font ,(format "%s %d"
-                  (or (plist-get minemacs-fonts :font-family)
-                   (plist-get minemacs-default-fonts :font-family))
-                  (or (plist-get minemacs-fonts :font-size)
-                   (plist-get minemacs-default-fonts :font-size)))))))
+      ((t (:font ,(format "%s %d"
+                   (or (plist-get minemacs-fonts :font-family)
+                    (plist-get minemacs-default-fonts :font-family))
+                   (or (plist-get minemacs-fonts :font-size)
+                    (plist-get minemacs-default-fonts :font-size)))))))
    `(fixed-pitch
      ((t (:inherit (default)))))
    `(fixed-pitch-serif
@@ -6397,9 +6397,9 @@ empv 是一款 Emacs 下的音乐播放器，可以播放本地音乐文件和�
   :config
   (defun +empv--dl-playlist (playlist &optional dist)
     (let ((default-directory
-           (or dist
-               (let ((d (expand-file-name "empv-downloads" empv-audio-dir)))
-                 (unless (file-directory-p d) (mkdir d t)) d)))
+            (or dist
+                (let ((d (expand-file-name "empv-downloads" empv-audio-dir)))
+                  (unless (file-directory-p d) (mkdir d t)) d)))
           (vids (seq-filter
                  #'identity ;; Filter nils
                  (mapcar
@@ -6813,6 +6813,9 @@ lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询�
 ;;; me-natural-langs.el ends here
 #+end_src
 ** me-notes.el
+:properties:
+:header-args: :tangle modules/me-notes.el
+:end:
 *** me-notes.el =HEAD=
 #+begin_src emacs-lisp
 ;;; me-notes.el --- Notes management -*- lexical-binding: t; -*-
@@ -6884,6 +6887,9 @@ Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图�
 ;;; me-notes.el ends here
 #+end_src
 ** me-org.el
+:properties:
+:header-args: :tangle modules/me-org.el
+:end:
 *** me-org.el =HEAD=
 #+begin_src emacs-lisp
 ;;; me-org.el --- Org related stuff -*- lexical-binding: t; -*-
@@ -7146,9 +7152,9 @@ Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图�
   (setq org-present-text-scale 2.5)
 
   (defvar-local +org-present--vcm-params
-      '(:enabled nil
-        :width nil
-        :center-text nil)
+    '(:enabled nil
+      :width nil
+      :center-text nil)
     "Variable to hold `visual-fill-column-mode' parameters")
 
   (add-hook
@@ -7208,6 +7214,9 @@ Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图�
 ;;; me-org.el ends here
 #+end_src
 ** me-prog.el
+:properties:
+:header-args: :tangle modules/me-prog.el
+:end:
 *** me-prog.el =HEAD=
 #+begin_src emacs-lisp
 ;;; me-prog.el --- Programming stuff -*- lexical-binding: t; -*-
@@ -7460,6 +7469,168 @@ compile是Emacs自带的编译命令，可以用来编译和运行各种程序�
           (remove-hook 'compilation-finish-functions #'+compilation--bury-if-successful-h))
       (message "Enabled burying compilation buffer.")
       (add-hook 'compilation-finish-functions #'+compilation--bury-if-successful-h))))
+#+end_src
+*** me-prog.el =apheleia=
+Apheleia 是一个自动化代码格式化和修复工具，可以用于Emacs和VSCode编辑器。
+它使用LSP协议，支持各种语言和格式器，并可以集成到编辑器中进行自动化格式化、保存前格式化等操作。
+它的目的是提高代码质量、一致性和可读性，并减少手动格式化代码的时间和工作量。
+#+begin_src emacs-lisp
+(use-package apheleia
+  :straight t
+  :init
+  (+map! "cff" #'apheleia-format-buffer)
+  :config
+  (dolist (alist '((lisp-data-mode . lisp-indent)
+                   (emacs-lisp-mode . lisp-indent)
+                   (sh-mode . shfmt)))
+    (add-to-list 'apheleia-mode-alist alist)))
+#+end_src
+*** me-prog.el =editorconfig=
+EditorConfig是一种跨编辑器的文件格式，旨在通过定义和维护一致的编码风格，从而使跨多个编辑器和IDE的协作更容易。
+在一个项目中，您可以创建一个名为 =.editorconfig= 的文件，指定您希望项目中的各种文件的格式规则。这些规则可以是缩进类型、缩进大小、换行符类型等等。不同的编辑器和IDE都有支持EditorConfig的插件或者内置支持，能够自动识别 =.editorconfig= 文件并将其中的规则应用到项目中的相应文件。
+EditorConfig能够减轻协作过程中由于使用不同的编辑器或IDE而产生的格式差异所带来的困难。
+#+begin_src emacs-lisp
+(use-package editorconfig
+  :straight t
+  :hook (prog-mode . editorconfig-mode)
+  :init
+  (+map!
+    "fc" '(editorconfig-find-current-editorconfig :wk "Find current EditorConfig")
+    "cfe" #'editorconfig-format-buffer))
+#+end_src
+*** me-prog.el =clang-format=
+clang-format 是一个由 Clang 项目提供的代码格式化工具，可以自动将代码格式化为符合某个指定的格式规范。
+clang-format 支持的语言非常广泛，包括 C、C++、Objective-C、Java、JavaScript、TypeScript、Swift、Protobuf、WebAssembly 等等，支持大部分常见的格式化规则，并且可以通过配置文件自定义格式化规则。
+在 Emacs 中，可以使用 clang-format.el 这个 package 来调用 clang-format，从而在 Emacs 中实现代码格式化的功能。
+#+begin_src emacs-lisp
+(use-package clang-format
+  :straight t
+  :init
+  (+map! :keymaps '(c-mode-map c++-mode-map cuda-mode-map scad-mode-map)
+    "cfc" #'clang-format-buffer))
+#+end_src
+*** me-prog.el =vimrc-mode=
+#+begin_src emacs-lisp
+;;; Modes
+(use-package vimrc-mode
+  :straight t
+  :mode "\\.vim\\(rc\\)?\\'")
+#+end_src
+*** me-prog.el =cmake-mode=
+cmake-mode 本身提供了基本的语法高亮功能，但是 cmake-font-lock 可以增强这一功能，提供更好的语法高亮效果。cmake-font-lock 会在 cmake-mode 基础上添加一些额外的语法高亮规则，如高亮变量、宏等。因此，如果你需要更好的 CMake 语法高亮效果，可以考虑使用 cmake-font-lock。
+#+begin_src emacs-lisp
+(use-package cmake-mode
+  :straight (:host github :repo "emacsmirror/cmake-mode" :files (:defaults "*"))
+  :mode "CMakeLists\\.txt\\'"
+  :mode "\\.cmake\\'")
+
+(use-package cmake-font-lock
+  :straight (:host github :repo "Lindydancer/cmake-font-lock" :files (:defaults "*"))
+  :hook (cmake-mode . cmake-font-lock-activate))
+#+end_src
+*** me-prog.el =rust-mode=
++ Rust 是一种现代的编程语言，由 Mozilla 公司的 Graydon Hoare 在 2006 年创建。它在内存安全和并发方面具有出色的表现，并且具有高度的可靠性和性能。Rust 的设计目标是成为一种具有高效性和安全性的系统级编程语言。
++ Rust 自发布以来一直受到广泛关注和使用。它在 Stack Overflow 的开发者调查中被评为“最喜欢的编程语言”和“最希望学习的编程语言”多年，并且在 TIOBE 编程语言排行榜中也一直位居前列。
++ Rust 的高可靠性、高安全性和高性能等特点，以及其逐渐成熟的生态系统，使其成为一种备受推崇的编程语言之一。
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :straight t
+  :commands
+  rust-compile rust-compile-release
+  rust-check rust-test
+  rust-run rust-run-release rust-run-clippy
+  rust-format-buffer rust-goto-format-problem
+  rust-enable-format-on-save
+  :init
+  (+map-local! :keymaps '(rust-mode-map rust-ts-mode-map)
+    "c" #'rust-compile
+    "C" #'rust-compile-release
+    "k" #'rust-check
+    "t" #'rust-test
+    "r" #'rust-run
+    "R" #'rust-run-release
+    "y" #'rust-run-clippy
+    "f" #'rust-format-buffer
+    "F" #'rust-goto-format-problem
+    "S" #'rust-enable-format-on-save))
+#+end_src
+*** me-prog.el =dumb-jump=
+dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、声明或引用。它不依赖于任何索引或 tags 文件，而是使用简单的搜索算法（例如 grep）来查找匹配项。dumb-jump 支持多种编程语言，并且易于配置。它可以根据需要与其他包集成，例如 projectile 或 helm。
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :straight t
+  :commands
+  +dumb-jump-hydra/body
+  :custom
+  (dumb-jump-selector 'completing-read)
+  (dumb-jump-prefer-searcher 'rg)
+  :init
+  (+map!
+    "cj" '(+dumb-jump-hydra/body :wk "+dumb-jump-hydra"))
+  ;; Use as xref backend
+  (with-eval-after-load 'xref
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 101))
+  :config
+  ;; Define Hydra keybinding (from the repo's examples)
+  (defhydra +dumb-jump-hydra (:color blue :columns 3)
+    "Dumb Jump."
+    ("j" dumb-jump-go "Go")
+    ("o" dumb-jump-go-other-window "Other window")
+    ("e" dumb-jump-go-prefer-external "Go external")
+    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+    ("i" dumb-jump-go-prompt "Prompt")
+    ("l" dumb-jump-quick-look "Quick look")
+    ("b" dumb-jump-back "Back")))
+#+end_src
+*** me-prog.el =hl-todo=
+=hl-todo= 是一个Emacs的包，用于在代码中高亮显示注释中的特殊标记。
+它可以用来标记TODO，FIXME，BUG等，以便更容易地找到和处理它们。
+它还提供了一些有用的功能，例如列表所有标记，定位到下一个或前一个标记，删除标记等。
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :straight (:host github :repo "tarsius/hl-todo")
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-keyword-faces
+        (append
+         hl-todo-keyword-faces
+         '(("BUG" . "#ee5555")
+           ("PROJ" . "#447f44")
+           ("IDEA" . "#0fa050")
+           ("INFO" . "#0e9030")
+           ("TWEAK" . "#fe9030")
+           ("PERF" . "#e09030")))))
+#+end_src
+*** me-prog.el =rainbow-mode=
+=Rainbow mode= 是一个 Emacs 插件，可以让括号、中括号、大括号、引号、字符串等不同的文本块以不同颜色显示，提高代码的可读性和可视化效果。
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :straight t
+  :init
+  (+map! :keymaps '(prog-mode-map conf-mode-map text-mode-map)
+    "tR" #'rainbow-mode))
+#+end_src
+*** me-prog.el =lua-mode=
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :straight t
+  :custom
+  (lua-indent-level 2))
+#+end_src
+*** me-prog.el =csharp-mode=
+#+begin_src emacs-lisp
+(use-package csharp-mode
+  :straight `(:type ,(if (< emacs-major-version 29) 'git 'built-in))
+  :mode "\\.cs\\'"
+  :custom
+  (csharp-ts-mode-indent-offset 2) ; customize variables
+  (imenu-generic-expression
+   '(("Variables" "^\\s-*[a-zA-Z0-9._ ]* \\([a-zA-Z0-9_]*\\)\\( = \\sw*\\|\\s-*\\);$" 1)
+     ("Functions" "^\\s-*[^/]* \\([a-zA-Z0-9_]+\\)(.*)\\(\\s-*.*\n\\|\\ *\\)\\s-*{" 1)
+     ("Classes" "^\\s-*\\(.*\\)class +\\([a-zA-Z0-9_]+\\)" 2)
+     ("Namespaces" "^namespace +\\([a-z0-9_]*\\)" 1)))
+  :init
+  :config)
 #+end_src
 *** me-prog.el =TAIL=
 #+begin_src emacs-lisp
