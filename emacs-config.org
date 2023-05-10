@@ -7898,7 +7898,7 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
 (provide 'me-rss)
 ;;; me-rss.el ends here
 #+end_src
-** me-tools
+** me-tools.el
 :properties:
 :header-args: :tangle modules/me-tools.el
 :end:
@@ -8077,4 +8077,36 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
 #+begin_src emacs-lisp
 (provide 'me-tools)
 ;;; me-tools.el ends here
+#+end_src
+** me-tty.el
+:properties:
+:header-args: :tangle modules/me-tty.el
+:end:
+*** me-tty.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-tty.el --- Emacs from terminal -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-tty.el =xt-mouse=
+#+begin_src emacs-lisp
+(use-package xt-mouse
+  :straight (:type built-in)
+  :hook (tty-setup . xterm-mouse-mode))
+#+end_src
+*** me-tty.el =xclip=
+#+begin_src emacs-lisp
+(use-package xclip
+  :straight t
+  :defines +xclip--enable-in-tty-h
+  :hook (tty-setup . +xclip--enable-in-tty-h)
+  :config
+  (defun +xclip--enable-in-tty-h ()
+    (with-demoted-errors "%s" (xclip-mode 1))))
+#+end_src
+*** me-tty.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-tty)
+;;; me-tty.el ends here
 #+end_src
