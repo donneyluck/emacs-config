@@ -531,7 +531,9 @@ plain variables.  This means that `setopt' will execute any
 ;; Configure `use-package'
 (unless (require 'use-package nil t)
   (straight-use-package 'use-package))
-
+#+end_src
+*** me-bootstarp.el 安装 =use-package= 扩展 :pin-ref
+#+begin_src emacs-lisp
 ;; Add the `:pin-ref' extension to `use-package'
 (require 'me-use-package-pin-ref)
 
@@ -540,6 +542,41 @@ plain variables.  This means that `setopt' will execute any
  use-package-verbose minemacs-verbose
  ;; Defer loading packages by default, use `:demand' to force loading a package
  use-package-always-defer t)
+
+(defvar minemacs--build-functions nil
+  "These functions are run after completing package updates.")
+(defun +register-build-function (fn)
+  "Register build function FN to be called at the end of `minemacs-update'."
+  (add-to-list 'minemacs--build-functions fn))
+(defun minemacs-update ()
+  "Update MinEmacs packages."
+  (interactive)
+  ;; Backup the current installed versions, this file can be restored if version
+  ;; upgrade does break some packages.
+  (message "[MinEmacs]: Creating backups for the current versions of packages")
+  (let* ((backup-dir (concat minemacs-local-dir (format "minemacs/versions/")))
+         (dest-file (concat backup-dir "default-" (format-time-string "%Y%m%d%H%M%S") ".el"))
+         (src-file (concat straight-base-dir "straight/versions/default.el")))
+    (unless (file-directory-p backup-dir) (mkdir backup-dir :parents))
+    (when (file-exists-p src-file)
+      (message "[MinEmacs]: Creating backup from \"%s\" to \"%s\"" src-file dest-file)
+      (copy-file src-file dest-file)))
+  ;; Run `straight's update cycle, taking into account the explicitly pinned
+  ;; packages versions.
+  (message "[MinEmacs]: Pulling packages")
+  (straight-x-pull-all)
+  (message "[MinEmacs]: Freezing packages")
+  (straight-x-freeze-versions)
+  (message "[MinEmacs]: Rebuilding packages")
+  (straight-rebuild-all)
+  ;; Runn package-specific build functions (ex: `pdf-tools-install-noverify')
+  (message "[MinEmacs]: Running additional package-specific build functions")
+  (dolist (fn minemacs--build-functions)
+    (message "MinEmacs: Running `%s'" fn)
+    ;; Do not ask before installing
+    (cl-letf (((symbol-function 'yes-or-no-p) #'always)
+              ((symbol-function 'y-or-n-p) #'always))
+      (funcall fn))))
 #+end_src
 *** me-bootstarp.el =TAIL=
 #+begin_src emacs-lisp
@@ -5643,28 +5680,28 @@ asm-blox是一款受WebAssembly Text格式（WAT）启发的编程游戏。在�
 (provide 'me-fun)
 ;;; me-fun.el ends here
 #+end_src
-** [✘] me-guns.el
-CLOSED: [2023-05-08 Mon 12:05]
+** [✘] me-gnus.el
+CLOSED: [2023-05-10 Wed 12:02]
 :properties:
-:header-args: :tangle modules/me-guns.el
+:header-args: :tangle modules/me-gnus.el
 :end:
-*** me-guns.el =HEAD=
+*** me-gnus.el =HEAD=
 #+begin_src emacs-lisp
 ;;; me-gnus.el --- Email stuff using Gnus -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-guns.el email use gnus
+*** me-gnus.el email use gnus
 #+begin_src emacs-lisp
 ;; See: emacswiki.org/emacs/GnusTutorial
 ;; github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org
 (setq gnus-init-file (concat minemacs-config-dir "gnus.el"))
 #+end_src
-*** me-guns.el =TAIL=
+*** me-gnus.el =TAIL=
 #+begin_src emacs-lisp
 (provide me-gnus)
-;;; me-guns.el ends here
+;;; me-gnus.el ends here
 #+end_src
 ** [✘] me-latex.el
 CLOSED: [2023-05-08 Mon 12:07]
@@ -5821,8 +5858,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 (provide me-lifestyle)
 ;;; me-lifestyle.el ends here
 #+end_src
-** [✘] me-lisp.el
-CLOSED: [2023-05-08 Mon 12:07]
+** me-lisp.el
 :properties:
 :header-args: :tangle modules/me-lisp.el
 :end:
@@ -6448,7 +6484,7 @@ emms 是 Emacs 多媒体系统（Emacs Multimedia System）的缩写，是 Emacs
 #+end_src
 ** [✘] me-modeling.el
 :properties:
-:header-args: :tangle no
+:header-args: :tangle modules/me-modeling.el
 :end:
 *** me-modeling.el =HEAD=
 #+begin_src emacs-lisp
@@ -7634,6 +7670,230 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
 #+end_src
 *** me-prog.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-prog)
+(provide 'me-prog)
 ;;; me-prog.el ends here
+#+end_src
+** me-project.el
+:properties:
+:header-args: :tangle modules/me-project.el
+:end:
+*** me-project.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-project.el --- Projects stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-project.el =project=
+project.el是Emacs 27及更高版本中默认启用的项目管理库。它为项目提供了一些基本功能，例如：查找项目中的文件、列出项目中的文件等等。您可以使用project.el来创建和管理项目。
+#+begin_src emacs-lisp
+(use-package project
+  :straight (:type built-in)
+  :after minemacs-loaded
+  :demand t
+  :custom
+  (project-list-file (concat minemacs-local-dir "project-list.el"))
+  (project-vc-extra-root-markers '(".projectile.el" ".project.el" ".project"))
+  :init
+  (+map! ":"  #'project-find-file)
+  (+map!
+    ;; project
+    :infix "p"
+    "w"  #'project-switch-project
+    "c"  #'project-compile
+    "d"  #'project-find-dir
+    "f"  #'project-find-file
+    "k"  #'project-kill-buffers
+    "b"  #'project-switch-to-buffer
+    "a"  #'+project-add-project
+    "D"  #'+dir-locals-open-or-create
+    "-"  #'project-dired
+    ;; compile/test
+    "c" #'project-compile
+    ;; run
+    "r"  '(nil :wk "run")
+    "re" #'project-eshell
+    "rg" #'+project-gdb
+    "rs" #'project-shell
+    "rc" #'project-shell-command
+    "rC" #'project-async-shell-command
+    ;; forget
+    "F"  '(nil :wk "forget/cleanup")
+    "Fz" '(project-forget-zombie-projects :wk "Zombie projects")
+    "Fp" '(project-forget-project :wk "Project")
+    "Fu" '(project-forget-projects-under :wk "Projects under...")
+    ;; search/replace
+    "s"  '(nil :wk "search/replace")
+    "ss" #'project-search
+    "sn" '(fileloop-continue :wk "Next match")
+    "sr" #'project-query-replace-regexp
+    "sf" #'project-find-regexp))
+#+end_src
+*** me-project.el =consult-project-extra=
+project-find-file是Emacs内置的函数，用于在当前项目中查找文件，而 consult-project-extra-find 则是 consult-project-extra 提供的功能，可以更加智能和高效地查找项目文件，例如可以使用快速搜索和过滤来定位文件，支持使用FZF和Ripgrep等工具进行快速匹配和搜索，还可以快速地跳转到项目的版本控制系统（如git）中。此外， consult-project-extra-find 还提供了其他一些高级功能，例如可以针对不同的文件类型使用不同的外部命令，或者使用不同的搜索模式来查找文件。
+#+begin_src emacs-lisp
+(use-package consult-project-extra
+  :straight t
+  :init
+  (+map!
+    "pp" #'consult-project-extra-find
+    "pP" #'consult-project-extra-find-other-window))
+#+end_src
+*** me-project.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-project)
+;;; me-project.el ends here
+#+end_src
+** [✘] me-robot.el
+CLOSED: [2023-05-10 Wed 14:02]
+:properties:
+:header-args: :tangle modules/me-project.el
+:end:
+*** me-robot.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-robot.el --- Robot Operating System -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-robot.el =robot=
+#+begin_src emacs-lisp
+(defgroup minemacs-robot nil
+  "MinEmacs robotics stuff."
+  :group 'minemacs)
+
+(defcustom +ros-mcap-command (or (executable-find "mcap") (executable-find "mcap-cli"))
+  "ROS 2 MCAP command."
+  :group 'minemacs-robot)
+
+(defcustom +ros-rosbag-command (executable-find "rosbag")
+  "ROS 1 \"rosbag\" command."
+  :group 'minemacs-robot)
+
+(defcustom +ros-ros2-command (executable-find "ros2")
+  "ROS 2 \"ros2\" command."
+  :group 'minemacs-robot)
+
+(dolist (ext-mode '(("\\.rviz\\'"   . conf-unix-mode)
+                    ("\\.urdf\\'"   . xml-mode)
+                    ("\\.xacro\\'"  . xml-mode)
+                    ("\\.launch\\'" . xml-mode)
+                    ("\\.msg\\'"    . gdb-script-mode)
+                    ("\\.srv\\'"    . gdb-script-mode)
+                    ("\\.action\\'" . gdb-script-mode)))
+  (add-to-list 'auto-mode-alist ext-mode))
+
+(+deferred-when! (or +ros-mcap-command +ros-rosbag-command +ros-ros2-command)
+  ;; A mode to display info from ROS bag files (via MCAP)
+  (define-derived-mode rosbag-info-mode conf-colon-mode "ROS bag"
+    "Major mode for viewing ROS/ROS2 bag files."
+    :interactive nil
+    (buffer-disable-undo)
+    (set-buffer-modified-p nil)
+    (setq-local buffer-read-only t
+                truncate-lines t))
+
+  (defun rosbag-info-mode-open-file (file)
+    "Browse the contents of an ROS bag (v1, SQLite, or MCAP) file."
+    (interactive "fROS/ROS2/MCAP bag file name: ")
+    (let ((bag-format (file-name-extension file)))
+      (if (not (member bag-format '("bag" "db3" "mcap")))
+          (user-error "File \"%s\" doesn't seem to be a ROS/ROS2 bag file."
+                      (file-name-nondirectory file))
+        (let ((buffer-read-only nil)
+              (buff (get-buffer-create
+                     (format "*ROS (%s) %s*" (upcase bag-format) (file-name-nondirectory file)))))
+          (pop-to-buffer buff)
+          (pcase bag-format
+            ("bag"
+             (call-process +ros-rosbag-command
+                           nil buff nil "info" (expand-file-name file)))
+            ("db3"
+             (call-process +ros-ros2-command
+                           nil buff nil "bag" "info" (expand-file-name file)))
+            ("mcap"
+             (call-process +ros-mcap-command
+                           nil buff nil "info" (expand-file-name file)))
+            (rosbag-info-mode)))))))
+
+;; Needed by ros.el
+(use-package kv
+  :straight t)
+
+(use-package string-inflection
+  :straight t)
+
+(use-package with-shell-interpreter
+  :straight t)
+
+(when (< emacs-major-version 29)
+  (use-package docker-tramp
+    :straight t))
+
+;; ROS package
+(use-package ros
+  :straight (:host github :repo "DerBeutlin/ros.el")
+  :init
+  (+map! :infix "o"
+    "r"  '(nil :wk "ros")
+    "rr" '(+hydra-ros-main/body :wk "Hydra")
+    "rs" '(ros-set-workspace :wk "Set workspace")
+    "rp" '(ros-go-to-package :wk "Go to package")
+    "rC" '(ros-cache-clean :wk "Clean cache"))
+  :config
+  (defhydra +hydra-ros-main (:color blue :hint nil :foreign-keys warn)
+    "
+[ROS]                                                  [_q_] quit
+  ├──────────────────────────────────────────────────────────────────────╮
+  │  [_c_] Compile    [_t_] Test       [_w_] Set workspace   [_p_] Packages      │
+  │  [_m_] Messages   [_s_] Services   [_a_] Actions         [_x_] Clean cache   │
+  ╰──────────────────────────────────────────────────────────────────────╯
+"
+    ("c" ros-colcon-build-transient)
+    ("t" ros-colcon-test-transient)
+    ("w" ros-set-workspace)
+    ("p" hydra-ros-packages/body)
+    ("m" hydra-ros-messages/body)
+    ("s" hydra-ros-srvs/body)
+    ("a" hydra-ros-actions/body)
+    ("x" ros-cache-clean)
+    ("q" nil :color blue)))
+
+(use-package robot-mode
+  :straight t)
+#+end_src
+*** me-robot.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-robot)
+;;; me-robot.el ends here
+#+end_src
+** me-rss.el
+:properties:
+:header-args: :tangle modules/me-rss.el
+:end:
+*** me-rss.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-rss.el --- News and RSS -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-rss.el =elfeed=
+elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elfeed 在 Emacs 中管理和阅读各种博客、新闻和其他类型的 RSS 订阅。
+#+begin_src emacs-lisp
+(use-package elfeed
+  :straight t
+  :init
+  (+map! "of" #'elfeed)
+  :custom
+  (elfeed-db-directory (concat minemacs-local-dir "elfeed/db/"))
+  (elfeed-enclosure-default-dir (concat minemacs-local-dir "elfeed/enclosure/"))
+  :config
+  ;; Hide the annoying index file form recent files
+  (+ignore-root elfeed-db-directory elfeed-enclosure-default-dir))
+#+end_src
+*** me-rss.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-rss)
+;;; me-rss.el ends here
 #+end_src
