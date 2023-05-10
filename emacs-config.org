@@ -3761,7 +3761,8 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 #+begin_src emacs-lisp
 ;;; +minemacs.el ends here
 #+end_src
-** WAIT netextender.el
+** [✘] netextender.el
+CLOSED: [2023-05-10 Wed 14:44]
 =netextender.el= 程序netextender的封装
 暂时用不到  可以学习一下如何和命令行程序交互
 :properties:
@@ -7896,4 +7897,184 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
 #+begin_src emacs-lisp
 (provide 'me-rss)
 ;;; me-rss.el ends here
+#+end_src
+** me-tools
+:properties:
+:header-args: :tangle modules/me-tools.el
+:end:
+*** me-tools.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-tools.el --- tools stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-tools.el =ssh-deploy=
+SSH-Deploy 是一个 Emacs 插件，用于将文件通过 SSH 协议部署到远程服务器。它提供了一套方便的命令和函数，使您能够轻松地将文件同步到远程服务器上，以便在开发过程中进行实时的部署和更新。
+#+begin_src emacs-lisp
+(use-package ssh-deploy
+  :straight t
+  :hook ((after-save . ssh-deploy-after-save)
+         (find-file . ssh-deploy-find-file))
+  :init
+  (+map! "od" '(ssh-deploy-hydra/body :wk "ssh-deploy"))
+  :config
+  (ssh-deploy-hydra "C-c C-z"))
+#+end_src
+*** me-tools.el =tldr=
+TLDR（Too Long; Didn't Read）是一个命令行工具，提供了简洁和易于理解的命令行指南。它的目标是以简洁的方式呈现常用命令的用法和示例，以便用户能够快速查阅和理解命令的功能和用法。
+#+begin_src emacs-lisp
+(use-package tldr
+  :straight t
+  :init
+  (+map! "ht" #'tldr)
+  :custom
+  (tldr-enabled-categories '("common" "linux" "osx")))
+#+end_src
+*** me-tools.el =vterm=
++ vterm 是一个 Emacs 中的终端模拟器，它提供了在 Emacs 中运行交互式终端会话的功能。vterm 基于 libvterm 库，支持终端的基本功能，包括命令行编辑、光标移动、颜色显示、文本选择等。
++ multi-vterm 是一个 Emacs 插件，它建立在 vterm 的基础上，提供了在 Emacs 中管理多个终端会话的能力。它使得同时打开和切换多个 vterm 窗口变得更加便捷和高效。
+#+begin_src emacs-lisp
+(use-package vterm
+  :straight t
+  :init
+  (+map!
+    "ot" '(nil :wk "vterm")
+    "otT" #'vterm)
+  ;; Hide vterm install window
+  (add-to-list
+   'display-buffer-alist
+   `(" \\*Install vterm\\*"
+     (display-buffer-no-window)
+     (allow-no-window . t)))
+  (+register-build-function #'vterm-module-compile)
+  :custom
+  (vterm-always-compile-module t)
+  (vterm-max-scrollback 5000)
+  (vterm-tramp-shells '(("docker" "/bin/bash")))
+  :config
+  (define-key vterm-mode-map [return] #'vterm-send-return))
+
+(use-package multi-vterm
+  :straight t
+  :init
+  (+map!
+    "ott" #'multi-vterm
+    "otd" #'multi-vterm-dedicated-toggle
+    "otp" #'multi-vterm-project)
+  ;; Show at buttom
+  (add-to-list
+   'display-buffer-alist
+   `("\\*vterminal - .*\\*" ;; multi-vterm-project / dedicated
+     (display-buffer-reuse-window display-buffer-in-direction)
+     (direction . bottom)
+     (dedicated . t)
+     (reusable-frames . visible)
+     (window-height . 0.3)))
+  :custom
+  (multi-vterm-dedicated-window-height-percent 30)
+  :config
+  (+nvmap!
+    :keymaps 'vterm-mode-map
+    ",c" #'multi-vterm
+    ",n" #'multi-vterm-next
+    ",p" #'multi-vterm-prev
+    "<return>" #'evil-insert-resume))
+#+end_src
+*** me-tools.el =docker=
+#+begin_src emacs-lisp
+(use-package docker
+  :straight t
+  :init
+  (+map! "ok" #'docker))
+
+(use-package docker-compose-mode
+  :straight t)
+
+(if (+emacs-features-p 'tree-sitter)
+    ;; Emacs 29 comes with `dockerfile-ts-mode'
+    (use-package dockerfile-ts-mode
+      :straight (:type built-in)
+      :mode "/Dockerfile\\'")
+  (use-package dockerfile-mode
+    :straight t))
+#+end_src
+*** me-tools.el =systemd=
+Major mode for editing systemd units.
+#+begin_src emacs-lisp
+(use-package systemd
+  :straight t)
+
+
+#+end_src
+*** me-tools.el =pkgbuild-mode=
+pkgbuild-mode 是一个用于编辑 PKGBUILD 文件的 Emacs 模式。PKGBUILD 是 Arch Linux 发行版中用于构建软件包的脚本文件，其中包含了软件包的构建、安装和配置信息。
+#+begin_src emacs-lisp
+(use-package pkgbuild-mode
+  :straight t
+  :config
+  (+map-local! :keymaps 'pkgbuild-mode-map
+    "b" #'pkgbuild-makepkg
+    "a" #'pkgbuild-tar
+    "r" #'pkgbuild-increase-release-tag
+    "u" #'pkgbuild-browse-url
+    "m" #'pkgbuild-update-sums-line
+    "s" #'pkgbuild-update-srcinfo
+    "e" #'pkgbuild-etags))
+#+end_src
+*** me-tools.el =journalctl-mode=
+=journalctl-mode= 是一个用于查看和编辑 systemd 日志的 Emacs 模式。它提供了在 Emacs 中浏览和搜索 systemd journal 的功能，并以可读的方式显示日志消息。
+#+begin_src emacs-lisp
+(use-package journalctl-mode
+  :straight t
+  :config
+  (+map-local! :keymaps 'journalctl-mode-map
+    "J" #'journalctl-next-chunk
+    "K" #'journalctl-previous-chunk))
+#+end_src
+*** me-tools.el =logview=
+=logview= 是一个 Emacs 包，用于在 Emacs 中浏览和过滤日志文件。它提供了一套交互式的界面和工具，使您可以方便地查看和分析日志数据。
+#+begin_src emacs-lisp
+(use-package logview
+  :straight t
+  :custom
+  (logview-views-file (concat minemacs-local-dir "logview-views.el"))
+  (logview-cache-filename (concat minemacs-cache-dir "logview-cache.el")))
+#+end_src
+*** me-tools.el =tramp=
+TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，用于在 Emacs 中透明地访问和编辑远程文件。它允许您使用 Emacs 的编辑功能与远程主机交互，就像在本地文件上一样。
+#+begin_src emacs-lisp
+(use-package tramp
+  :straight (:type built-in)
+  :init
+  ;; This is faster than the default "scp"
+  (unless os/win
+    (setq tramp-default-method "ssh"))
+  :custom
+  (tramp-default-remote-shell "/bin/bash"))
+#+end_src
+*** me-tools.el =bitwarden=
+#+begin_src emacs-lisp
+(use-package bitwarden
+  :straight (:host github :repo "seanfarley/emacs-bitwarden")
+  :preface
+  (defconst +bitwarden-available-p (executable-find "bw"))
+  :when +bitwarden-available-p
+  :custom
+  (bitwarden-automatic-unlock
+   (lambda ()
+     (require 'auth-source)
+     (if-let* ((matches (auth-source-search :host "bitwarden.com" :max 1))
+               (entry (nth 0 matches))
+               (email (plist-get entry :user))
+               (pass (plist-get entry :secret)))
+         (progn
+           (setq bitwarden-user email)
+           (if (functionp pass) (funcall pass) pass))
+       ""))))
+#+end_src
+*** me-tools.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-tools)
+;;; me-tools.el ends here
 #+end_src
