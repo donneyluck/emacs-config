@@ -8090,12 +8090,14 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
 ;;; Code:
 #+end_src
 *** me-tty.el =xt-mouse=
+=xt-mouse= 是 Emacs 内置的一个功能，用于在终端环境中启用鼠标操作。=在终端中运行 Emacs 时，默认情况下是没有鼠标支持的，通过启用 xt-mouse，你可以在终端中使用鼠标进行一些操作，如点击、拖拽、滚动等。
 #+begin_src emacs-lisp
 (use-package xt-mouse
   :straight (:type built-in)
   :hook (tty-setup . xterm-mouse-mode))
 #+end_src
 *** me-tty.el =xclip=
+Emacs 在终端环境中使用 xclip 命令进行剪贴板操作。
 #+begin_src emacs-lisp
 (use-package xclip
   :straight t
@@ -8109,4 +8111,21 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
 #+begin_src emacs-lisp
 (provide 'me-tty)
 ;;; me-tty.el ends here
+#+end_src
+** me-ui.el
+:properties:
+:header-args: :tangle modules/me-ui.el
+:end:
+
+*** me-ui.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-ui.el --- UI stuff -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-ui.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-ui)
+;;; me-ui.el ends here
 #+end_src
