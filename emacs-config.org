@@ -482,7 +482,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 *** me-backports-29.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-backports-29)
+(provide 'me-backports-29)
 ;;; me-backports-29.el ends here
 #+end_src
 ** me-bootstrap.el
@@ -508,7 +508,7 @@ plain variables.  This means that `setopt' will execute any
                                 (format "-%s" (substring emacs-repository-version 0 8))
                               ""))
  ;; Use the "develop" branch on straight.el's repo.
- straight-repository-branch (if (>= emacs-major-version 29) "develop" "master")
+ straight-repository-branch "develop"
  ;; Do not slow startup by checking for package modifs, check only on demand
  straight-check-for-modifications '(check-on-save find-when-checking))
 
@@ -545,9 +545,11 @@ plain variables.  This means that `setopt' will execute any
 
 (defvar minemacs--build-functions nil
   "These functions are run after completing package updates.")
+
 (defun +register-build-function (fn)
   "Register build function FN to be called at the end of `minemacs-update'."
   (add-to-list 'minemacs--build-functions fn))
+
 (defun minemacs-update ()
   "Update MinEmacs packages."
   (interactive)
@@ -561,6 +563,7 @@ plain variables.  This means that `setopt' will execute any
     (when (file-exists-p src-file)
       (message "[MinEmacs]: Creating backup from \"%s\" to \"%s\"" src-file dest-file)
       (copy-file src-file dest-file)))
+
   ;; Run `straight's update cycle, taking into account the explicitly pinned
   ;; packages versions.
   (message "[MinEmacs]: Pulling packages")
@@ -569,33 +572,31 @@ plain variables.  This means that `setopt' will execute any
   (straight-x-freeze-versions)
   (message "[MinEmacs]: Rebuilding packages")
   (straight-rebuild-all)
+
   ;; Runn package-specific build functions (ex: `pdf-tools-install-noverify')
   (message "[MinEmacs]: Running additional package-specific build functions")
   (dolist (fn minemacs--build-functions)
     (message "MinEmacs: Running `%s'" fn)
-    ;; Do not ask before installing
-    (cl-letf (((symbol-function 'yes-or-no-p) #'always)
-              ((symbol-function 'y-or-n-p) #'always))
-      (funcall fn))))
+    (funcall fn)))
 #+end_src
 *** me-bootstarp.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-bootstrap)
 ;;; me-bootstrap.el ends here
 #+end_src
-** me-buildin.el
+** me-builtin.el
 :properties:
-:header-args: :tangle core/me-buildin.el
+:header-args: :tangle core/me-builtin.el
 :end:
-=me-buildin.el= 管理一些内置包
-*** me-buildin.el =HEAD=
+=me-builtin.el= 管理一些内置包
+*** me-builtin.el =HEAD=
 #+begin_src emacs-lisp
 ;;; me-builtin.el --- Customization of some of Emacs' builtin libraries -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-buildin.el buildin libraries
+*** me-builtin.el builtin libraries
 #+begin_src emacs-lisp
 (use-package transient
   :straight (:type built-in)
@@ -610,16 +611,16 @@ plain variables.  This means that `setopt' will execute any
 (use-package let-alist
   :straight (:type built-in))
 #+end_src
-*** me-buildin.el =TAIL=
+*** me-builtin.el =TAIL=
 #+begin_src emacs-lisp
-(provide 'me-buildin)
-;;; me-buildin ends here
+(provide 'me-builtin)
+;;; me-builtin.el ends here
 #+end_src
 ** me-compat.el
 :properties:
 :header-args: :tangle core/me-compat.el
 :end:
-=me-compat.el= 向前兼容的能力
+=me-compat.el= 提供兼容的能力
 *** me-compat.el =HEAD=
 #+begin_src emacs-lisp
 ;;; me-compat.el --- Emacs forward compatibility layer -*- lexical-binding: t; -*-
@@ -627,7 +628,9 @@ plain variables.  This means that `setopt' will execute any
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-compat.el package [[https://github.com/emacs-compat/compat][compat]]
+*** me-compat.el package  [[https://github.com/emacs-compat/compat][compat]]
++ compat 包是一个用于提供 Emacs 版本兼容性的库。它旨在简化在不同版本的 Emacs 上编写可移植代码的过程。
++ 具体而言，compat 包提供了一些宏和函数，这些宏和函数在不同版本的 Emacs上具有不同的行为，并且它们会根据当前运行的 Emacs 版本选择合适的实现。
 #+begin_src emacs-lisp
 (use-package compat
   :straight t
@@ -636,7 +639,7 @@ plain variables.  This means that `setopt' will execute any
 *** me-compat.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-compat)
-;;; me-compat ends here
+;;; me-compat.el ends here
 #+end_src
 ** me-completion.el
 :properties:
@@ -674,7 +677,6 @@ plain variables.  This means that `setopt' will execute any
   (corfu-cycle t) ; Allows cycling through candidates
   (corfu-min-width 25)
   (corfu-auto-delay 0.2)
-  (corfu-exclude-modes '(org-mode markdown-mode))
   :config
   (with-eval-after-load 'evil
     (define-key corfu-map (kbd "C-j") #'corfu-next)
@@ -734,6 +736,7 @@ plain variables.  This means that `setopt' will execute any
 #+begin_src emacs-lisp
 (use-package consult
   :straight t
+  :demand t
   :hook (embark-collect-mode . consult-preview-at-point-mode)
   :custom
   ;; Use `consult-xref' for `xref-find-references'
@@ -896,7 +899,7 @@ plain variables.  This means that `setopt' will execute any
 *** me-completion.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-completion)
-;;; me-completion ends here
+;;; me-completion.el ends here
 #+end_src
 ** me-core-ui.el
 :properties:
@@ -1078,7 +1081,7 @@ Useful for keeping track of the enabled theme."
 *** me-core-ui.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-core-ui)
-;;; me-core-ui ends here
+;;; me-core-ui.el ends here
 #+end_src
 ** me-defaults.el
 :properties:
@@ -2528,7 +2531,7 @@ Used to synchronize loading some other stuff after loading Emacs.
               (not (string-match-p
                     "file format not recognized"
                     (with-temp-buffer
-                      (shell-command (format "%s --file-HEADs %s"
+                      (shell-command (format "%s --file-headers %s"
                                              +binary-objdump-executable
                                              (shell-quote-argument file))
                                      (current-buffer))
@@ -2590,7 +2593,7 @@ is binary, activate `hexl-mode'."
 #+end_src
 *** +binary.el =TAIL=
 #+begin_src emacs-lisp
-;;; binary ends here
+;;; +binary.el ends here
 #+end_src
 ** +buffer.el
 :properties:
@@ -2776,17 +2779,24 @@ When available, use \"fortune\" to add a random quote."
 #+end_src
 *** +buffer.el =TAIL=
 #+begin_src emacs-lisp
-;;; buffer ends here
+;;; buffer.el ends here
 #+end_src
 ** ecryptfs.el
 :properties:
-:header-args: :tangle elisp/+ecryptfs.el
+:header-args: :tangle elisp/ecryptfs.el
 :end:
-This allows me to mount my private directory encrypted using ecryptfs-utils.
-It is a port of "ecryptfs-mount-private" shell command. It uses extracts the
-encryption key from a GPG encrypted file containting the ecryptfs password.
-The decryption of the password is performed using Emacs' `epg'.
 *** ecryptfs.el =HEAD=
+#+begin_src emacs-lisp
+;;; +io.el --- io -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+
+;; This allows me to mount my private directory encrypted using ecryptfs-utils.
+;; It is a port of "ecryptfs-mount-private" shell command. It uses extracts the
+;; encryption key from a GPG encrypted file containting the ecryptfs password.
+;; The decryption of the password is performed using Emacs' `epg'.
+#+end_src
 *** ecryptfs.el 私有文件夹加密解密
 #+begin_src emacs-lisp
 (require 'epg)
@@ -3026,8 +3036,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   "Open the current file as root."
   (interactive)
   (if-let ((this-file (or buffer-file-name
-                          (when (or (derived-mode-p 'dired-mode)
-                                    (derived-mode-p 'wdired-mode))
+                          (when (derived-mode-p 'dired-mode 'wdired-mode)
                             default-directory))))
       (find-file (+tramp-sudo-file-path this-file))
     (user-error "Current buffer not bound to a file")))
@@ -3504,7 +3513,7 @@ It is deferred until `general' gets loaded and configured."
 ;;;###autoload
 (defun +emacs-features-p (&rest feats)
   "Is features FEATS are enabled in this Emacs build."
-  (cl-every (lambda (feat) (memq feat emacs/features)) feats))
+  (cl-every (lambda (feat) (and (memq feat emacs/features) t)) feats))
 #+end_src
 *** +minemacs.el =inhibit-message=
 #+begin_src emacs-lisp
@@ -3588,6 +3597,47 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   (run-hooks 'minemacs-after-load-theme-hook))
 #+end_src
 *** +minemacs.el =eval-when-idle=
+#+begin_src emacs-lisp
+;; An internal variable to keep track of the tasks
+(defvar +eval-when-idle--task-num 0)
+(defcustom +eval-when-idle-delay 5.0
+  "The default delay (in seconds) to consider in `+eval-when-idle!' macro."
+  :group 'minemacs-core
+  :type 'float)
+
+;;;###autoload
+(defun +eval-when-idle (delay &rest fns)
+  "Queue FNS to be processed when Emacs becomes idle."
+  (let* ((task-num (cl-incf +eval-when-idle--task-num))
+         (task-name (make-symbol (format "+eval-when-idle--task-%d" task-num))))
+    (with-memoization (get task-name 'timer)
+      (run-with-idle-timer
+       delay t
+       (lambda ()
+         (when-let (fn (pop fns))
+           (+log! "Running task %d, calling function `%s'" task-num
+                  (truncate-string-to-width (format "%s" fn) 40 nil nil "…"))
+           (funcall fn))
+         (unless fns
+           (cancel-timer (get task-name 'timer))
+           (put task-name 'timer nil)))))))
+
+;;;###autoload
+(defmacro +eval-when-idle! (&rest body)
+  "Evaluate BODY when Emacs becomes idle."
+  (declare (indent 0))
+  `(+eval-when-idle ,+eval-when-idle-delay
+    (lambda ()
+      ,@body)))
+
+;;;###autoload
+(defmacro +eval-when-idle-for! (delay &rest body)
+  "Evaluate BODY after DELAY seconds from Emacs becoming idle."
+  (declare (indent 1))
+  `(+eval-when-idle ,delay
+    (lambda ()
+      ,@body)))
+#+end_src
 *** +minemacs.el =deferred=
 #+begin_src emacs-lisp
 ;;;###autoload
@@ -3762,12 +3812,11 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 ;;; +minemacs.el ends here
 #+end_src
 ** [✘] netextender.el
-CLOSED: [2023-05-10 Wed 14:44]
-=netextender.el= 程序netextender的封装
-暂时用不到  可以学习一下如何和命令行程序交互
 :properties:
 :header-args: :tangle elisp/netextender.el
 :end:
+=netextender.el= 程序netextender的封装
+暂时用不到  可以学习一下如何和命令行程序交互
 *** netextender.el =HEAD=
 #+begin_src emacs-lisp
 ;;; netextender.el --- +keybinding -*- lexical-binding: t; -*-
@@ -3860,7 +3909,7 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
 #+end_src
 ** +project.el
 :properties:
-:header-args: :tangle elisp/project.el
+:header-args: :tangle elisp/+project.el
 :end:
 *** +project.el =HEAD=
 #+begin_src emacs-lisp
@@ -3920,7 +3969,7 @@ When DIR is not detected as a project, ask to force it to be by adding a
 #+end_src
 ** +primitives.el
 :properties:
-:header-args: :tangle elisp/primitives.el
+:header-args: :tangle elisp/+primitives.el
 :end:
 *** +primitives.el =HEAD=
 #+begin_src emacs-lisp
@@ -4104,10 +4153,10 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 ;;; +primitives.el ends here
 #+end_src
 ** +systemd.el
-=+systemd.el= 启动 关闭 检查 服务状态 --user
 :properties:
-:header-args: :tangle elisp/systemd.el
+:header-args: :tangle elisp/+systemd.el
 :end:
+=+systemd.el= 启动 关闭 检查 服务状态 --user
 *** +systemd.el =HEAD=
 #+begin_src emacs-lisp
 ;;; +systemd.el --- systemd wrapper -*- lexical-binding: t; -*-
@@ -4148,7 +4197,7 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 #+end_src
 ** +unix.el
 :properties:
-:header-args: :tangle elisp/unix.el
+:header-args: :tangle elisp/+unix.el
 :end:
 *** +unix.el =HEAD=
 #+begin_src emacs-lisp
@@ -8646,7 +8695,7 @@ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同�
                      (or
                       (project-name (project-current))
                       (file-name-nondirectory
-                       (string-trim-right (expand-file-name (window-root-dir)) "/"))))))))
+                       (string-trim-right (expand-file-name (vc-root-dir)) "/"))))))))
            (concat
             (if (buffer-modified-p) " ○" " ●")
             (when (and proj (not (string= proj "-")))
