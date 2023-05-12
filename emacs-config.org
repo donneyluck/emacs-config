@@ -8436,6 +8436,144 @@ diff-hl 是一个 Emacs 包，用于在代码编辑器中显示版本控制系�
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 #+end_src
+*** me-vc.el =git-timemachine=
+git-timemachine 是一个用于在 Emacs 中浏览 Git 仓库历史的包。它提供了一个类似于时间机器的界面，允许你逐步回溯和比较 Git 仓库中的不同版本。
+#+begin_src emacs-lisp
+(use-package git-timemachine
+  :straight t
+  :init
+  (+map! "gt" #'git-timemachine-toggle)
+  :custom
+  (git-timemachine-show-minibuffer-details t))
+#+end_src
+*** me-vc.el =git-commit=
+这段代码使用了 Emacs 中的 git-commit 包，并配置了一些选项和钩子函数来强制执行 Git 提交规范。
++ 限制提交信息的摘要行长度不超过 50 个字符。
++ 在创建新的提交信息时可以直接进行编辑
++ 置局部变量 fill-column 的值为 72，将提交信息编辑缓冲区的行宽限制为 72 个字符。
++ 需要检查的 Git 提交风格约定，如过长的摘要行和非空的第二行。
+#+begin_src emacs-lisp
+;; Enforce git commit conventions.
+;; See: chris.beams.io/posts/git-commit/
+(use-package git-commit
+  :after magit
+  :demand t
+  :custom
+  (git-commit-summary-max-length 50)
+  (git-commit-style-convention-checks '(overlong-summary-line non-empty-second-line))
+  :config
+  (add-hook
+   'git-commit-mode-hook
+   (defun +git-gommit--set-fill-column-h ()
+     (setq-local fill-column 72)))
+  (add-hook
+   'git-commit-setup-hook
+   ;; Enter evil-insert-state for new commits
+   (defun +git-commit--enter-evil-insert-state-maybe-h ()
+     (when (and (bound-and-true-p evil-mode)
+                (not (evil-emacs-state-p))
+                (bobp)
+                (eolp))
+       (evil-insert-state))))
+  (global-git-commit-mode 1))
+#+end_src
+*** me-vc.el =git-mode=
+git-modes 是一个 Emacs 包，提供了用于 Git 相关文件的模式和功能。
+它包含以下几个模式：
++ git-commit-mode：用于编辑 Git 提交消息的模式 提供了一些快捷键和辅助功能来编写符合约定的提交消息。
++ git-rebase-mode：用于进行 Git 变基操作的模式 提供了一些快捷键和辅助功能来编辑和管理变基操作。
++ gitignore-mode：用于编辑 Git 忽略文件（例如.gitignore）的模式 提供了语法高亮和辅助功能来编辑和管理忽略规则。
+#+begin_src emacs-lisp
+(use-package git-modes
+  :straight t
+  :init
+  :mode ("/.dockerignore\\'" . gitignore-mode))
+#+end_src
+*** me-vc.el =ediff=
+ediff-split-window-function 设置为 split-window-horizontally，表示使用水平分割窗口来显示比较结果。
+ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同一个框架中设置所有窗口，而不是创建新的框架来显示比较结果。
+接下来定义了一个变量 +ediff--saved-window-config，用于保存当前窗口配置。
+在 ediff 启动之前，通过 ediff-before-setup-hook 钩子，将当前窗口配置保存到 +ediff--saved-window-config。
+另外，还添加了两个钩子 ediff-quit-hook 和 ediff-suspend-hook，当退出或挂起 ediff 时，会执行函数 +ediff--restore-window-config-h，将保存的窗口配置恢复到之前的状态。
+这样的配置使得 ediff 在水平分割窗口并在同一框架中显示比较结果，同时还可以在退出或挂起时恢复之前的窗口配置。
+#+begin_src emacs-lisp
+(use-package ediff
+  :straight (:type built-in)
+  :custom
+  ;; Split horizontally
+  (ediff-split-window-function #'split-window-horizontally)
+  ;; Setup all windows in one frame
+  (ediff-window-setup-function #'ediff-setup-windows-plain)
+  :config
+  (defvar +ediff--saved-window-config nil)
+
+  ;; Save the current window configuration
+  (add-hook
+   'ediff-before-setup-hook
+   (defun +ediff--save-window-config-h ()
+     (setq +ediff--saved-window-config (current-window-configuration))))
+
+  ;; Restore the saved window configuration on quit or suspend
+  (dolist (hook '(ediff-quit-hook ediff-suspend-hook))
+    (add-hook
+     hook
+     (defun +ediff--restore-window-config-h ()
+       (when (window-configuration-p +ediff--saved-window-config)
+         (set-window-configuration +ediff--saved-window-config)))
+     101)))
+#+end_src
+*** me-vc.el =smerge-mode=
+=smerge-mode= 是 Emacs 中用于解决代码冲突的工具。它可以在 Git 或其他版本控制系统中发生代码冲突时使用。
+
+当你在编辑一个文件时，如果发生代码冲突，Emacs 会自动进入 smerge-mode。在 smerge-mode 中，冲突的代码块会被高亮显示，并且你可以使用一系列命令来处理冲突，如合并代码块、接受当前版本或其他版本的修改等。
+#+begin_src emacs-lisp
+(use-package smerge-mode
+  :straight t
+  :init
+  (+map! "gm" '(+smerge-hydra/body :wk "sMerge"))
+  :config
+  (defhydra +smerge-hydra (:hint nil
+                                 :pre (if (not smerge-mode) (smerge-mode 1))
+                                 ;; Disable `smerge-mode' when quitting hydra if
+                                 ;; no merge conflicts remain.
+                                 :post (smerge-auto-leave))
+    "
+                                                         [smerge]
+  Movement   Keep           Diff              Other         │
+  ╭─────────────────────────────────────────────────────────╯
+  │  ^_g_^       [_b_] base       [_<_] upper/base    [_C_] Combine
+  │  ^_C-k_^     [_u_] upper      [_=_] upper/lower   [_r_] resolve
+  │  ^_k_ ↑^     [_l_] lower      [_>_] base/lower    [_R_] remove
+  │  ^_j_ ↓^     [_a_] all        [_H_] hightlight    [_n_] next in project
+  │  ^_C-j_^     [_RET_] current  [_E_] ediff
+  │  ^_G_^                                                 [_q_] quit
+  ╰─────────────────────────────────────────────────────╯
+"
+    ("g" (progn (goto-char (point-min)) (smerge-next)))
+    ("G" (progn (goto-char (point-max)) (smerge-prev)))
+    ("C-j" smerge-next)
+    ("C-k" smerge-prev)
+    ("j" next-line)
+    ("k" previous-line)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("RET" smerge-keep-current)
+    ("\C-m" smerge-keep-current)
+    ("<" smerge-diff-base-upper)
+    ("=" smerge-diff-upper-lower)
+    (">" smerge-diff-base-lower)
+    ("H" smerge-refine)
+    ("E" smerge-ediff)
+    ("C" smerge-combine-with-next)
+    ("r" smerge-resolve)
+    ("R" smerge-kill-current)
+    ;; Often after calling `smerge-vc-next-conflict', the cursor will land at
+    ;; the bottom of the window
+    ("n" (progn (smerge-vc-next-conflict) (recenter-top-bottom (/ (window-height) 8))))
+    ("q" nil :color blue)))
+#+end_src
 *** me-vc.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-vc)
