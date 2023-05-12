@@ -8248,3 +8248,196 @@ focus-mode 是一个 Emacs 包，用于提供专注模式（focus mode）的功�
 (provide 'me-ui)
 ;;; me-ui.el ends here
 #+end_src
+** me-undo.el
+:properties:
+:header-args: :tangle modules/me-undo.el
+:end:
+*** me-undo.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-undo.el --- Undo -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-undo.el =vundo=
+vundo 是一个用于撤销和重做操作的插件，它扩展了 Vim 的撤销系统，提供了更强大的撤销和重做功能。它可以跟踪编辑会话的历史记录，包括文本更改、光标位置、窗口布局等，并允许您在编辑过程中回溯和重做这些操作。
+#+begin_src emacs-lisp
+;; Visual Undo
+(use-package vundo
+  :straight t
+  :init
+  (+map! "ou" #'vundo)
+  :custom
+  (vundo-compact-display t)
+  (vundo-window-max-height 8)
+  (vundo-glyph-alist vundo-unicode-symbols))
+#+end_src
+*** me-undo.el =undo-fu=
++ undo-fu 是一个用于增强 Vim 撤销系统的插件。它提供了更灵活和强大的撤销和重做功能，使您能够更好地管理和控制您的编辑历史记录。
++ undo-fu-session 是一个 Emacs 插件，用于管理撤销会话。它可以保存和恢复 Emacs 中的撤销历史，允许您在重新启动 Emacs 后继续撤销和重做操作。
+#+begin_src emacs-lisp
+(use-package undo-fu
+  :straight t
+  :after minemacs-loaded
+  :demand t
+  :config
+  (with-eval-after-load 'evil
+    (setq evil-undo-system 'undo-fu)
+    (evil-set-undo-system 'undo-fu)))
+
+(use-package undo-fu-session
+  :straight t
+  :after undo-fu
+  :demand t
+  :custom
+  (undo-fu-session-compression (if (executable-find "zstd") 'zst 'gz))
+  (undo-fu-session-directory (concat minemacs-local-dir "undo-fu-session/"))
+  :config
+  (global-undo-fu-session-mode 1))
+#+end_src
+*** me-undo.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-undo)
+;;; me-undo.el ends here
+#+end_src
+** me-vc.el
+:properties:
+:header-args: :tangle modules/me-vc.el
+:end:
+*** me-vc.el =HEAD=
+#+begin_src emacs-lisp
+;;; me-vc.el --- Git and version control -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-vc.el =magit=
+Magit 是一个用于 Git 版本控制的 Emacs 插件，它提供了一套强大的界面和工具，使得在 Emacs 中进行 Git 操作变得更加方便和高效。
+
+使用 Magit，您可以在 Emacs 中执行 Git 命令、查看和比较提交、分支、标签等，进行分支合并、重置、回滚等操作，以及提交和推送代码等常见的 Git 操作。它提供了一个交互式的界面，让您可以直观地查看和处理 Git 存储库的状态，并提供了许多快捷键和命令，使得在 Emacs 中进行 Git 工作变得更加便捷和高效。
+
+Magit 还提供了一些额外的功能，如代码提交信息编辑、补丁管理、日志查看等。它与 Emacs 的其他功能和插件集成得很好，例如与代码编辑模式的集成、与项目管理工具的集成等，使得在开发过程中使用 Git 变得更加无缝和流畅。
+
+要使用 Magit，您需要先安装它。您可以通过使用包管理器（如 straight.el、use-package）来安装 Magit，并在您的 Emacs 配置文件中进行相应的配置。安装完成后，您可以使用 M-x magit-status 命令来打开 Magit 状态界面，并通过界面上的命令和快捷键进行各种 Git 操作。
+
+Magit 是一个功能丰富且高度可定制的 Git 客户端，适用于那些希望在 Emacs 中进行 Git 工作的开发者和用户。它提供了一种更加集成和灵活的方式来管理和操作 Git 存储库，使得版本控制变得更加愉快和高效。
+#+begin_src emacs-lisp
+(use-package magit
+  :straight t
+  :init
+  (+map! :infix "g"
+    "g" #'magit-status
+    "C" #'magit-clone
+    "b" #'magit-blame
+    "l" #'magit-log
+    "d" #'magit-diff-dwim
+    "s" #'magit-stage
+    "i" #'magit-init)
+  :custom
+  (magit-diff-refine-hunk t)
+  (magit-revision-show-gravatars t)
+  (magit-save-repository-buffers nil)
+  ;; Show in new window
+  (magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1))
+#+end_src
+*** me-vc.el =magit-todo=
+magit-todos 是 Magit 的一个插件，它可以帮助您在 Git 存储库中查找和管理待办事项。
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :straight t
+  :after magit
+  :demand t
+  :config
+  (magit-todos-mode 1))
+#+end_src
+*** me-vc.el =forge=
+Forge 和 Magit 都是 Emacs 中与 Git 和 GitHub 集成的包，但它们的功能和重点略有不同。
+
+Magit 是一个强大的 Git 客户端，它提供了全面的 Git 操作支持，使您可以在 Emacs 中管理和操作 Git 存储库。Magit 提供了直观的界面，可以浏览和修改提交历史、分支、标签等，并支持提交、拉取、推送、合并等操作。它使得在 Emacs 中进行 Git 工作变得非常方便和高效。
+
+Forge 则是建立在 Magit 之上的一个包，它提供了与 GitHub 的集成功能。Forge 允许您在 Emacs 中与 GitHub 存储库进行交互，包括查看和处理问题、处理拉取请求、浏览存储库文件等。Forge 扩展了 Magit 的功能，使您可以直接在 Emacs 中完成与 GitHub 相关的工作，而无需切换到浏览器或其他工具。
+#+begin_src emacs-lisp
+(use-package forge
+  :straight t
+  :pin-ref "ba35ffc9bafc6457cc95633904e53e34e544543f"
+  :after magit
+  :demand t
+  :preface
+  ;; Keybindings will be overriten by `evil-collection'
+  (setq forge-add-default-bindings nil)
+  :init
+  (+map! :infix "g"
+    "f" '(nil :wk "forge")
+    "ff" #'forge-dispatch
+    "fc" #'forge-create-post
+    "fe" #'forge-edit-post
+    "ft" #'forge-edit-topic-title
+    "fs" #'forge-edit-topic-state
+    "fd" #'forge-edit-topic-draft)
+  :custom
+  (forge-database-connector (if (+emacs-features-p 'sqlite3) 'sqlite-builtin 'sqlite))
+  (forge-database-file (concat minemacs-local-dir "forge/database.sqlite")))
+#+end_src
+*** me-vc.el =emojify=
+Emojify 是一个 Emacs 包，用于在 Emacs 中显示和处理表情符号（Emojis）。它可以将文本中的表情符号替换为相应的图标，并且还提供了一些有用的功能来管理和插入表情符号。
+
+Emojify 使用 Unicode 字符来表示表情符号，并提供了一个预定义的表情符号集合。当你编辑或查看包含表情符号的文本时，Emojify 可以自动将其替换为相应的图标，使文本更加生动和有趣。
+
+此外，Emojify 还提供了一些交互命令，使你可以快速搜索和插入表情符号。你可以使用命令来浏览可用的表情符号列表，并选择要插入的符号。
+
+Emojify 包的使用可以增加在 Emacs 中处理文本时的乐趣和个性化，尤其在聊天、编写注释或编辑包含表情符号的文档时非常有用。
+#+begin_src emacs-lisp
+(use-package emojify ;; Needed by `code-review'
+  :straight t
+  :custom
+  (emojify-emoji-set "emojione-v2.2.6")
+  (emojify-emojis-dir (concat minemacs-cache-dir "emojify/emojis/"))
+  (emojify-display-style 'image)
+  (emojify-download-emojis-p t)
+  :init
+  (when (< emacs-major-version 29)
+    (+map! "ie" '(emojify-insert-emoji :wk "Emoji"))))
+#+end_src
+*** me-vc.el =code-review=
+code-review 包是一个用于在 Emacs 中进行代码审查的工具。它提供了一组功能和界面，使你能够在 Emacs 中查看、评论和处理代码审查请求。
+#+begin_src emacs-lisp
+(use-package code-review
+  :straight t
+  :pin-ref "26f426e99221a1f9356aabf874513e9105b68140"
+  :after magit
+  :demand t
+  :custom
+  (code-review-download-dir (concat minemacs-cache-dir "code-review/"))
+  (code-review-db-database-file (concat minemacs-local-dir "code-review/database.sqlite"))
+  (code-review-log-file (concat minemacs-local-dir "code-review/code-review-error.log"))
+  (code-review-auth-login-marker 'forge) ; use the same credentials as forge in ~/.authinfo.gpg
+  :init
+  (with-eval-after-load 'magit
+    (transient-append-suffix 'magit-merge "i"
+      '("y" "Review pull-request" code-review-forge-pr-at-point)))
+  (with-eval-after-load 'forge
+    (transient-append-suffix 'forge-dispatch "c u"
+      '("c r" "review pull-request" code-review-forge-pr-at-point))))
+#+end_src
+*** me-vc.el =diff-hl=
+diff-hl 是一个 Emacs 包，用于在代码编辑器中显示版本控制系统（如 Git）的差异信息。它会在代码的左侧边栏或行号处以不同的颜色或符号显示文件中的差异部分，让你更容易地识别出哪些行发生了更改、添加或删除。
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :straight t
+  :hook (find-file . diff-hl-mode)
+  :hook (dired-mode . diff-hl-dired-mode)
+  :hook (vc-dir-mode . diff-hl-dir-mode)
+  :hook (diff-hl-mode . diff-hl-flydiff-mode)
+  :init
+  (+map! "gs" #'diff-hl-stage-current-hunk)
+  :custom
+  (diff-hl-draw-borders nil)
+  :config
+  (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
+#+end_src
+*** me-vc.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-vc)
+;;; me-vc.el ends here
+#+end_src
