@@ -1173,6 +1173,9 @@ Useful for keeping track of the enabled theme."
  desktop-path (list desktop-dirname)
  custom-theme-directory (concat minemacs-config-dir "themes/")
 
+ ;; ====== Additional directories for non-builtin but common packages ======
+ pcache-directory (concat minemacs-cache-dir "pcache/")
+
  ;; ====== Default behavior ======
  ;; Inhibit startup message
  inhibit-startup-message t
@@ -1205,7 +1208,7 @@ Useful for keeping track of the enabled theme."
  ;; Select help window for faster quit!
  help-window-select t
  ;; More info on completions
- completions-deTAILed t
+ completions-detailed t
  ;; Do not ask obvious questions, follow symlinks
  vc-follow-symlinks t
  ;; Display the true file name for symlinks
@@ -1571,7 +1574,7 @@ or file path may exist now."
 *** me-defaults.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-defaults)
-;;; me-defaults ends here
+;;; me-defaults.el ends here
 #+end_src
 ** me-evil.el
 :properties:
@@ -1637,7 +1640,6 @@ or file path may exist now."
    (seq-filter
     (lambda (mode)
       (not (memq mode '(evil-mc ; Default bindings for `evil-mc' are messy
-                        mu4e ; TEMP: until `evil-collection-mu4e' gets fixed, see github.com/emacs-evil/evil-collection/issues/695
                         elisp-mode)))) ; I don't like "gz" for `ielm', I like "gr" though
     evil-collection-mode-list))
 
@@ -1664,8 +1666,8 @@ or file path may exist now."
     ;; Fix some missed up bindings
     (defalias 'mu4e~view-quit-buffer #'mu4e-view-quit)
 
-    (add-hook 'org-mode-hook #'evil-collection-mu4e-org-set-HEAD-to-normal-mode)
-    (add-hook 'mu4e-compose-pre-hook #'evil-collection-mu4e-org-set-HEAD-to-insert-mode)))
+    (add-hook 'org-mode-hook #'evil-collection-mu4e-org-set-header-to-normal-mode)
+    (add-hook 'mu4e-compose-pre-hook #'evil-collection-mu4e-org-set-header-to-insert-mode)))
 #+end_src
 *** me-evil.el pacakge =evil-snipe=
 #+begin_src emacs-lisp
@@ -1754,8 +1756,8 @@ or file path may exist now."
 #+end_src
 *** me-gc.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-gc)
-;;; me-gc ends here
+(provide 'me-gc)
+;;; me-gc.el ends here
 #+end_src
 ** me-keybindings.el
 :properties:
@@ -1981,8 +1983,118 @@ or file path may exist now."
 #+end_src
 *** me-keybindings.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-keybindings)
-;;; me-keybindings ends here
+(provide 'me-keybindings)
+;;; me-keybindings.el ends here
+#+end_src
+** me-meow.el
+:properties:
+:header-args: :tangle core/me-meow.el
+:end:
+*** me-meow.el =HEAD=
+#+begin_src emacs-lisp
+;; me-meow.el --- Meow integration -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+*** me-meow.el 一种不同于evil的按键模式
+#+begin_src emacs-lisp
+(when (memq 'me-evil minemacs-core-modules)
+  (user-error "The `me-meow' module is incompatible with `me-evil'."))
+
+(use-package meow
+  :straight t
+  :preface
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore))))
+#+end_src
+*** me-meow.el =TAIL=
+#+begin_src emacs-lisp
+(provide 'me-meow)
+;;; me-meow.el ends here
 #+end_src
 ** me-loaddefs.el
 =me-loaddefs.el= 此文件是由 =minemacs-generate-loaddefs= 收集autoload 函数
@@ -2055,8 +2167,7 @@ or file path may exist now."
 #+end_src
 *** me-modules.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-modules)
-;;; me-modules ends here
+;;; me-modules.el ends here
 #+end_src
 ** me-splash.el
 :properties:
@@ -2072,6 +2183,8 @@ or file path may exist now."
 #+end_src
 *** me-splash.el 界面定制
 #+begin_src emacs-lisp
+;; Adapted from: github.com/rougier/emacs-splash
+
 (setq inhibit-startup-screen t)
 (defvar minemacs-splash-buffer-name "*minemacs-splash*")
 
@@ -2157,8 +2270,8 @@ or file path may exist now."
 #+end_src
 *** me-splash.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-splash)
-;;; me-splash ends here
+(provide 'me-splash)
+;;; me-splash.el ends here
 #+end_src
 ** me-vars.el
 :properties:
@@ -2357,8 +2470,8 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 *** me-vars.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-vars)
-;;; me-vars ends here
+(provide 'me-vars)
+;;; me-vars.el ends here
 #+end_src
 ** me-use-package-pin-ref.el
 :properties:
@@ -2375,6 +2488,9 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 *** me-use-package-pin-ref.el 扩展use-package支持固定版本的包
 #+begin_src emacs-lisp
+;; Add support for pinning versions of individual packages. See:
+;; github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases
+
 (with-eval-after-load 'straight
   ;; Add a profile (and lockfile) for stable package revisions.
   (add-to-list 'straight-profiles '(pinned . "pinned.el"))
@@ -2402,10 +2518,9 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 *** me-use-package-pin-ref.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-use-package-pin-ref)
-;;; me-use-package-pin-ref ends here
+(provide 'me-use-package-pin-ref)
+;;; me-use-package-pin-ref.el ends here
 #+end_src
-
 ** minemacs-loaded.el
 :properties:
 :header-args: :tangle core/minemacs-loaded.el
@@ -2437,10 +2552,9 @@ Used to synchronize loading some other stuff after loading Emacs
 #+end_src
 *** minemacs-loaded.el =TAIL=
 #+begin_src emacs-lisp
-(provide minemacs-loaded)
-;;; minemacs-loaded ends here
+(provide 'minemacs-loaded)
+;;; minemacs-loaded.el ends here
 #+end_src
-
 ** minemacs-lazy.el
 :properties:
 :header-args: :tangle core/minemacs-lazy.el
@@ -2453,14 +2567,18 @@ Used to synchronize loading some other stuff after loading Emacs.
 ;;; minemacs-lazy.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
-;;; Code:
-#+end_src
-*** minemacs-lazy.el =lazy hook=
-#+begin_src emacs-lisp
+
+;; Virtual module loaded when idle after `minemacs-loaded'.
+;; Used to synchronize loading some other stuff after loading Emacs.
+
 ;; The hooks in `minemacs-lazy-hook' are loaded incrementally when Emacs goes
 ;; idle, but when `minemacs-not-lazy' is set to t, they will be all loaded at
 ;; once.
 
+;;; Code:
+#+end_src
+*** minemacs-lazy.el =lazy hook=
+#+begin_src emacs-lisp
 ;; Run hooks
 (when minemacs-lazy-hook
   ;; Reverse the order to follow the order in which modules are loaded. Make
@@ -8395,9 +8513,7 @@ magit-todos 是 Magit 的一个插件，它可以帮助您在 Git 存储库中�
 #+end_src
 *** me-vc.el =forge=
 Forge 和 Magit 都是 Emacs 中与 Git 和 GitHub 集成的包，但它们的功能和重点略有不同。
-
 Magit 是一个强大的 Git 客户端，它提供了全面的 Git 操作支持，使您可以在 Emacs 中管理和操作 Git 存储库。Magit 提供了直观的界面，可以浏览和修改提交历史、分支、标签等，并支持提交、拉取、推送、合并等操作。它使得在 Emacs 中进行 Git 工作变得非常方便和高效。
-
 Forge 则是建立在 Magit 之上的一个包，它提供了与 GitHub 的集成功能。Forge 允许您在 Emacs 中与 GitHub 存储库进行交互，包括查看和处理问题、处理拉取请求、浏览存储库文件等。Forge 扩展了 Magit 的功能，使您可以直接在 Emacs 中完成与 GitHub 相关的工作，而无需切换到浏览器或其他工具。
 #+begin_src emacs-lisp
 (use-package forge
