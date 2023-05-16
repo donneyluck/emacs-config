@@ -8540,6 +8540,20 @@ magit-todos 是 Magit 的一个插件，它可以帮助您在 Git 存储库中�
   :config
   (magit-todos-mode 1))
 #+end_src
+*** me-vc.el =magit-imerge=
+magit-imerge 是一个与 magit 集成的插件，用于进行 Git 中的交互式合并（Interactive Merging）。它提供了一个用户界面，让您可以更方便地进行合并操作
+#+begin_src emacs-lisp
+(use-package magit-imerge
+  :straight t)
+#+end_src
+*** me-vc.el =closql=
++ closql 是一个 Emacs 包，用于在 EmacSQL 数据库中存储和检索 EIEIO 对象（Emacs Lisp 中的对象系统）。它使用 SQLite 作为后端数据库。
++ EIEIO（Emacs Lisp Object System）是Emacs中的一种面向对象编程系统。它提供了一套类和对象的概念，允许开发者使用面向对象的编程风格来组织和管理代码。
+
+#+begin_src emacs-lisp
+(use-package closql
+  :straight t)
+#+end_src
 *** me-vc.el =forge=
 Forge 和 Magit 都是 Emacs 中与 Git 和 GitHub 集成的包，但它们的功能和重点略有不同。
 Magit 是一个强大的 Git 客户端，它提供了全面的 Git 操作支持，使您可以在 Emacs 中管理和操作 Git 存储库。Magit 提供了直观的界面，可以浏览和修改提交历史、分支、标签等，并支持提交、拉取、推送、合并等操作。它使得在 Emacs 中进行 Git 工作变得非常方便和高效。
