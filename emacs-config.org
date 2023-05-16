@@ -148,7 +148,7 @@
 ;; stage to provide its functionality to the rest of the modules so we can use
 ;; some new features when configuring them.
 (when (< emacs-major-version 29)
-  (+load minemacs-modules-dir "me-backports-29.el"))
+  (+load minemacs-core-dir "me-backports-29.el"))
 #+end_src
 ** init.el =debug-on-error=
 #+begin_src emacs-lisp
@@ -210,7 +210,13 @@
 (+load minemacs-loaddefs-file)
 
 #+end_src
-** NO init.el load init-tweak.el
+** init.el load init-tweak.el
+#+begin_src emacs-lisp
+;; Load user init tweaks from "$MINEMACSDIR/init-tweaks.el" when available
+(let ((user-init-tweaks (concat minemacs-config-dir "init-tweaks.el")))
+  (when (file-exists-p user-init-tweaks)
+    (+load user-init-tweaks)))
+#+end_src
 ** init.el load environment vars
 #+begin_src emacs-lisp
 ;; HACK: When Emacs is launched from the terminal (in GNU/Linux), it inherits
@@ -2124,11 +2130,8 @@ or file path may exist now."
     me-debug         ; Debugging tools (gdb-mi, realgud, disaster, ...)
     ;; me-lsp        ; LSP and DAP (lsp-mode, dap-mode, consult-lsp, lsp-pyright, ccls, ...)
     me-lisp          ; Lisps development (parinfer-rust, sly, macrostep, geiser, elisp, helpful, eros, ...)
-    ;; me-embedded   ; Embedded systems (arduino, openocd, bitbake, vhdl-mode, ...)
-    ;; me-robot      ; Robotics stuff (ros, robot-mode, ...)
     me-data          ; Data file formats (csv, yaml, toml, json, plantuml-mode, ...)
     ;; me-math       ; Mathematics (maxima, ess, ein, julia-mode, octave, ...)
-    ;; me-modeling   ; Modeling tools (scad-mode, ...)
     me-org           ; Org-mode for life (org, org-contrib, org-modern, org-appear, ...)
     me-extra         ; Extra features (better-jumper, crux, ...)
     me-notes         ; Notes & Zettelkasten (org-roam, consult-org-roam, ...)
@@ -2145,7 +2148,6 @@ or file path may exist now."
     me-tty           ; Emacs from terminal (xt-mouse, xclip, ...)
     ;; me-fun        ; Games and funny packages (xkcd, speed-type, ...)
     ;; me-media      ; Multimedia (empv, emms, ...)
-    ;; me-workspaces ; Workspace separation (tabspaces, tab-bar, ...). NOTE: This is a WIP
     ;; me-binary        ; Display binary files in hex or decompile them (hexl, ...) ...
     me-window)       ; Frame & window tweaks
   "MinEmacs enabled modules."
@@ -5147,6 +5149,8 @@ and move to the source code that caused it."
 #+end_src
 *** me-docs.el [[https://github.com/misohena/el-easydraw][edraw]] 简易绘图
 #+begin_src emacs-lisp
+(defconst +easydraw-available-p (+emacs-features-p 'rsvg 'zlib 'libxml2))
+
 (use-package edraw
   :straight (:host github :repo "misohena/el-easydraw")
   :when +easydraw-available-p)
@@ -5321,6 +5325,7 @@ Tempel 可以在 org-mode 中使用，通过定义不同的模板，可以根据
   :hook (prog-mode . auto-make-header)
   :custom
   (header-date-format t)
+  (header-copyright "Machine Studio")
   (make-header-hook
    '(
      ;; header-mode-line
@@ -5409,6 +5414,19 @@ unicode-fonts 是一个 Emacs 包，它为 Emacs 中的 Unicode 字符提供了�
        "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
        "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
        "\\\\" "://"))))
+#+end_src
+*** me-editor.el =rainbow-delimiters=
+rainbow-delimiters 是一个用于在 Emacs 中显示彩虹颜色的括号匹配的包。它可以帮助你更容易地识别代码中的括号嵌套结构。当你在编写代码时，每对括号会以不同的颜色进行高亮显示，帮助你更好地理解代码的结构。这对于大型代码文件或深层嵌套的括号非常有用。
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :straight t
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+*** me-editor.el =highlight-numbers=
+#+begin_src emacs-lisp
+(use-package highlight-numbers
+  :straight t
+  :hook (prog-mode . highlight-numbers-mode))
 #+end_src
 *** TODO me-editor.el [[https://github.com/Fuco1/smartparens][smartparens]]
 Smartparens 是一个 Emacs 的插件，它提供了一些智能的括号匹配和操作功能。主要功能包括：
