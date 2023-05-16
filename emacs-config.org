@@ -5285,7 +5285,10 @@ Tempel 可以在 org-mode 中使用，通过定义不同的模板，可以根据
   (tempel-trigger-prefix "<") ;; Require trigger prefix before template name when completing.
   (tempel-path (concat minemacs-root-dir "templates/tempel/*.eld"))
   :bind (("M-\"" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
+         ("M-*" . tempel-insert)
+         :map tempel-map
+         ("TAB" . tempel-next)
+         ("<backtab>" . tempel-previous))
   :hook ((prog-mode text-mode) . +tempel-setup-capf-h)
   :hook (prog-mode . tempel-abbrev-mode)
   :defines +tempel-setup-capf-h
@@ -5310,6 +5313,53 @@ Tempel 可以在 org-mode 中使用，通过定义不同的模板，可以根据
   :straight t
   :after tempel
   :demand t)
+#+end_src
+*** me-editor.el header2
+#+begin_src emacs-lisp
+(use-package header2
+  :straight t
+  :hook (prog-mode . auto-make-header)
+  :custom
+  (header-date-format t)
+  (make-header-hook
+   '(
+     ;; header-mode-line
+     header-title
+     header-blank
+     header-file-name
+     header-description
+     ;; header-status
+     header-author
+     header-maintainer
+     header-copyright
+     header-creation-date
+     ;; header-rcs-id
+     header-version
+     ;; header-pkg-requires
+     ;; header-sccs
+     header-modification-date
+     header-modification-author
+     header-update-count
+     ;; header-url
+     ;; header-doc-url
+     ;; header-keywords
+     ;; header-compatibility
+     header-blank
+     ;; header-lib-requires
+     header-end-line
+     header-commentary
+     header-blank
+     header-blank
+     header-blank
+     header-end-line
+     ;; header-history
+     ;; header-blank
+     ;; header-blank
+     ;; header-rcs-log
+     ;; header-end-line
+     header-free-software
+     header-code
+     header-eof)))
 #+end_src
 *** me-editor.el [[https://github.com/rolandwalker/unicode-fonts][unicode-fonts]]
 unicode-fonts 是一个 Emacs 包，它为 Emacs 中的 Unicode 字符提供了良好的显示效果。在 Emacs 中，如果一个字体不能正确地显示 Unicode 字符，这些字符将以方块或空心的框框代替。unicode-fonts 包可以解决这个问题，它会检测 Emacs 中所使用的字体是否支持 Unicode 字符，并动态地将 Unicode 字符映射到支持它们的字体上，从而让 Unicode 字符在 Emacs 中正常地显示。
@@ -6016,7 +6066,7 @@ LaTeX是一种文本排版系统，通常用于制作科技论文、报告、学
 #+end_src
 *** me-latex.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-latex)
+(provide 'me-latex)
 ;;; me-latex.el ends here
 #+end_src
 ** me-lifestyle.el
@@ -6047,7 +6097,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 #+end_src
 *** me-lifestyle.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-lifestyle)
+(provide 'me-lifestyle)
 ;;; me-lifestyle.el ends here
 #+end_src
 ** me-lisp.el
@@ -6298,7 +6348,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 #+end_src
 *** me-lisp.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-lisp)
+(provide 'me-lisp)
 ;;; me-lisp.el ends here
 #+end_src
 ** me-lsp.el
@@ -6470,7 +6520,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 #+end_src
 *** me-lsp.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-lsp)
+(provide 'me-lsp)
 ;;; me-lsp.el ends here
 #+end_src
 ** me-math.el
@@ -6584,7 +6634,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 #+end_src
 *** me-math.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-math)
+(provide 'me-math)
 ;;; me-math.el ends here
 #+end_src
 ** me-media.el
@@ -6671,7 +6721,7 @@ emms 是 Emacs 多媒体系统（Emacs Multimedia System）的缩写，是 Emacs
 #+end_src
 *** me-media.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-media)
+(provide 'me-media)
 ;;; me-media.el ends here
 #+end_src
 ** [✘] me-modeling.el
@@ -6810,7 +6860,7 @@ emms 是 Emacs 多媒体系统（Emacs Multimedia System）的缩写，是 Emacs
 #+end_src
 *** me-multi-cursors.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-multi-cursors)
+(provide 'me-multi-cursors)
 ;;; me-multi-cursors.el ends here
 #+end_src
 ** me-natural-langs.el
@@ -7037,7 +7087,7 @@ lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询�
 #+end_src
 *** me-natura-langs.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-natura-langs)
+(provide 'me-natura-langs)
 ;;; me-natural-langs.el ends here
 #+end_src
 ** me-notes.el
@@ -7111,7 +7161,7 @@ Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图�
 #+end_src
 *** me-notes.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-notes)
+(provide 'me-notes)
 ;;; me-notes.el ends here
 #+end_src
 ** me-org.el
@@ -7438,7 +7488,7 @@ Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图�
 #+end_src
 *** me-org.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-org)
+(provide  'me-org)
 ;;; me-org.el ends here
 #+end_src
 ** me-prog.el
@@ -8076,12 +8126,45 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
   :straight t
   :init
   (+map! "of" #'elfeed)
+  (+nmap! :keymaps 'elfeed-search-mode-map
+    "<tab>" #'+elfeed-completing-filter
+    "d" #'+elfeed-youtube-dl)
+  (+nmap! :keymaps 'elfeed-show-mode-map
+    "d" '+download-image)
+  (defcustom +elfeed-videos-dir "~/Videos/"
+    "Videos directory.")
+  (defcustom +elfeed-images-dir "~/Images/elfeed/"
+    "Images directory.")
   :custom
   (elfeed-db-directory (concat minemacs-local-dir "elfeed/db/"))
   (elfeed-enclosure-default-dir (concat minemacs-local-dir "elfeed/enclosure/"))
   :config
   ;; Hide the annoying index file form recent files
-  (+ignore-root elfeed-db-directory elfeed-enclosure-default-dir))
+  (+ignore-root elfeed-db-directory elfeed-enclosure-default-dir)
+
+  (defun +download-image ()
+    "Downloads the image at point."
+    (interactive)
+    (let ((url (get-text-property (point) 'image-url)))
+      (if (not url)
+          (message "No image at point!")
+        (url-copy-file url (expand-file-name (url-file-nondirectory url) +elfeed-images-dir)))))
+
+  (defun +yt-dl-it (url)
+    "Downloads the URL in an async shell."
+    (let ((default-directory +elfeed-videos-dir))
+      (async-shell-command (format "yt-dlp '%s'" url))))
+
+  (defun +elfeed-youtube-dl (&optional use-generic-p)
+    "Youtube-DL link."
+    (interactive "P")
+    (let ((entries (elfeed-search-selected)))
+      (cl-loop for entry in entries
+               do (elfeed-untag entry 'unread)
+               when (elfeed-entry-link entry)
+               do (+yt-dl-it it))
+      (mapc #'elfeed-search-update-entry entries)
+      (unless (use-region-p) (forward-line)))))
 #+end_src
 *** me-rss.el =TAIL=
 #+begin_src emacs-lisp
@@ -8097,6 +8180,10 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
 ;;; me-tools.el --- tools stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
+
+;; Should be configured in per-project basis, good documentation at:
+;; github.com/cjohansson/emacs-ssh-deploy#deployment-configuration-examples
+
 ;;; Code:
 #+end_src
 *** me-tools.el =ssh-deploy=
@@ -8561,7 +8648,6 @@ Forge 则是建立在 Magit 之上的一个包，它提供了与 GitHub 的集�
 #+begin_src emacs-lisp
 (use-package forge
   :straight t
-  :pin-ref "ba35ffc9bafc6457cc95633904e53e34e544543f"
   :after magit
   :demand t
   :preface
@@ -8604,8 +8690,7 @@ Emojify 包的使用可以增加在 Emacs 中处理文本时的乐趣和个性�
 code-review 包是一个用于在 Emacs 中进行代码审查的工具。它提供了一组功能和界面，使你能够在 Emacs 中查看、评论和处理代码审查请求。
 #+begin_src emacs-lisp
 (use-package code-review
-  :straight t
-  :pin-ref "26f426e99221a1f9356aabf874513e9105b68140"
+  :straight (:host github :repo "phelrine/code-review" :branch "fix/closql-update")
   :after magit
   :demand t
   :custom
