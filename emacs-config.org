@@ -2448,7 +2448,7 @@ MinEmacs hooks will be run in this order:
     "Default fonts of MinEmacs."))
 
 (defcustom +env-save-vars
-  '("PATH" "MANPATH" "CMAKE_PREFIX_PATH" "PKG_CONFIG_PATH" "LSP_USE_PLISTS")
+  '("PATH" "MANPATH" "CMAKE_PREFIX_PATH" "PKG_CONFIG_PATH" "LSP_USE_PLISTS" "HTTP_PROXY" "HTTPS_PROXY")
   "List of the environment variables to saved by `+env-save'.
 You need to run Emacs from terminal to get the environment variables.
 MinEmacs then save them when calling `+env-save' to be used in GUI sessions as well."
@@ -8776,11 +8776,12 @@ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同�
 ;;; me-window.el --- Windows and frames -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
-;;; Code:
 
 ;; Window configuration for special windows.
 ;; This section inspired by the article "Demystifying Emacs’s Window Manager" found here:
 ;; www.masteringemacs.org/article/demystifying-emacs-window-manager
+
+;;; Code:
 #+end_src
 *** me-window.el =window-adjust=
 #+begin_src emacs-lisp
