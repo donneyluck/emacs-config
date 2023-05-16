@@ -361,14 +361,15 @@
 ;;; me-backports-29.el --- Some Emacs 29 functionalities ported back to Emacs 28 -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
-;;; Code:
-#+end_src
-*** me-backports-29.el emacs29函数
-#+begin_src emacs-lisp
+
 ;; MinEmacs is distributed under the MIT license. However, this file is mostly a
 ;; copy-and-paste from Emacs 29 with some adaptations, hence, it is licensed
 ;; with original Emacs GNU GPL-3.0 license.
 
+;;; Code:
+#+end_src
+*** me-backports-29.el emacs29函数
+#+begin_src emacs-lisp
 (when (>= emacs-major-version 29)
   (user-error "This file should only be called from an Emacs 28.x"))
 
@@ -577,7 +578,10 @@ plain variables.  This means that `setopt' will execute any
   (message "[MinEmacs]: Running additional package-specific build functions")
   (dolist (fn minemacs--build-functions)
     (message "MinEmacs: Running `%s'" fn)
-    (funcall fn)))
+    ;; Do not ask before installing
+    (cl-letf (((symbol-function 'yes-or-no-p) #'always)
+              ((symbol-function 'y-or-n-p) #'always))
+      (funcall fn))))
 #+end_src
 *** me-bootstarp.el =TAIL=
 #+begin_src emacs-lisp
@@ -1025,6 +1029,9 @@ Useful for keeping track of the enabled theme."
   ;; Show .m files as matlab/octave files
   (setcdr (assoc "m" all-the-icons-extension-icon-alist)
           (cdr (assoc "matlab" all-the-icons-extension-icon-alist))))
+
+(use-package nerd-icons
+  :straight t)
 
 (use-package doom-themes
   :straight t)
@@ -1647,27 +1654,7 @@ or file path may exist now."
   (with-eval-after-load 'elisp-mode
     (when evil-collection-want-find-usages-bindings
       (evil-collection-define-key 'normal 'emacs-lisp-mode-map
-        "gr" 'xref-find-references)))
-
-  ;; TEMP: Fix `mu4e' evil integraion
-  (with-eval-after-load 'mu4e
-    (require 'loadhist) ; to use `feature-file'
-
-    ;; To avoid calling `evil-collection-mu4e--main-action-str'
-    (defvar evil-collection-mu4e-new-region-basic nil)
-
-    (require 'evil-collection-mu4e
-             (concat (file-name-directory (feature-file 'evil-collection))
-                     "modes/mu4e/evil-collection-mu4e.el"))
-
-    (evil-collection-mu4e-set-state)
-    (evil-collection-mu4e-set-bindings)
-
-    ;; Fix some missed up bindings
-    (defalias 'mu4e~view-quit-buffer #'mu4e-view-quit)
-
-    (add-hook 'org-mode-hook #'evil-collection-mu4e-org-set-header-to-normal-mode)
-    (add-hook 'mu4e-compose-pre-hook #'evil-collection-mu4e-org-set-header-to-insert-mode)))
+        "gr" 'xref-find-references))))
 #+end_src
 *** me-evil.el pacakge =evil-snipe=
 #+begin_src emacs-lisp
@@ -1722,8 +1709,8 @@ or file path may exist now."
 #+end_src
 *** me-evil.el =TAIL=
 #+begin_src emacs-lisp
-(provide me-evil)
-;;; me-evil ends here
+(provide 'me-evil)
+;;; me-evil.el ends here
 #+end_src
 ** me-gc.el
 :properties:
@@ -2484,13 +2471,14 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 ;;; me-use-package-pin-ref.el --- Extend use-package to allow straight-x package pinning -*- lexical-   binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
+
+;; Add support for pinning versions of individual packages. See:
+;; github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases
+
 ;;; Code:
 #+end_src
 *** me-use-package-pin-ref.el 扩展use-package支持固定版本的包
 #+begin_src emacs-lisp
-;; Add support for pinning versions of individual packages. See:
-;; github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases
-
 (with-eval-after-load 'straight
   ;; Add a profile (and lockfile) for stable package revisions.
   (add-to-list 'straight-profiles '(pinned . "pinned.el"))
@@ -2532,6 +2520,10 @@ Used to synchronize loading some other stuff after loading Emacs
 ;;; minemacs-loaded.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
+
+;; Virtual module loaded at end of init.el (after custom-vars.el)
+;; Used to synchronize loading some other stuff after loading Emacs
+
 ;;; Code:
 #+end_src
 *** minemacs-loaded.el 同步加载一些其他东西
@@ -2897,7 +2889,44 @@ When available, use \"fortune\" to add a random quote."
 #+end_src
 *** +buffer.el =TAIL=
 #+begin_src emacs-lisp
-;;; buffer.el ends here
+;;; +buffer.el ends here
+#+end_src
+** +eglot.el
+:properties:
+:header-args: :tangle elisp/+eglot.el
+:end:
+*** +eglot.el =HEAD=
+#+begin_src emacs-lisp
+;;; +eglot.el --- eglot -*- lexical-binding: t; -*-
+;;; Author: donney.luck@gmail.com
+;;; Commentary:
+;;; Code:
+#+end_src
+
+*** +eglot.el =eglot autoload=
+#+begin_src emacs-lisp
+;;;###autoload
+(defun +eglot-register (modes &rest servers)
+  "Register MODES with LSP SERVERS.
+Examples:
+  (+eglot-register 'vhdl-mode \"vhdl_ls\")
+  (+eglot-register 'lua-mode \"lua-language-server\" \"lua-lsp\")
+  (+eglot-register '(c-mode c++-mode) '(\"clangd\" \"--clang-tidy\" \"-j=12\") \"ccls\")"
+  (declare (indent 0))
+  (let* ((alternatives-p (length> servers 1))
+         (first-server (car servers))
+         (first-server (if (listp first-server) (car first-server) first-server)))
+    (with-eval-after-load 'eglot
+      (when (executable-find first-server)
+        (add-to-list
+         'eglot-server-programs
+         (cons modes (if alternatives-p
+                         (eglot-alternatives (ensure-list servers))
+                       (ensure-list (car servers)))))))))
+#+end_src
+*** +eglot.el =TAIL=
+#+begin_src emacs-lisp
+;;; +eglot.el ends here
 #+end_src
 ** ecryptfs.el
 :properties:
@@ -2908,12 +2937,13 @@ When available, use \"fortune\" to add a random quote."
 ;;; +io.el --- io -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
-;;; Code:
 
 ;; This allows me to mount my private directory encrypted using ecryptfs-utils.
 ;; It is a port of "ecryptfs-mount-private" shell command. It uses extracts the
 ;; encryption key from a GPG encrypted file containting the ecryptfs password.
 ;; The decryption of the password is performed using Emacs' `epg'.
+
+;;; Code:
 #+end_src
 *** ecryptfs.el 私有文件夹加密解密
 #+begin_src emacs-lisp
@@ -5612,7 +5642,6 @@ Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、ki
 ;;; me-email.el ends here
 #+end_src
 ** [✘] me-embedded.el
-CLOSED: [2023-05-08 Mon 12:05]
 :properties:
 :header-args: :tangle modules/me-embedded.el
 :end:
