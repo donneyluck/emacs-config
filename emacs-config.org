@@ -9524,7 +9524,7 @@ library/userland functions"
 *** me-evil-mc-evil-escape.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-evil-mc-evil-escape)
-;;; me-evil-mc-evil-escape.el.el ends here
+;;; me-evil-mc-evil-escape.el ends here
 #+end_src
 ** me-latex-fonts.el
 :properties:
