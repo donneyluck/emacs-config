@@ -376,7 +376,7 @@
 #+end_src
 *** me-backports-29.el emacs29函数
 #+begin_src emacs-lisp
-(when (>= emacs-major-version 29)
+(unless (= emacs-major-version 28)
   (user-error "This file should only be called from an Emacs 28.x"))
 
 (require 'wid-edit) ;; Needed by `setopt--set'
@@ -5016,10 +5016,13 @@ and move to the source code that caused it."
 
 (use-package realgud-lldb
   :straight t
-  :commands realgud--lldb)
+  :init
+  (defalias 'realgud:lldb #'realgud--lldb)
+  :commands (realgud--lldb realgud:lldb lldb))
 
 (use-package realgud-ipdb
-  :straight t)
+  :straight t
+  :commands (ipdb realgud:ipdb))
 #+end_src
 *** me-debug.el =disaster= 查看汇编
 #+begin_src emacs-lisp
@@ -8140,19 +8143,27 @@ project-find-file是Emacs内置的函数，用于在当前项目中查找文件�
 *** me-rss.el =elfeed=
 elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elfeed 在 Emacs 中管理和阅读各种博客、新闻和其他类型的 RSS 订阅。
 #+begin_src emacs-lisp
+(defgroup minemacs-elfeed nil
+  "MinEmacs elfeed tweaks."
+  :group 'minemacs)
+
 (use-package elfeed
   :straight t
   :init
   (+map! "of" #'elfeed)
   (+nmap! :keymaps 'elfeed-search-mode-map
-    "<tab>" #'+elfeed-completing-filter
     "d" #'+elfeed-youtube-dl)
   (+nmap! :keymaps 'elfeed-show-mode-map
-    "d" '+download-image)
-  (defcustom +elfeed-videos-dir "~/Videos/"
-    "Videos directory.")
-  (defcustom +elfeed-images-dir "~/Images/elfeed/"
-    "Images directory.")
+    "d" #'+elfeed-download-image)
+  (defcustom +elfeed-videos-dir "~/Videos/elfeed/"
+    "Directory of downloaded videos."
+    :group 'minemacs-elfeed)
+  (defcustom +elfeed-images-dir "~/Pictures/elfeed/"
+    "Directory of downloaded pictures."
+    :group 'minemacs-elfeed)
+  (defcustom +yt-dlp-command (executable-find "yt-dlp")
+    "The \"yt-dlp\" command."
+    :group 'minemacs-tools)
   :custom
   (elfeed-db-directory (concat minemacs-local-dir "elfeed/db/"))
   (elfeed-enclosure-default-dir (concat minemacs-local-dir "elfeed/enclosure/"))
@@ -8160,21 +8171,23 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
   ;; Hide the annoying index file form recent files
   (+ignore-root elfeed-db-directory elfeed-enclosure-default-dir)
 
-  (defun +download-image ()
-    "Downloads the image at point."
+  (defun +elfeed-download-image ()
+    "Download the image at point."
     (interactive)
     (let ((url (get-text-property (point) 'image-url)))
       (if (not url)
           (message "No image at point!")
-        (url-copy-file url (expand-file-name (url-file-nondirectory url) +elfeed-images-dir)))))
+        (url-copy-file
+         url (expand-file-name (url-file-nondirectory url)
+                               (+directory-ensure +elfeed-images-dir))))))
 
   (defun +yt-dl-it (url)
-    "Downloads the URL in an async shell."
-    (let ((default-directory +elfeed-videos-dir))
-      (async-shell-command (format "yt-dlp '%s'" url))))
+    "Downloads the URL with \"yt-dlp\" in an async shell."
+    (let ((default-directory (+directory-ensure +elfeed-videos-dir)))
+      (async-shell-command (format "%s '%s'" +yt-dlp-command url))))
 
   (defun +elfeed-youtube-dl (&optional use-generic-p)
-    "Youtube-DL link."
+    "Download Youtube videos."
     (interactive "P")
     (let ((entries (elfeed-search-selected)))
       (cl-loop for entry in entries
