@@ -19,6 +19,7 @@ init.el
 core/
 elisp/
 modules/
+skel/
 Makefile
 
 # Created by https://www.toptal.com/developers/gitignore/api/emacs
