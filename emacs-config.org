@@ -7956,12 +7956,13 @@ project.el是Emacs 27及更高版本中默认启用的项目管理库。它为�
   :custom
   (project-list-file (concat minemacs-local-dir "project-list.el"))
   (project-vc-extra-root-markers '(".projectile.el" ".project.el" ".project"))
+  (project-ignores '("*.meta" "*.prefab" "*.dll" "*.png" "*.asset"))
   :init
-  (+map! ":"  #'project-find-file)
+  (+map! "."  #'project-find-file)
   (+map!
     ;; project
     :infix "p"
-    "w"  #'project-switch-project
+    "p"  #'project-switch-project
     "c"  #'project-compile
     "d"  #'project-find-dir
     "f"  #'project-find-file
