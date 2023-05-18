@@ -1062,7 +1062,7 @@ Useful for keeping track of the enabled theme."
   (dashboard-items '((recents . 5) (projects . 5) (bookmarks . 5)))
   (dashboard-image-banner-max-width 600)
   (dashboard-projects-backend 'project-el)
-  (dashboard-startup-banner (concat minemacs-assets-dir "images/minemacs.png"))
+  (dashboard-startup-banner (concat minemacs-assets-dir "images/anonymous.png"))
   :config
   ;; Ensure setting the keybindings before openning the dashboard
   (evil-collection-dashboard-setup)
@@ -5790,10 +5790,11 @@ Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、ki
 (use-package better-jumper
   :straight t
   :hook (minemacs-after-startup . better-jumper-mode)
-  :config
+  :init
   ;; Map extra mouse buttons to jump forward/backward
-  (global-set-key (kbd "C-o") #'better-jumper-jump-backward)
-  (global-set-key (kbd "C-i") #'better-jumper-jump-forward))
+  (+mmap!
+    "C-o" #'better-jumper-jump-backward
+    "C-S-o" #'better-jumper-jump-forward))
 #+end_src
 *** me-extra.el =crux=
 #+begin_src emacs-lisp
