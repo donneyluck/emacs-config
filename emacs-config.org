@@ -8445,7 +8445,6 @@ Emacs 在终端环境中使用 xclip 命令进行剪贴板操作。
 #+begin_src emacs-lisp
 (use-package xclip
   :straight t
-  :defines +xclip--enable-in-tty-h
   :hook (tty-setup . +xclip--enable-in-tty-h)
   :config
   (defun +xclip--enable-in-tty-h ()
