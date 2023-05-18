@@ -764,7 +764,7 @@ plain variables.  This means that `setopt' will execute any
     "bB"  #'consult-buffer-other-window
     "bF"  #'consult-buffer-other-frame
     "bmM" #'consult-bookmark
-    "bi"  #'consult-imenu
+    "si"  #'consult-imenu
     "bO"  #'consult-outline
     ;; file
     "fr"  #'consult-recent-file
@@ -8397,9 +8397,13 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
            (if (functionp pass) (funcall pass) pass))
        ""))))
 #+end_src
-*** me-tools.el =screen-shot=
+*** me-tools.el =screenshot=
 图形界面下精美的代码截图工具 结合了上传到黑洞的工具
 #+begin_src emacs-lisp
+(defun g-screenshot-on-buffer-creation ()
+  (setq display-fill-column-indicator-column nil)
+  (setq line-spacing nil))
+
 (use-package screenshot
   :straight (:type git :host github :repo "tecosaur/screenshot")
   :config
