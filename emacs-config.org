@@ -6918,7 +6918,7 @@ Spell-fu 是一个 Emacs 拼写检查的工具，它支持多种语言和拼写�
 (use-package spell-fu
   :straight t
   :when +aspell-available-p
-  :hook (text-mode . spell-fu-mode)
+  ;;:hook (text-mode . spell-fu-mode)
   :custom
   (spell-fu-directory (+directory-ensure minemacs-local-dir "spell-fu/"))
   :init
