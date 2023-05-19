@@ -398,7 +398,9 @@ init-tweaks.el  init.el后执行 用户可以微调
 :header-args: :tangle core/me-backports-29.el
 :end:
 =me-backports-29.el= 一些emacs29的函数
-*** me-backports-29.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-backports-29.el --- Some Emacs 29 functionalities ported back to Emacs 28 -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -410,7 +412,9 @@ init-tweaks.el  init.el后执行 用户可以微调
 
 ;;; Code:
 #+end_src
-*** me-backports-29.el emacs29函数
+
+一些emacs29才有的函数
+
 #+begin_src emacs-lisp
 (unless (= emacs-major-version 28)
   (user-error "This file should only be called from an Emacs 28.x"))
@@ -523,11 +527,14 @@ plain variables.  This means that `setopt' will execute any
 (defalias 'string-split #'split-string)
 (defalias 'loaddefs-generate #'make-directory-autoloads)
 #+end_src
-*** me-backports-29.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-backports-29)
 ;;; me-backports-29.el ends here
 #+end_src
+
 ** me-bootstrap.el
 :properties:
 :header-args: :tangle core/me-bootstrap.el
