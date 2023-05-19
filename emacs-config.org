@@ -1,7 +1,7 @@
 #+title: Emacs 配置文件
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
-#+startup: overview
+#+startup: overview nohideblocks
 #+property: header-args:emacs-lisp :comments no :mkdirp yes
 * early-init.el
 :properties:
@@ -76,7 +76,7 @@
 =init.el= 是Emacs的主要配置文件。
 
 文件头
-
+
 #+begin_src emacs-lisp
 ;; init.el --- MinEmacs core initialization file -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -85,7 +85,7 @@
 #+end_src
 
 版本检测
-
+
 #+begin_src emacs-lisp
 ;; Check if Emacs version is supported. You can define the
 ;; $MINEMACS_IGNORE_VERSION_CHECK environment variable to ignore this check.
@@ -98,7 +98,7 @@
 #+end_src
 
 提高启动速度
-
+
 #+begin_src emacs-lisp
 ;; PERF: Setting `file-name-handler-alist' to nil should boost startup time.
 ;; reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start
@@ -119,7 +119,7 @@
 #+end_src
 
 载入定义的vars
-
+
 #+begin_src emacs-lisp
 ;; HACK: At this point, MinEmacs variables defined in `me-vars' should be
 ;; already loaded (in "early-init.el"). However, we double-check here and load
@@ -149,7 +149,7 @@
 #+end_src
 
 当emacs版本小于29 则需要加载兼容函数
-
+
 #+begin_src emacs-lisp
 ;; HACK: Load Emacs 29 back ports for earlier Emacs versions. Note that I do
 ;; only back port a very small number of the functions/variables that I use at
@@ -164,7 +164,7 @@
 #+end_src
 
 设置警告等级 是否开启debug-on-error
-
+
 #+begin_src emacs-lisp
 (setq
  ;; Enable debugging on error when Emacs is launched with the "--debug-init"
@@ -182,7 +182,7 @@
 =native-compile= 是 Emacs 28 版本引入的一个特性，它允许将 Emacs Lisp 代码编译为本机机器代码，从而提高 Emacs 的性能和启动速度。
 通过 =native-compile= Emacs Lisp 代码可以直接编译为本机机器码，而不是以解释器方式执行, 这样可以显著提高代码的执行速度。
 编译后的代码可以保存在文件中，以便下次启动时直接加载，避免重新编译。
-
+
 #+begin_src emacs-lisp
 ;; Native compilation settings
 (when (featurep 'native-compile)
@@ -202,14 +202,14 @@
 #+end_src
 
 增加一些目录为load-path
-
+
 #+begin_src emacs-lisp
 ;; Add some of MinEmacs' directories to `load-path'.
 (setq load-path (append (list minemacs-core-dir minemacs-elisp-dir minemacs-extras-dir) load-path))
 #+end_src
 
 增加一个函数 自动收集目录下的autoload函数到 =minemacs-loaddefs-file= 文件(不存在就执行)
-
+
 #+begin_src emacs-lisp
 (defun minemacs-generate-loaddefs ()
   "Generate MinEmacs' loaddefs file."
@@ -234,7 +234,7 @@
 #+end_src
 
 init-tweaks.el  init.el后执行 用户可以微调
-
+
 #+begin_src emacs-lisp
 ;; Load user init tweaks from "$MINEMACSDIR/init-tweaks.el" when available
 (let ((user-init-tweaks (concat minemacs-config-dir "init-tweaks.el")))
@@ -242,9 +242,8 @@ init-tweaks.el  init.el后执行 用户可以微调
     (+load user-init-tweaks)))
 #+end_src
 
-环境变量的解决方案 通过 =+env_save= 保存
-启动的时候通过 =+env_load= 载入
-
+环境变量的解决方案 通过 =+env_save= 保存 启动的时候通过 =+env_load= 载入
+
 #+begin_src emacs-lisp
 ;; HACK: When Emacs is launched from the terminal (in GNU/Linux), it inherits
 ;; the terminal's environment variables, which can be useful specially for
@@ -262,7 +261,7 @@ init-tweaks.el  init.el后执行 用户可以微调
 
 加载 Emacs 后，emacs-startup-hook 被执行，我们使用这个钩子来分析启动时间，加载字体和主题，
 并设置 *scratch* 缓冲区内容, 最后 require =minemacs-loaded= 这个虚拟模块来控制延迟加载
-
+
 #+begin_src emacs-lisp
 ;; NOTE: This is MinEmacs' synchronization point. To get a fast Emacs startup,
 ;; MinEmacs tries to defer loading most of its packages until this hook is
@@ -313,7 +312,7 @@ init-tweaks.el  init.el后执行 用户可以微调
 #+end_src
 
 载入 =packages= 和 =user customization=
-
+
 #+begin_src emacs-lisp
 ;; ========= Load MinEmacs packages and user customization =========
 ;; When running in an async Org export context, the used modules are set in
@@ -386,7 +385,7 @@ init-tweaks.el  init.el后执行 用户可以微调
 #+end_src
 
 文件尾
-
+
 #+begin_src emacs-lisp
 ;;; init.el ends here
 #+end_src
@@ -400,7 +399,7 @@ init-tweaks.el  init.el后执行 用户可以微调
 =me-backports-29.el= 一些emacs29的函数
 
 文件头
-
+
 #+begin_src emacs-lisp
 ;;; me-backports-29.el --- Some Emacs 29 functionalities ported back to Emacs 28 -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -414,7 +413,7 @@ init-tweaks.el  init.el后执行 用户可以微调
 #+end_src
 
 一些emacs29才有的函数
-
+
 #+begin_src emacs-lisp
 (unless (= emacs-major-version 28)
   (user-error "This file should only be called from an Emacs 28.x"))
@@ -529,7 +528,7 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 
 文件尾
-
+
 #+begin_src emacs-lisp
 (provide 'me-backports-29)
 ;;; me-backports-29.el ends here
@@ -540,14 +539,18 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-bootstrap.el
 :end:
 =me-bootstrap.el= 设置包下载器和包安装器
-*** me-bootstrap.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;; me-bootstrap.el --- Bootstrap packages (straight & use-package) -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-bootstrap.el 安装 =straight= 包下载器
+
+安装 =straight= 包下载器
+
 #+begin_src emacs-lisp
 (setq
  ;; Base directory
@@ -576,23 +579,31 @@ plain variables.  This means that `setopt' will execute any
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 #+end_src
-*** me-bootstarp.el 安装 =use-package= 包管理器
+
+安装 =use-package= 包管理器
+
 #+begin_src emacs-lisp
 ;; Configure `use-package'
 (unless (require 'use-package nil t)
   (straight-use-package 'use-package))
-#+end_src
-*** me-bootstarp.el 安装 =use-package= 扩展 :pin-ref
-#+begin_src emacs-lisp
-;; Add the `:pin-ref' extension to `use-package'
-(require 'me-use-package-pin-ref)
 
 (setq
  ;; Set `use-package' to verbose when MinEmacs is started in verbose mode
  use-package-verbose minemacs-verbose
  ;; Defer loading packages by default, use `:demand' to force loading a package
  use-package-always-defer t)
+#+end_src
 
+安装 =use-package= 扩展 =:pin-ref=
+
+#+begin_src emacs-lisp
+;; Add the `:pin-ref' extension to `use-package'
+(require 'me-use-package-pin-ref)
+#+end_src
+
+备份并且更新 =minemacs= 的函数
+
+#+begin_src emacs-lisp
 (defvar minemacs--build-functions nil
   "These functions are run after completing package updates.")
 
@@ -632,11 +643,14 @@ plain variables.  This means that `setopt' will execute any
               ((symbol-function 'y-or-n-p) #'always))
       (funcall fn))))
 #+end_src
-*** me-bootstarp.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-bootstrap)
 ;;; me-bootstrap.el ends here
 #+end_src
+
 ** me-builtin.el
 :properties:
 :header-args: :tangle core/me-builtin.el
