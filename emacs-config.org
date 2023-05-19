@@ -8,6 +8,7 @@
 :header-args: :tangle early-init.el
 :end:
 =early-init.el= 在Emacs刚启动，还未加载主要配置文件时的配置文件。
+
 #+begin_src emacs-lisp
 ;;; early-init.el --- MinEmacs early initialization tweaks -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -67,19 +68,24 @@
 
 ;;; early-init.el ends here
 #+end_src
+
 * init.el
 :properties:
 :header-args: :tangle init.el
 :end:
 =init.el= 是Emacs的主要配置文件。
-** init.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;; init.el --- MinEmacs core initialization file -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-** init.el 版本检测
+
+版本检测
+
 #+begin_src emacs-lisp
 ;; Check if Emacs version is supported. You can define the
 ;; $MINEMACS_IGNORE_VERSION_CHECK environment variable to ignore this check.
@@ -90,7 +96,9 @@
   (when (and (version< emacs-version min-ver) (not (getenv "MINEMACS_IGNORE_VERSION_CHECK")))
     (error "Emacs v%s is not supported, MinEmacs requires v%s or higher" emacs-version min-ver)))
 #+end_src
-** init.el 提高启动速度
+
+提高启动速度
+
 #+begin_src emacs-lisp
 ;; PERF: Setting `file-name-handler-alist' to nil should boost startup time.
 ;; reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start
@@ -109,7 +117,9 @@
                   (get 'file-name-handler-alist 'original-value)))))
  101)
 #+end_src
-** init.el 载入定义的vars
+
+载入定义的vars
+
 #+begin_src emacs-lisp
 ;; HACK: At this point, MinEmacs variables defined in `me-vars' should be
 ;; already loaded (in "early-init.el"). However, we double-check here and load
@@ -137,7 +147,9 @@
 ;; "early-init.el", otherwise, it won't work with Chemacs2-based installations.
 (setq user-emacs-directory minemacs-local-dir)
 #+end_src
-** init.el 向后兼容一些函数(>=emacs29)
+
+当emacs版本小于29 则需要加载兼容函数
+
 #+begin_src emacs-lisp
 ;; HACK: Load Emacs 29 back ports for earlier Emacs versions. Note that I do
 ;; only back port a very small number of the functions/variables that I use at
@@ -150,7 +162,9 @@
 (when (< emacs-major-version 29)
   (+load minemacs-core-dir "me-backports-29.el"))
 #+end_src
-** init.el =debug-on-error=
+
+设置警告等级 是否开启debug-on-error
+
 #+begin_src emacs-lisp
 (setq
  ;; Enable debugging on error when Emacs is launched with the "--debug-init"
@@ -163,9 +177,12 @@
  ;; Make byte compilation less noisy
  byte-compile-warnings minemacs-verbose
  byte-compile-verbose minemacs-verbose)
-
 #+end_src
-** init.el =native-compile=
+
+=native-compile= 是 Emacs 28 版本引入的一个特性，它允许将 Emacs Lisp 代码编译为本机机器代码，从而提高 Emacs 的性能和启动速度。
+通过 =native-compile= Emacs Lisp 代码可以直接编译为本机机器码，而不是以解释器方式执行, 这样可以显著提高代码的执行速度。
+编译后的代码可以保存在文件中，以便下次启动时直接加载，避免重新编译。
+
 #+begin_src emacs-lisp
 ;; Native compilation settings
 (when (featurep 'native-compile)
@@ -183,11 +200,17 @@
   (startup-redirect-eln-cache (concat minemacs-cache-dir "eln/")))
 
 #+end_src
-** init.el =loaddefs-generate=
+
+增加一些目录为load-path
+
 #+begin_src emacs-lisp
 ;; Add some of MinEmacs' directories to `load-path'.
 (setq load-path (append (list minemacs-core-dir minemacs-elisp-dir minemacs-extras-dir) load-path))
+#+end_src
 
+增加一个函数 自动收集目录下的autoload函数到 =minemacs-loaddefs-file= 文件(不存在就执行)
+
+#+begin_src emacs-lisp
 (defun minemacs-generate-loaddefs ()
   "Generate MinEmacs' loaddefs file."
   (interactive)
@@ -208,16 +231,20 @@
 
 ;; Then we load the loaddefs file
 (+load minemacs-loaddefs-file)
-
 #+end_src
-** init.el load init-tweak.el
+
+init-tweaks.el  init.el后执行 用户可以微调
+
 #+begin_src emacs-lisp
 ;; Load user init tweaks from "$MINEMACSDIR/init-tweaks.el" when available
 (let ((user-init-tweaks (concat minemacs-config-dir "init-tweaks.el")))
   (when (file-exists-p user-init-tweaks)
     (+load user-init-tweaks)))
 #+end_src
-** init.el load environment vars
+
+环境变量的解决方案 通过 =+env_save= 保存
+启动的时候通过 =+env_load= 载入
+
 #+begin_src emacs-lisp
 ;; HACK: When Emacs is launched from the terminal (in GNU/Linux), it inherits
 ;; the terminal's environment variables, which can be useful specially for
@@ -232,7 +259,10 @@
 ;; `+env-load' command.
 (+env-load) ; Load environment variables when available.
 #+end_src
-** init.el load =packages= and =user =customization=
+
+加载 Emacs 后，emacs-startup-hook 被执行，我们使用这个钩子来分析启动时间，加载字体和主题，
+并设置 *scratch* 缓冲区内容, 最后 require =minemacs-loaded= 这个虚拟模块来控制延迟加载
+
 #+begin_src emacs-lisp
 ;; NOTE: This is MinEmacs' synchronization point. To get a fast Emacs startup,
 ;; MinEmacs tries to defer loading most of its packages until this hook is
@@ -280,7 +310,11 @@
 
 ;; Add it to the very begining of `emacs-startup-hook'
 (add-hook 'emacs-startup-hook #'+minemacs--loaded-h -101)
+#+end_src
 
+载入 =packages= 和 =user customization=
+
+#+begin_src emacs-lisp
 ;; ========= Load MinEmacs packages and user customization =========
 ;; When running in an async Org export context, the used modules are set in
 ;; modules/extras/me-org-export-async-init.el, so we must not overrite them with
@@ -349,12 +383,14 @@
   (+shutup! (native-compile-prune-cache)))
 
 (+log! "Loaded init.el")
-
 #+end_src
-** init.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; init.el ends here
 #+end_src
+
 * core/
 =core= 目录下是框架的核心配置
 ** me-backports-29.el
@@ -6398,7 +6434,7 @@ awqat它提供了显示伊斯兰教离线礼拜时间表的功能.
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** WAIT me-lsp.el
+*** me-lsp.el
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :straight t
@@ -7933,7 +7969,20 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
 #+end_src
 *** me-prog.el =csharp-mode=
 #+begin_src emacs-lisp
-(use-package csharp-mode
+;; (use-package csharp-mode
+;;   :straight `(:type ,(if (< emacs-major-version 29) 'git 'built-in))
+;;   :mode "\\.cs\\'"
+;;   :custom
+;;   (csharp-ts-mode-indent-offset 2) ; customize variables
+;;   (imenu-generic-expression
+;;    '(("Variables" "^\\s-*[a-zA-Z0-9._ ]* \\([a-zA-Z0-9_]*\\)\\( = \\sw*\\|\\s-*\\);$" 1)
+;;      ("Functions" "^\\s-*[^/]* \\([a-zA-Z0-9_]+\\)(.*)\\(\\s-*.*\n\\|\\ *\\)\\s-*{" 1)
+;;      ("Classes" "^\\s-*\\(.*\\)class +\\([a-zA-Z0-9_]+\\)" 2)
+;;      ("Namespaces" "^namespace +\\([a-z0-9_]*\\)" 1)))
+;;   :init
+;;   :config)
+
+(use-package csharp-ts-mode
   :straight `(:type ,(if (< emacs-major-version 29) 'git 'built-in))
   :mode "\\.cs\\'"
   :custom
@@ -7944,7 +7993,8 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
      ("Classes" "^\\s-*\\(.*\\)class +\\([a-zA-Z0-9_]+\\)" 2)
      ("Namespaces" "^namespace +\\([a-z0-9_]*\\)" 1)))
   :init
-  :config)
+  :config
+  (+eglot-register '(csharp-mode csharp-ts-mode) "omnisharp"))
 #+end_src
 *** me-prog.el =TAIL=
 #+begin_src emacs-lisp
