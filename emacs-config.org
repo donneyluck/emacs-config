@@ -1920,15 +1920,19 @@ gcmh 垃圾回收
 :properties:
 :header-args: :tangle core/me-keybindings.el
 :end:
-=me-keybindings.el= 按键相关包
-*** me-keybindings.el =HEAD=
+=me-keybindings.el= 按键相关设置
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-keybindings.el --- Default keybindings -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-keybindings.el package =which-key=
+
+[[https://github.com/justbur/emacs-which-key][which-key]]
+
 #+begin_src emacs-lisp
 (use-package which-key
   :straight t
@@ -1951,7 +1955,7 @@ gcmh 垃圾回收
     which-key-replacement-alist
     (list
      '(("\\`g z" . "\\`evil-\\(?:mc\\|multiedit\\)-\\(.*\\)")    . (nil . "⌶·\\1"))
-     '(("\\`g c" . "\\`evilnc-\\(.*\\)")                         . (nil . "#·\\1"))
+     ;; '(("\\`g c" . "\\`evilnc-\\(.*\\)")                         . (nil . "#·\\1"))
      '(("\\`g" . "\\`[Ii]nfo[-:]?\\(?:a-\\)?\\(.*\\)")           . (nil . "ɩ·\\1"))
      '(("\\`SPC TAB" . "\\`tabspaces-\\(.*\\)")                  . (nil . "⭾·\\1"))
      '(("\\`SPC p" . "\\`\\+?\\(?:consult-\\)?project-\\(.*\\)") . (nil . "🅟·\\1"))
@@ -1959,7 +1963,9 @@ gcmh 垃圾回收
   ;; Setup `which-key' integration with the minibuffer
   (which-key-setup-minibuffer))
 #+end_src
-*** me-keybindings.el package =general=
+
+general
+
 #+begin_src emacs-lisp
 (use-package general
   :straight t
@@ -2133,16 +2139,21 @@ gcmh 垃圾回收
   ;; are available (See the `+map!' macro definition in "elisp/+minemacs.el").
   (provide 'me-general-ready))
 #+end_src
-*** me-keybindings.el package =hydra=
+
+=hydra=
+
 #+begin_src emacs-lisp
 (use-package hydra
   :straight t)
 #+end_src
-*** me-keybindings.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-keybindings)
 ;;; me-keybindings.el ends here
 #+end_src
+
 ** me-meow.el
 :properties:
 :header-args: :tangle core/me-meow.el
