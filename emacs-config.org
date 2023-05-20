@@ -656,14 +656,18 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-builtin.el
 :end:
 =me-builtin.el= 管理一些内置包
-*** me-builtin.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-builtin.el --- Customization of some of Emacs' builtin libraries -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-builtin.el builtin libraries
+
+一些内置的包
+
 #+begin_src emacs-lisp
 (use-package transient
   :straight (:type built-in)
@@ -678,36 +682,45 @@ plain variables.  This means that `setopt' will execute any
 (use-package let-alist
   :straight (:type built-in))
 #+end_src
-*** me-builtin.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-builtin)
 ;;; me-builtin.el ends here
 #+end_src
+
 ** me-compat.el
 :properties:
 :header-args: :tangle core/me-compat.el
 :end:
 =me-compat.el= 提供兼容的能力
-*** me-compat.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-compat.el --- Emacs forward compatibility layer -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-compat.el package  [[https://github.com/emacs-compat/compat][compat]]
-+ compat 包是一个用于提供 Emacs 版本兼容性的库。它旨在简化在不同版本的 Emacs 上编写可移植代码的过程。
-+ 具体而言，compat 包提供了一些宏和函数，这些宏和函数在不同版本的 Emacs上具有不同的行为，并且它们会根据当前运行的 Emacs 版本选择合适的实现。
+
+[[https://github.com/emacs-compat/compat][compat]]  包是一个用于提供 Emacs 版本兼容性的库。它旨在简化在不同版本的 Emacs 上编写可移植代码的过程。
+具体而言，compat 包提供了一些宏和函数，这些宏和函数在不同版本的 Emacs上具有不同的行为，并且它们会根据当前运行的 Emacs 版本选择合适的实现。
+
 #+begin_src emacs-lisp
 (use-package compat
   :straight t
   :demand t)
 #+end_src
-*** me-compat.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-compat)
 ;;; me-compat.el ends here
 #+end_src
+
 ** me-completion.el
 :properties:
 :header-args: :tangle core/me-completion.el
