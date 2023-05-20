@@ -1880,14 +1880,18 @@ pacakge =evil= 模拟vim
 :header-args: :tangle core/me-gc.el
 :end:
 =me-gc.el=  garbage collection 垃圾回收
-*** me-gc.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-gc.el --- garbage collection -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-gc.el package gcmh
+
+gcmh 垃圾回收
+
 #+begin_src emacs-lisp
 (use-package gcmh
   :straight t
@@ -1904,11 +1908,14 @@ pacakge =evil= 模拟vim
   (gcmh-high-cons-threshold
    (* 1024 1024 (if (string-suffix-p "64" (symbol-name sys/arch)) 256 16))))
 #+end_src
-*** me-gc.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-gc)
 ;;; me-gc.el ends here
 #+end_src
+
 ** me-keybindings.el
 :properties:
 :header-args: :tangle core/me-keybindings.el
