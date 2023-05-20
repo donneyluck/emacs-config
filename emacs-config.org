@@ -1732,14 +1732,18 @@ or file path may exist now."
 :header-args: :tangle core/me-evil.el
 :end:
 =me-evil.el= Emacs as Vim
-*** me-evil.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-evil.el --- Emacs as Vim! -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-evil.el pacakge =evil=
+
+pacakge =evil= 模拟vim
+
 #+begin_src emacs-lisp
 (use-package evil
   :straight t
@@ -1780,7 +1784,9 @@ or file path may exist now."
        (defun +evil--cunsult-buffer-after-window-split-a (&rest _)
          (consult-buffer))))))
 #+end_src
-*** me-evil.el pacakge =evil-collection=
+
+=evil-collection= 其他包的evil按键集合
+
 #+begin_src emacs-lisp
 (use-package evil-collection
   :straight t
@@ -1800,7 +1806,9 @@ or file path may exist now."
       (evil-collection-define-key 'normal 'emacs-lisp-mode-map
         "gr" 'xref-find-references))))
 #+end_src
-*** me-evil.el pacakge =evil-snipe=
+
+=evil-snipe= 快速移动光标
+
 #+begin_src emacs-lisp
 (use-package evil-snipe
   :straight t
@@ -1811,7 +1819,9 @@ or file path may exist now."
   (evil-snipe-smart-case t)
   (evil-snipe-auto-scroll t))
 #+end_src
-*** me-evil.el package =evil-numbers=
+
+=evil-numbers= 数字增加或者减少
+
 #+begin_src emacs-lisp
 (use-package evil-numbers
   :straight t
@@ -1825,7 +1835,9 @@ or file path may exist now."
     "g=" #'evil-numbers/inc-at-pt-incremental
     "g-" #'evil-numbers/dec-at-pt-incremental))
 #+end_src
-*** me-evil.el package =evil-nerd-commenter=
+
+=evil-nerd-commenter= 快速注释 TODO:
+
 #+begin_src emacs-lisp
 (use-package evil-nerd-commenter
   :straight t
@@ -1833,7 +1845,9 @@ or file path may exist now."
   :init
   (+nvmap! "gc" #'evilnc-comment-operator))
 #+end_src
-*** me-evil.el pacakge =evil-escape=
+
+=evil-escape= 快速回到normal-state
+
 #+begin_src emacs-lisp
 (use-package evil-escape
   :straight t
@@ -1843,7 +1857,9 @@ or file path may exist now."
   (evil-escape-key-sequence "kj")
   (evil-escape-unordered-key-sequence t)) ; "kj" or "jk"
 #+end_src
-*** me-evil.el pacakge =evil-surround=
+
+=evil-surround=
+
 #+begin_src emacs-lisp
 (use-package evil-surround
   :straight t
@@ -1851,11 +1867,14 @@ or file path may exist now."
   :config
   (global-evil-surround-mode 1))
 #+end_src
-*** me-evil.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-evil)
 ;;; me-evil.el ends here
 #+end_src
+
 ** me-gc.el
 :properties:
 :header-args: :tangle core/me-gc.el
