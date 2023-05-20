@@ -1211,14 +1211,19 @@ package doom-modeline
 :properties:
 :header-args: :tangle core/me-defaults.el
 :end:
-*** me-defaults.el =HEAD=
+=me-defaults.el= 一些默认设置
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-defaults.el --- MinEmacs defaults for Emacs -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-defaults.el gun广告关闭
+
+GNU 广告关闭
+
 #+begin_src emacs-lisp
 ;; Inhibit startup message in echo area the brutal way!
 ;; The `inhibit-startup-echo-area-message' variable is very restrictive, there
@@ -1226,7 +1231,9 @@ package doom-modeline
 ;; See: reddit.com/r/emacs/comments/6e9o4o/comment/di8q1t5
 (fset 'display-startup-echo-area-message #'ignore)
 #+end_src
-*** me-defaults.el 编码UTF-8
+
+EMACS 中的 UTF-8：无处不在，永远不变
+
 #+begin_src emacs-lisp
 ;;; Why use anything but UTF-8?
 (prefer-coding-system 'utf-8)
@@ -1248,7 +1255,9 @@ package doom-modeline
 (when (display-graphic-p)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 #+end_src
-*** me-defaults.el 一些默认参数的设置
+
+设置一些默认路径和参数
+
 #+begin_src emacs-lisp
 (setq
  ;; ====== Default directories for builtin packages ======
@@ -1710,11 +1719,14 @@ or file path may exist now."
   ;; Global SubWord mode
   (global-subword-mode 1))
 #+end_src
-*** me-defaults.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-defaults)
 ;;; me-defaults.el ends here
 #+end_src
+
 ** me-evil.el
 :properties:
 :header-args: :tangle core/me-evil.el
