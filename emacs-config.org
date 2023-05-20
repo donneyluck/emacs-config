@@ -2276,15 +2276,20 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 :properties:
 :header-args: :tangle core/me-modules.el
 :end:
-=me-modules.el= 模块划分文件
-*** me-modules.el =HEAD=
+=me-modules.el= 按照模块划分功能
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-modules.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-modules.el 核心模块
+
+
+核心模块
+
 #+begin_src emacs-lisp
 (defcustom minemacs-core-modules
   '(me-splash        ; Simple splash screen
@@ -2296,7 +2301,9 @@ meow 猫态编辑模式 一种不同于evil的按键模式
   :group 'minemacs-core
   :type '(repeat symbol))
 #+end_src
-*** me-modules.el 定制模块
+
+功能模块
+
 #+begin_src emacs-lisp
 (defcustom minemacs-modules
   '(me-ui            ; User interface (focus, writeroom-mode, mixed-pitch, ...)
@@ -2335,10 +2342,13 @@ meow 猫态编辑模式 一种不同于evil的按键模式
   :group 'minemacs-core
   :type '(repeat symbol))
 #+end_src
-*** me-modules.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-modules.el ends here
 #+end_src
+
 ** me-splash.el
 :properties:
 :header-args: :tangle core/me-splash.el
