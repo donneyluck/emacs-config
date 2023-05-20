@@ -726,14 +726,18 @@ plain variables.  This means that `setopt' will execute any
 :header-args: :tangle core/me-completion.el
 :end:
 =me-completion.el= 补全相关包
-*** me-completion.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; completion.el --- Completion packages -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-completion.el pacakge [[https://github.com/minad/cape/][cape]]  完成后端
+
+package [[https://github.com/minad/cape/][cape]]  完成后端
+
 #+begin_src emacs-lisp
 (use-package cape
   :straight t
@@ -743,7 +747,9 @@ plain variables.  This means that `setopt' will execute any
   (dolist (fn '(cape-file cape-ispell cape-symbol cape-keyword))
     (add-to-list 'completion-at-point-functions fn)))
 #+end_src
-*** me-completion.el package [[https://github.com/minad/corfu][corfu]] 完成前端
+
+package [[https://github.com/minad/corfu][corfu]] 完成前端
+
 #+begin_src emacs-lisp
 (use-package corfu
   :straight t
@@ -770,7 +776,9 @@ plain variables.  This means that `setopt' will execute any
 
   (add-hook 'minibuffer-setup-hook #'+corfu-enable-in-minibuffer))
 #+end_src
-*** me-completion.el package [[https://elpa.gnu.org/packages/corfu.html][corfu extensions]]
+
+package [[https://elpa.gnu.org/packages/corfu.html][corfu extensions]]
+
 #+begin_src emacs-lisp
 (use-package corfu-popupinfo
   :hook (corfu-mode . corfu-popupinfo-mode)
@@ -793,7 +801,9 @@ plain variables.  This means that `setopt' will execute any
   :straight t
   :hook (corfu-mode . corfu-terminal-mode))
 #+end_src
-*** me-completion.el package [[https://github.com/jdtsmith/kind-icon][kind-icon]] 图标和完成前缀
+
+package [[https://github.com/jdtsmith/kind-icon][kind-icon]] 图标和完成前缀
+
 #+begin_src emacs-lisp
 (use-package kind-icon
   :straight t
@@ -812,7 +822,9 @@ plain variables.  This means that `setopt' will execute any
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
-*** me-completion.el package [[https://github.com/minad/consult][consult]] 搜索和导航
+
+package [[https://github.com/minad/consult][consult]] 搜索和导航
+j
 #+begin_src emacs-lisp
 (use-package consult
   :straight t
@@ -902,7 +914,9 @@ plain variables.  This means that `setopt' will execute any
                    (list (or initial (+region-or-thing-at-point)))
                  (list initial))))))))
 #+end_src
-*** me-completion.el package [[https://github.com/oantolin/embark][embark]] TODO:
+
+package [[https://github.com/oantolin/embark][embark]] TODO:
+j
 #+begin_src emacs-lisp
 (use-package embark
   :straight t
@@ -916,7 +930,9 @@ plain variables.  This means that `setopt' will execute any
   :after embark consult
   :demand t)
 #+end_src
-*** me-completion.el package [[https://github.com/minad/marginalia][marginalia]] 旁注
+
+package [[https://github.com/minad/marginalia][marginalia]] 旁注
+
 #+begin_src emacs-lisp
 (use-package marginalia
   :straight t
@@ -926,7 +942,9 @@ plain variables.  This means that `setopt' will execute any
   :straight t
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup))
 #+end_src
-*** me-completion.el package [[https://github.com/oantolin/orderless][orderless]] 正则匹配
+
+package [[https://github.com/oantolin/orderless][orderless]] 正则匹配
+
 #+begin_src emacs-lisp
 (use-package orderless
   :straight t
@@ -936,7 +954,9 @@ plain variables.  This means that `setopt' will execute any
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
-*** me-completion.el package [[https://github.com/minad/vertico][vertico]] 完成UI
+
+package [[https://github.com/minad/vertico][vertico]] 完成UI
+
 #+begin_src emacs-lisp
 (use-package vertico
   :straight t
@@ -976,11 +996,14 @@ plain variables.  This means that `setopt' will execute any
   :init
   (keymap-global-set "M-R" #'vertico-repeat))
 #+end_src
-*** me-completion.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-completion)
 ;;; me-completion.el ends here
 #+end_src
+
 ** me-core-ui.el
 :properties:
 :header-args: :tangle core/me-core-ui.el
