@@ -725,7 +725,7 @@ plain variables.  This means that `setopt' will execute any
 :properties:
 :header-args: :tangle core/me-completion.el
 :end:
-=me-completion.el= 补全相关包
+=me-completion.el= 补全相关配置
 
 文件头
 
@@ -824,7 +824,7 @@ package [[https://github.com/jdtsmith/kind-icon][kind-icon]] 图标和完成前�
 #+end_src
 
 package [[https://github.com/minad/consult][consult]] 搜索和导航
-j
+
 #+begin_src emacs-lisp
 (use-package consult
   :straight t
@@ -1008,15 +1008,19 @@ package [[https://github.com/minad/vertico][vertico]] 完成UI
 :properties:
 :header-args: :tangle core/me-core-ui.el
 :end:
-=me-core-ui.el= 界面相关包
-*** me-core-ui.el =HEAD=
+=me-core-ui.el= 界面相关配置
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-core-ui.el --- MinEmacs -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-core-ui.el 调整行号大小
+
+调整行号大小 75% 更美观一些
+
 #+begin_src emacs-lisp
 (defun +theme--tweaks-h (&optional _)
   "Use smaller font (75% of the default) for line numbers in graphic mode."
@@ -1043,7 +1047,9 @@ package [[https://github.com/minad/vertico][vertico]] 完成UI
 Useful for keeping track of the enabled theme."
    (setq minemacs-theme theme)))
 #+end_src
-*** me-core-ui.el 主题相关
+
+主题相关
+
 #+begin_src emacs-lisp
 ;; Disable previously enabled custom themes before enabling a new one.
 (advice-add
@@ -1122,6 +1128,16 @@ Useful for keeping track of the enabled theme."
   ;; Load the theme of your choice.
   (load-theme 'modus-operandi-tinted t))
 
+(use-package doom-themes
+  :straight t)
+
+(use-package apropospriate-theme
+  :straight t)
+#+end_src
+
+图标icon相关
+
+#+begin_src emacs-lisp
 (use-package all-the-icons
   :straight t
   :config
@@ -1131,15 +1147,12 @@ Useful for keeping track of the enabled theme."
 
 (use-package nerd-icons
   :straight t)
-
-(use-package doom-themes
-  :straight t)
-
-(use-package apropospriate-theme
-  :straight t)
 #+end_src
-*** me-core-ui.el [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]]
+
+pacakge [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]] 仪表盘
+
 #+begin_src emacs-lisp
+;;HACK: want hack
 (use-package dashboard
   :straight t
   :after evil evil-collection
@@ -1164,7 +1177,9 @@ Useful for keeping track of the enabled theme."
   (when (zerop (length (seq-filter #'identity (mapcar #'buffer-file-name (buffer-list)))))
     (dashboard-open)))
 #+end_src
-*** me-core-ui.el doom-modeline
+
+package doom-modeline
+
 #+begin_src emacs-lisp
 (use-package doom-modeline
   :straight t
@@ -1184,11 +1199,14 @@ Useful for keeping track of the enabled theme."
       github debug repl lsp minor-modes input-method indent-info buffer-encoding
       major-mode process vcs checker time "  ")))
 #+end_src
-*** me-core-ui.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-core-ui)
 ;;; me-core-ui.el ends here
 #+end_src
+
 ** me-defaults.el
 :properties:
 :header-args: :tangle core/me-defaults.el
