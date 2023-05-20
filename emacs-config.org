@@ -2158,14 +2158,18 @@ general
 :properties:
 :header-args: :tangle core/me-meow.el
 :end:
-*** me-meow.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;; me-meow.el --- Meow integration -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-meow.el 一种不同于evil的按键模式
+
+meow 猫态编辑模式 一种不同于evil的按键模式
+
 #+begin_src emacs-lisp
 (when (memq 'me-evil minemacs-core-modules)
   (user-error "The `me-meow' module is incompatible with `me-evil'."))
@@ -2259,7 +2263,9 @@ general
      '("'" . repeat)
      '("<escape>" . ignore))))
 #+end_src
-*** me-meow.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-meow)
 ;;; me-meow.el ends here
