@@ -2354,14 +2354,18 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 :header-args: :tangle core/me-splash.el
 :end:
 =me-splash.el= 下载包过程中简易界面 参考 [[github.com/rougier/emacs-splash][emacs-splash]]
-*** me-splash.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-splash.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-splash.el 界面定制
+
+界面定制
+
 #+begin_src emacs-lisp
 ;; Adapted from: github.com/rougier/emacs-splash
 
@@ -2419,8 +2423,8 @@ meow 猫态编辑模式 一种不同于evil的按键模式
         (insert (propertize "Minimal Emacs configuration for daily use" 'face 'shadow))
         (insert-char ?\n)
         (insert-char ?\s 10)
-        (insert-text-button "github.com/abougouffa/minemacs"
-                            'action (lambda (_) (browse-url "https://github.com/abougouffa/minemacs"))
+        (insert-text-button "github.com/donneyluck/emacs-config"
+                            'action (lambda (_) (browse-url "https://github.com/donneyluck/emacs-config"))
                             'help-echo "Visit MinEmacs repo"
                             'follow-link t)
         (insert-char ?\n)
@@ -2448,11 +2452,14 @@ meow 猫态编辑模式 一种不同于evil的按键模式
  (defun +minemacs-splash--kill-h ()
    (run-at-time 0.5 nil #'minemacs-splash-kill)))
 #+end_src
-*** me-splash.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-splash)
 ;;; me-splash.el ends here
 #+end_src
+
 ** me-vars.el
 :properties:
 :header-args: :tangle core/me-vars.el
