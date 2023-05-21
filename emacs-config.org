@@ -641,7 +641,7 @@ plain variables.  This means that `setopt' will execute any
     ;; Do not ask before installing
     (cl-letf (((symbol-function 'yes-or-no-p) #'always)
               ((symbol-function 'y-or-n-p) #'always))
-      (funcall fn))))
+      (funcall-interactively fn))))
 #+end_src
 
 文件尾
