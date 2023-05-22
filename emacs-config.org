@@ -4732,14 +4732,19 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 :properties:
 :header-args: :tangle elisp/+unix.el
 :end:
-*** +unix.el =HEAD=
+=+unix.el=  unix一些命令的包装
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +unix.el --- unix cmd wrapper -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +unix.el =unix cmd wrapper=
+
+=unix cmd wrapper=
+
 #+begin_src emacs-lisp
 ;; From: emacswiki.org/emacs/download/misc-cmds.el
 (defun +read-shell-file-command (command)
@@ -4773,10 +4778,13 @@ CMD is the command to execute (interactively, `chown')."
   (interactive (list (+read-shell-file-command 'chown)))
   (shell-command cmd))
 #+end_src
-*** +unix.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +unix.el ends here
 #+end_src
+
 ** valgrind.el
 :properties:
 :header-args: :tangle elisp/valgrind.el
