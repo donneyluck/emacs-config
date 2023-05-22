@@ -4744,6 +4744,8 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 #+end_src
 
 =unix cmd wrapper=
+函数 +read-shell-file-command 的作用是提示用户输入一个 shell 命令，并使用当前缓冲区的文件名作为默认参数。
+它通过获取文件名和命令，将它们合并为一个字符串，并在迷你缓冲区中显示，让用户进行输入。
 
 #+begin_src emacs-lisp
 ;; From: emacswiki.org/emacs/download/misc-cmds.el
@@ -4789,14 +4791,19 @@ CMD is the command to execute (interactively, `chown')."
 :properties:
 :header-args: :tangle elisp/valgrind.el
 :end:
-*** valgrind.el =HEAD=
+=valgrind.el= 程序 =valgrind= 的包装
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; valgrind.el --- valgrind wrapper -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** valgrind.el =valgrind wrapper=
+
+=valgrind wrapper=
+
 #+begin_src emacs-lisp
 (require 'compile)
 
@@ -4843,14 +4850,15 @@ and move to the source code that caused it."
     (unless (equal command (eval valgrind-command))
       (setq valgrind-command command))
     (compilation-start command nil (lambda (mode) "*valgrind*"))))
-
-
-(provide 'valgrind)
 #+end_src
-*** valgrind.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
+(provide 'valgrind)
 ;;; valgrind.el ends here
 #+end_src
+
 * modules/
 =modules= 目录下是各个模块
 ** [✘] me-biblio.el
