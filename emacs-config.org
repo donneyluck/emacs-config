@@ -2274,6 +2274,7 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 (provide 'me-meow)
 ;;; me-meow.el ends here
 #+end_src
+
 ** me-loaddefs.el
 =me-loaddefs.el= 此文件是由 =minemacs-generate-loaddefs= 收集autoload 函数
 ** me-modules.el
@@ -2833,18 +2834,24 @@ Used to synchronize loading some other stuff after loading Emacs.
 #+end_src
 
 * elisp/
+=elisp= 目录下是一些自己实现的扩展
 ** +binary.el
 :properties:
 :header-args: :tangle elisp/+binary.el
 :end:
-*** +binary.el =HEAD=
+=+binary.el= 一些二进制相关的包
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +binary.el --- binary -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +binary.el 二进制相关
+
+=objdump= 扩展  二进制相关
+
 #+begin_src emacs-lisp
 (defgroup minemacs-binary nil
   "MinEmacs binary files."
@@ -2938,22 +2945,29 @@ is binary, activate `hexl-mode'."
   (add-to-list 'magic-fallback-mode-alist '(+binary-objdump-buffer-p . objdump-disassemble-mode) t)
   (add-to-list 'magic-fallback-mode-alist '(+binary-hexl-buffer-p . +binary-hexl-mode-maybe) t))
 #+end_src
-*** +binary.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +binary.el ends here
 #+end_src
+
 ** +buffer.el
 :properties:
 :header-args: :tangle elisp/+buffer.el
 :end:
-*** +buffer.el =HEAD=
+=+buffer.el= 一些关于buffer的函数
+
+文件头
+
 #+begin_src emacs-lisp
-;;; +buffer.el --- binary -*- lexical-binding: t; -*-
+;;; +buffer.el --- buffer misc cmds -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +buffer.el 一些关于buffer的函数
+
+一些关于buffer的函数 [[emacswiki.org/emacs/download/misc-cmds.el][misc-cmds]]
 #+begin_src emacs-lisp
 (defgroup minemacs-buffer nil
   "MinEmacs buffer stuff."
@@ -3124,23 +3138,30 @@ When available, use \"fortune\" to add a random quote."
     ;; Set initial scratch message
     (setq initial-scratch-message (buffer-string))))
 #+end_src
-*** +buffer.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +buffer.el ends here
 #+end_src
+
 ** +eglot.el
 :properties:
 :header-args: :tangle elisp/+eglot.el
 :end:
-*** +eglot.el =HEAD=
+=+eglot.el=  eglot 扩展
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +eglot.el --- eglot -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
+
+=eglot autoload= 注册modes 和 对应的lsp-server
 
-*** +eglot.el =eglot autoload=
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +eglot-register (modes &rest servers)
@@ -3158,15 +3179,20 @@ Examples:
                    (ensure-list (car servers)))))))
 #+end_src
 
-*** +eglot.el =TAIL=
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +eglot.el ends here
 #+end_src
+
 ** ecryptfs.el
 :properties:
 :header-args: :tangle elisp/ecryptfs.el
 :end:
-*** ecryptfs.el =HEAD=
+=ecryptfs.el= private文件夹的加密解密
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +io.el --- io -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -3179,7 +3205,9 @@ Examples:
 
 ;;; Code:
 #+end_src
-*** ecryptfs.el 私有文件夹加密解密
+
+通过 =ecryptfs= 实现对private文件的加密和解密
+
 #+begin_src emacs-lisp
 (require 'epg)
 
@@ -3278,22 +3306,31 @@ Examples:
       (message "Unmounted private directory successfully.")
     (user-error "Cannot unmount the private directory, seems to be already unmounted.")))
 #+end_src
-*** ecryptfs.el =TAIL=
+
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; ecryptfs.el ends here
 #+end_src
+
 ** +io.el
 :properties:
 :header-args: :tangle elisp/+io.el
 :end:
-*** +io.el =HEAD=
+=+io= io的扩展函数
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +io.el --- io -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +io.el 一些路径和文件的处理函数
+
+通过 =file= 获取文件类型
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +file-mime-type (file)
@@ -3304,7 +3341,11 @@ Return a symbol of the MIME type, ex: `text/x-lisp', `text/plain',
       (let ((mime-type (shell-command-to-string (format "file --brief --mime-type %s" file))))
         (intern (string-trim-right mime-type)))
     (error "The \"file\" command isn't installed.")))
+#+end_src
 
+获取文件唯一名字 如果存在 =file.ext= 则返回 =file-0.ext=
+
+#+begin_src emacs-lisp
 ;;;###autoload
 (defun +file-name-incremental (filename)
   "Return an unique file name for FILENAME.
@@ -3317,7 +3358,11 @@ If \"file.ext\" exists, returns \"file-0.ext\"."
          (last-file-num (when (and last-file (string-match filename-regex last-file) (match-string 1 last-file))))
          (num (1+ (string-to-number (or last-file-num "-1")))))
     (file-name-concat dir (format "%s%s%s" file (if last-file (format "-%d" num) "") (if ext (concat "." ext) "")))))
+#+end_src
 
+读取文件内容放入buffer
+
+#+begin_src emacs-lisp
 ;;;###autoload
 (defun +file-read-to-string (filename)
   "Return a string with the contents of FILENAME."
@@ -3325,7 +3370,11 @@ If \"file.ext\" exists, returns \"file-0.ext\"."
     (with-temp-buffer
       (insert-file-contents filename)
       (buffer-string))))
+#+end_src
 
+返回子目录列表
+
+#+begin_src emacs-lisp
 ;;;###autoload
 (defun +directory-subdirs (dir)
   "Return a list of sub-directories in DIR."
@@ -3333,11 +3382,14 @@ If \"file.ext\" exists, returns \"file-0.ext\"."
     (seq-filter #'file-directory-p
                 (mapcar #'abbreviate-file-name
                         (directory-files dir t "[^.][^.]?$")))))
+#+end_src
 
+确保路径存在 不存在就创建
+
+#+begin_src emacs-lisp
 ;;;###autoload
 (defun +directory-ensure (&rest path-parts)
   "Concatenate PATH-PARTS to construct a path and return it.
-
 Ensure the path exists, if not create it. The exact behavior is to create the
 parent directory if the path is a file, and if the path is a directory, create
 that directory."
@@ -3348,7 +3400,11 @@ that directory."
       (unless (file-directory-p parent-dir)
         (+error! "Cannot create directory %s" parent-dir)))
     path))
+#+end_src
 
+文件相关(太多了先这样)
+
+#+begin_src emacs-lisp
 ;;;###autoload
 (defun +delete-this-file (&optional path force-p)
   "Delete PATH.
@@ -3569,10 +3625,12 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
                "--browser-executable-path" browse-url-chromium-program
                url out-file))))
 #+end_src
-*** +io.el =TAIL=
+
+文件尾
 #+begin_src emacs-lisp
 ;;; +io.el ends here
 #+end_src
+
 ** +emacs.el
 :properties:
 :header-args: :tangle elisp/+emacs.el
