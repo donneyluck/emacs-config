@@ -3936,15 +3936,19 @@ It is deferred until `general' gets loaded and configured."
 :properties:
 :header-args: :tangle elisp/+minemacs.el
 :end:
-=minemacs.el= 一些宏和方法 简化配置
-*** +minemacs.el =HEAD=
+=minemacs.el= 一些宏和方法用来简化配置
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +minemacs.el --- +keybinding -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +minemacs.el =log=
+
+日志相关宏
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defmacro +error! (msg &rest vars)
@@ -3973,14 +3977,18 @@ It is deferred until `general' gets loaded and configured."
     `(let ((inhibit-message t))
       (apply #'message (list (concat "[MinEmacs:Debug] " ,msg) ,@vars)))))
 #+end_src
-*** +minemacs.el =featurep=
+
+=featurep= 检测emacs是否有这个特性
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +emacs-features-p (&rest feats)
   "Is features FEATS are enabled in this Emacs build."
   (cl-every (lambda (feat) (and (memq feat emacs/features) t)) feats))
 #+end_src
-*** +minemacs.el =inhibit-message=
+
+=inhibit-message= 抑制函数的消息输出
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defmacro +fn-inhibit-messages! (fn &optional no-message-log)
@@ -4010,7 +4018,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
       `(with-temp-message (or (current-message) "") ,@body)
     `(progn ,@body)))
 #+end_src
-*** +minemacs.el =convert to interactive=
+
+=convert to interactive= 把不能交互的函数转为可交互
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defmacro +cmdfy! (&rest body)
@@ -4019,7 +4029,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
      (interactive)
      ,@body))
 #+end_src
-*** +minemacs.el =set-fonts=
+
+=set-fonts= 通过 =minemacs-fonts= 设置字体
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +set-fonts ()
@@ -4046,7 +4058,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   ;; Run hooks
   (run-hooks 'minemacs-after-set-fonts-hook))
 #+end_src
-*** +minemacs.el =load-theme=
+
+=load-theme= 载入主题
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +load-theme ()
@@ -4061,7 +4075,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   ;; Run hooks
   (run-hooks 'minemacs-after-load-theme-hook))
 #+end_src
-*** +minemacs.el =eval-when-idle=
+
+=eval-when-idle= 空闲时执行
+
 #+begin_src emacs-lisp
 ;; An internal variable to keep track of the tasks
 (defvar +eval-when-idle--task-num 0)
@@ -4103,7 +4119,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
     (lambda ()
       ,@body)))
 #+end_src
-*** +minemacs.el =deferred=
+
+=deferred=  延迟执行
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defmacro +deferred! (&rest body)
@@ -4129,7 +4147,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   (declare (indent 1))
   `(if ,condition (+deferred! ,@body) (progn ,@body)))
 #+end_src
-*** +minemacs.el =lazy=
+
+=lazy=  惰性加载
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defmacro +lazy! (&rest body)
@@ -4156,7 +4176,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   (declare (indent 1))
   `(if ,condition (+lazy! ,@body) (progn ,@body)))
 #+end_src
-*** +minemacs.el =after-load=
+
+=after-load= 当features加载完成后执行
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defmacro +after-load! (features &rest body)
@@ -4177,7 +4199,9 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
             (setq body `((with-eval-after-load ',(+unquote next) ,@body)))))
          (t `(+after-load! '(:all ,@features) ,@body)))))))
 #+end_src
-*** +minemacs.el =hook=
+
+=hook= 延迟hook 和 hook一次
+
 #+begin_src emacs-lisp
 ;; Adapted from: github.com/d12frosted/environment
 ;;;###autoload
@@ -4207,7 +4231,9 @@ DEPTH and LOCAL are passed as is to `add-hook'."
        ,(macroexp-progn body)
        (remove-hook ',hook ',fn-name)))))
 #+end_src
-*** +minemacs.el =complie-function=
+
+=complie-function= 函数进行本地编译 如不支持则进行字节编译 并禁止编译过程中的日志输出
+
 #+begin_src emacs-lisp
 ;; Adapted from: Doom Emacs
 ;;;###autoload
@@ -4224,7 +4250,9 @@ DEPTH and LOCAL are passed as is to `add-hook'."
           (let (byte-compile-warnings)
             (+shutup! (byte-compile fn)))))))
 #+end_src
-*** +minemacs.el =env load & save=
+
+=env load & save= 环境变量的读取和保存
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +env-save ()
@@ -4263,7 +4291,9 @@ DEPTH and LOCAL are passed as is to `add-hook'."
     (when (file-exists-p env-file)
       (+load env-file))))
 #+end_src
-*** +minemacs.el =ignore-root=
+
+=ignore-root=  recentf 排除目录
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +ignore-root (&rest roots)
@@ -4272,16 +4302,20 @@ DEPTH and LOCAL are passed as is to `add-hook'."
     (with-eval-after-load 'recentf
       (add-to-list 'recentf-exclude root))))
 #+end_src
-*** +minemacs.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +minemacs.el ends here
 #+end_src
+
 ** [✘] netextender.el
 :properties:
 :header-args: :tangle elisp/netextender.el
 :end:
 =netextender.el= 程序netextender的封装
-暂时用不到  可以学习一下如何和命令行程序交互
+TODO: 暂时用不到
+
 *** netextender.el =HEAD=
 #+begin_src emacs-lisp
 ;;; netextender.el --- +keybinding -*- lexical-binding: t; -*-
