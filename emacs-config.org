@@ -3402,7 +3402,8 @@ that directory."
     path))
 #+end_src
 
-文件相关(太多了先这样)
+文件相关
+TODO: 太多了有空看的时候在整理
 
 #+begin_src emacs-lisp
 ;;;###autoload
@@ -3635,14 +3636,20 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 :properties:
 :header-args: :tangle elisp/+emacs.el
 :end:
-*** +emacs.el =HEAD=
+=+emacs.el= emacs的一些扩展
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +emacs.el --- emacs -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +emacs.el =.dir_local=
+
+=.dir_local=
+TODO:看不懂先这样
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +dir-locals-reload-for-this-buffer ()
@@ -3698,7 +3705,9 @@ If ENABLE is non-nil, force enabling autoreloading."
            ((vc-root-dir) (expand-file-name dir-locals-file (vc-root-dir)))
            (t (expand-file-name dir-locals-file (file-name-directory file-name)))))))
 #+end_src
-*** +emacs.el =whitespace=
+
+文件保存前是否删除尾部多于的空格
+
 #+begin_src emacs-lisp
 ;; The hook is defined and enabled by default in `me-defaults'
 ;;;###autoload
@@ -3712,7 +3721,9 @@ If ENABLE is non-nil, force enabling autoreloading."
     (message "+toggle-auto-whitespace-cleanup: Enabled.")
     (add-hook 'before-save-hook #'+save--whitespace-cleanup-h)))
 #+end_src
-*** +emacs.el =what-faces=
+
+=what-faces= 查看pos位置font face
+
 #+begin_src emacs-lisp
 ;; Adapted from: rougier/nano-emacs
 ;;;###autoload
@@ -3726,7 +3737,9 @@ If ENABLE is non-nil, force enabling autoreloading."
                       (plist-get (text-properties-at pos) 'face)))))
     (message "Faces: %s" faces)))
 #+end_src
-*** +emacs.el =screen-svg=
+
+=screen-svg= svg截图
+
 #+begin_src emacs-lisp
 (defcustom +screenshot-delay 5
   "A delay to wait before taking the screenshot.
@@ -3753,7 +3766,9 @@ prefix or universal argument, it waits for a moment (defined by
     (kill-new filename)
     (message "Screenshot saved to %s" filename)))
 #+end_src
-*** +emacs.el =webjump=
+
+=webjump= 快捷web搜索
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +region-or-thing-at-point ()
@@ -3786,10 +3801,13 @@ prefix or universal argument, it waits for a moment (defined by
     (cl-letf (((symbol-function 'webjump-read-string) #'+webjump-read-string-with-initial-query))
       (webjump))))
 #+end_src
-*** +emacs.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +emacs.el ends here
 #+end_src
+
 ** +keybinding.el
 :properties:
 :header-args: :tangle elisp/+keybinding.el
