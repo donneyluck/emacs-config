@@ -7288,22 +7288,23 @@ lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询�
     "C-n" #'lexic-search-history-forwards
     "/" `(,(+cmdfy! (call-interactively #'lexic-search)) :wk "Search")))
 #+end_src
-*** me-natural-langs.el me-eglot-ltex-extras
+*** me-natural-langs.el me-eglot-ltex
 #+begin_src emacs-lisp
 ;; Add this to .dir-locals.el
 ;; ((nil (eglot-workspace-configuration
 ;;        . ((ltex . ((language . "fr")
 ;;                    (disabledRules . ((fr . ["FRENCH_WHITESPACE"])))
 ;;                    (additionalRules . ((languageModel . "/usr/share/ngrams/")))))))))
-(use-package me-eglot-ltex-extras
+(use-package me-eglot-ltex
   :after eglot
   :demand t
   :config
   (eglot-ltex-enable-handling-client-commands)
   (+eglot-register
     '(text-mode org-mode markdown-mode rst-mode latex-mode bibtex-mode context-mode)
-    "ltex-ls"))
+    `("localhost" ,ltex-ls-server-port)))
 #+end_src
+
 *** me-natura-langs.el =TAIL=
 #+begin_src emacs-lisp
 (provide 'me-natura-langs)
@@ -9351,13 +9352,13 @@ Fallback to FALLBACK-RELEASE when it can't get the last one."
 #+begin_src emacs-lisp
 ;;; me-dap-utils.el ends here
 #+end_src
-** me-eglot-ltex-extras.el
+** me-eglot-ltex.el
 :properties:
-:header-args: :tangle modules/extras/me-eglot-ltex-extras.el
+:header-args: :tangle modules/extras/me-eglot-ltex.el
 :end:
 *** me-eglot-ltex-extras.el =HEAD=
 #+begin_src emacs-lisp
-;;; me-eglot-ltex-extras.el --- Extra functionality for Eglot+LTeX-LS -*- lexical-binding: t; -*-
+;;; me-eglot-ltex.el --- Extra functionality for Eglot+LTeX-LS -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 
@@ -9390,6 +9391,36 @@ Fallback to FALLBACK-RELEASE when it can't get the last one."
 #+begin_src emacs-lisp
 (defvar-local eglot-ltex-language "auto")
 (defvar eglot-ltex-user-rules-path (concat minemacs-local-dir "eglot/ltex/"))
+
+(defvar ltex-ls-command "ltex-ls")
+(defvar ltex-ls-server-port 40001)
+(defvar ltex-ls-server-process-name "ltex-ls-server")
+(defvar ltex-ls--process nil)
+
+;;;###autoload
+(defun ltex-ls-start ()
+  "Start LTeX-LS as a TCP server at port `ltex-ls-server-port' on \"localhost\"."
+  (interactive)
+  (if (eq (process-status ltex-ls-server-process-name) 'run)
+      (message "LTeX-LS server already running!")
+    (if (executable-find ltex-ls-command)
+        (setq ltex-ls--process
+              (make-process
+               :name ltex-ls-server-process-name
+               :buffer (format " *%s*" ltex-ls-server-process-name)
+               :command (list ltex-ls-command "--server-type=TcpSocket" (format "--port=%d" ltex-ls-server-port))))
+      (user-error "LTeX-LS command \"%s\" not found." ltex-ls-command))
+    (if (process-live-p ltex-ls--process)
+        (message "Started LTeX-LS TCP server successfuly.")
+      (user-error "Cannot start LTeX-LS TCP server."))))
+
+(defun ltex-ls-stop ()
+  "Stop LTeX-LS server if running."
+  (interactive)
+  (if (not (process-live-p ltex-ls--process))
+      (message "No running instance of LTeX-LS server!")
+    (delete-process ltex-ls--process)
+    (message "LTeX-LS server stopped.")))
 
 (defvar eglot-ltex-dictionary
   (+deserialize-sym 'eglot-ltex-dictionary eglot-ltex-user-rules-path))
@@ -9442,17 +9473,20 @@ When STORE is non-nil, this will also store the new plist in the directory
             (plist-get args-plist lang)))))
 
 (defun eglot-ltex-enable-handling-client-commands ()
+  "Enable Eglot hack to handle code actions of LTeX-LS."
   (interactive)
   (advice-add 'eglot-execute-command :before #'eglot-ltex--can-process-client-commands-a))
 
 (defun eglot-ltex-disable-handling-client-commands ()
+  "Disable Eglot hack to handle code actions of LTeX-LS."
   (interactive)
   (advice-remove 'eglot-execute-command #'eglot-ltex--can-process-client-commands-a))
 #+end_src
+
 *** me-eglot-ltex-extras.el =TAIL=
 #+begin_src emacs-lisp
-(provide 'me-eglot-ltex-extras)
-;;; me-eglot-ltex-extras.el ends here
+(provide 'me-eglot-ltex)
+;;; me-eglot-ltex.el ends here
 #+end_src
 ** me-elisp-extras.el
 :properties:
