@@ -4316,14 +4316,17 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 =netextender.el= 程序netextender的封装
 TODO: 暂时用不到
 
-*** netextender.el =HEAD=
+文件头
+
 #+begin_src emacs-lisp
 ;;; netextender.el --- +keybinding -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** netextender.el =netextender=
+
+=netextender=
+
 #+begin_src emacs-lisp
 (defvar netextender-process-name "netextender")
 (defvar netextender-buffer-name " *NetExtender*")
@@ -4402,10 +4405,13 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
       (netextender-kill)
     (netextender-start)))
 #+end_src
-*** netextender.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; netextender.el ends here
 #+end_src
+
 ** +project.el
 :properties:
 :header-args: :tangle elisp/+project.el
