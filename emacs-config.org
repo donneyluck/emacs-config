@@ -4416,14 +4416,19 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
 :properties:
 :header-args: :tangle elisp/+project.el
 :end:
-*** +project.el =HEAD=
+=+project.el= 内置project的扩展
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +project.el --- project -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +project.el 自动扫描目录添加项目
+
+自动扫描目录添加项目
+
 #+begin_src emacs-lisp
 (defgroup minemacs-project nil
   "MinEmacs project stuff."
@@ -4468,10 +4473,13 @@ When DIR is not detected as a project, ask to force it to be by adding a
   (let ((default-directory (project-root (project-current t))))
     (call-interactively #'gdb)))
 #+end_src
-*** +project.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +project.el ends here
 #+end_src
+
 ** +primitives.el
 :properties:
 :header-args: :tangle elisp/+primitives.el
