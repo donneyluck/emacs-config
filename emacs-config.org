@@ -4683,14 +4683,18 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 :header-args: :tangle elisp/+systemd.el
 :end:
 =+systemd.el= 启动 关闭 检查 服务状态 --user
-*** +systemd.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +systemd.el --- systemd wrapper -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +systemd.el =systemd wrapper=
+
+=systemd wrapper=
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +systemd-running-p (service)
@@ -4717,10 +4721,13 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
   "Stops the systemd SERVICE."
   (+systemd-command service "stop" pre-fn post-fn))
 #+end_src
-*** +systemd.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +systemd.el ends here
 #+end_src
+
 ** +unix.el
 :properties:
 :header-args: :tangle elisp/+unix.el
