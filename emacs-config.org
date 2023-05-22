@@ -2369,7 +2369,7 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 #+end_src
 
 界面定制
-
+
 #+begin_src emacs-lisp
 ;; Adapted from: github.com/rougier/emacs-splash
 
@@ -2469,14 +2469,18 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 :header-args: :tangle core/me-vars.el
 :end:
 =me-vars.el= 一些自定义变量
-*** me-vars.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-vars.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-vars.el 变量定义
+
+变量定义
+
 #+begin_src emacs-lisp
 ;;; MinEmacs directories
 
@@ -2650,7 +2654,11 @@ MinEmacs hooks will be run in this order:
       :variable-pitch-font-family ,varp-font
       :variable-pitch-font-size 13)
     "Default fonts of MinEmacs."))
+#+end_src
 
+需要存储的环境变量KEY
+
+#+begin_src emacs-lisp
 (defcustom +env-save-vars
   '("PATH" "MANPATH" "CMAKE_PREFIX_PATH" "PKG_CONFIG_PATH" "LSP_USE_PLISTS" "HTTP_PROXY" "HTTPS_PROXY")
   "List of the environment variables to saved by `+env-save'.
@@ -2659,18 +2667,23 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
   :group 'minemacs-core
   :type '(repeat string))
 #+end_src
-*** me-vars.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-vars)
 ;;; me-vars.el ends here
 #+end_src
+
 ** me-use-package-pin-ref.el
 :properties:
 :header-args: :tangle core/me-use-package-pin-ref.el
 :end:
 =me-use-package-pin-ref.el= 使用确定版本的包
 [[https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases][How do I pin package versions or use only tagged releases?]]
-*** me-use-package-pin-ref.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-use-package-pin-ref.el --- Extend use-package to allow straight-x package pinning -*- lexical-   binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -2681,7 +2694,9 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 
 ;;; Code:
 #+end_src
-*** me-use-package-pin-ref.el 扩展use-package支持固定版本的包
+
+扩展 =use-package= 支持固定版本的包
+
 #+begin_src emacs-lisp
 (with-eval-after-load 'straight
   ;; Add a profile (and lockfile) for stable package revisions.
@@ -2708,11 +2723,14 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
            (push '(,(symbol-name name-symbol) . ,ref) straight-x-pinned-packages)
            ,(macroexp-progn body)))))))
 #+end_src
-*** me-use-package-pin-ref.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-use-package-pin-ref)
 ;;; me-use-package-pin-ref.el ends here
 #+end_src
+
 ** minemacs-loaded.el
 :properties:
 :header-args: :tangle core/minemacs-loaded.el
