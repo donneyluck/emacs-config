@@ -4484,14 +4484,19 @@ When DIR is not detected as a project, ask to force it to be by adding a
 :properties:
 :header-args: :tangle elisp/+primitives.el
 :end:
-*** +primitives.el =HEAD=
+=+primitives.el= 一些上古方法
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; +primitives.el --- primitives -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** +primitives.el =plist= & =alist= miss fuction
+
+=plist= & =alist= miss fuction
+
 #+begin_src emacs-lisp
 ;;; === Some plist and alist missing functions ===
 
@@ -4584,7 +4589,10 @@ alist, to ensure correct results."
     (push (cons key val) alist))
   alist)
 #+end_src
-*** +primitives.el =serialization=
+
+函数 =+serialize-sym= 的作用是将一个符号序列化为文件，并保存到指定的目录中。
+它通过参数来控制文件名的格式和保存的目录，并在序列化过程中输出相应的日志信息。
+
 #+begin_src emacs-lisp
 ;;; === Serialization ===
 
@@ -4626,7 +4634,9 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
       (when mutate (set sym res)))
     res))
 #+end_src
-*** +primitives.el =misc=
+
+=misc= 一些小方法
+
 #+begin_src emacs-lisp
 ;;; === Misc ===
 
@@ -4661,10 +4671,13 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
   (lambda (&rest args2)
     (apply fun (append args2 args))))
 #+end_src
-*** +primitives.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; +primitives.el ends here
 #+end_src
+
 ** +systemd.el
 :properties:
 :header-args: :tangle elisp/+systemd.el
