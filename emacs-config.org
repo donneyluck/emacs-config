@@ -2735,9 +2735,11 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 :properties:
 :header-args: :tangle core/minemacs-loaded.el
 :end:
-=minemacs-loaded.el=  Virtual module loaded at end of init.el (after custom-vars.el)
+=minemacs-loaded.el= Virtual module loaded at end of init.el (after custom-vars.el)
 Used to synchronize loading some other stuff after loading Emacs
-*** minemacs-loaded.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; minemacs-loaded.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -2748,7 +2750,9 @@ Used to synchronize loading some other stuff after loading Emacs
 
 ;;; Code:
 #+end_src
-*** minemacs-loaded.el 同步加载一些其他东西
+
+同步加载一些其他东西
+
 #+begin_src emacs-lisp
 ;; Run hooks
 (when minemacs-after-startup-hook
@@ -2764,11 +2768,14 @@ Used to synchronize loading some other stuff after loading Emacs
 
 (+log! "Providing `minemacs-loaded'.")
 #+end_src
-*** minemacs-loaded.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'minemacs-loaded)
 ;;; minemacs-loaded.el ends here
 #+end_src
+
 ** minemacs-lazy.el
 :properties:
 :header-args: :tangle core/minemacs-lazy.el
