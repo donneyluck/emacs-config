@@ -4866,14 +4866,18 @@ and move to the source code that caused it."
 :header-args: :tangle no
 :end:
 =me-biblio.el= bibliography 用来做文献引用
-*** me-biblio.el =HEAD=
+TODO: 暂时用不到
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-biblio.el --- bibliography -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-biblio.el package =oc=
+
+=oc=
 #+begin_src emacs-lisp
 (use-package oc
   :straight (:type built-in)
@@ -4901,7 +4905,9 @@ and move to the source code that caused it."
   :after oc
   :demand t)
 #+end_src
-*** me-biblio.el pacakge =zotxt=
+
+=zotxt=
+
 #+begin_src emacs-lisp
 (use-package zotxt
   :straight t
@@ -4914,7 +4920,8 @@ and move to the source code that caused it."
   (+map-local! :keymaps 'markdown-mode-map
     "z" #'zotxt-citekey-mode))
 #+end_src
-*** me-biblio.el package =citar=
+
+=citar=
 #+begin_src emacs-lisp
 (use-package citar
   :straight t
@@ -4978,24 +4985,31 @@ and move to the source code that caused it."
   :config
   (citar-embark-mode 1))
 #+end_src
-*** me-biblio.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-biblio)
 ;;; me-biblio.el ends here
 #+end_src
+
 ** [✘] me-binary.el
 :properties:
 :header-args: :tangle no
 :end:
 =me-binary.el= 二进制一些信息的查看
-*** me-binary.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-binary.el --- stuff to work with binary files -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-binary.el 加载 =+binary-setup-modes=
+
+加载 =+binary-setup-modes=
+
 #+begin_src emacs-lisp
 ;; +binary-* are autoloaded
 (+deferred!
@@ -5004,23 +5018,31 @@ and move to the source code that caused it."
  (setq +binary-objdump-enable nil)
  (+binary-setup-modes))
 #+end_src
-*** me-binary.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-binary)
 ;;; me-binary.el ends here
 #+end_src
+
 ** me-checkers.el
 :properties:
 :header-args: :tangle modules/me-checkers.el
 :end:
-*** me-checkers.el =HEAD=
+=me-checkers.el= 实时检查和显示源代码中的语法错误
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-checkers.el --- syntax checking -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-checkers.el package =flymake=
+
+=flymake=
+
 #+begin_src emacs-lisp
 (use-package flymake
   :straight (:type built-in)
@@ -5087,11 +5109,14 @@ and move to the source code that caused it."
 (use-package flymake-easy
   :straight t)
 #+end_src
-*** me-checkers.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-checkers)
 ;;; me-checkers.el ends here
 #+end_src
+
 ** me-daemon.el
 :properties:
 :header-args: :tangle modules/me-daemon.el
@@ -11428,7 +11453,6 @@ If SKIP-HEADERS is set, do not show include message headers."
 (provide 'me-mu4e-extras)
 ;;; me-mu4e-extras.el ends here
 #+end_src
-* modules/obsolete/
 * skel/
 =skel= 目录下是框架的骨架 可以放入自定义的部分
 ** config.el
