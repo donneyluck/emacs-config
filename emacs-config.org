@@ -5121,14 +5121,19 @@ TODO: 暂时用不到
 :properties:
 :header-args: :tangle modules/me-daemon.el
 :end:
-*** me-daemon.el =HEAD=
+=me-daemon.el= 后台运行
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-daemon.el --- daemon -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-daemon.el =email (mu4e)=
+
+=email (mu4e)=
+
 #+begin_src emacs-lisp
 ;; Email (mu4e)
 (+lazy-when! (memq 'me-email minemacs-modules)
@@ -5138,7 +5143,9 @@ TODO: 暂时用不到
       (let ((inhibit-message t))
         (mu4e t)))))
 #+end_src
-*** me-daemon.el =rss (elfeed)=
+
+=rss (elfeed)=
+
 #+begin_src emacs-lisp
 ;; RSS (elfeed)
 (+lazy-when! (memq 'me-rss minemacs-modules)
@@ -5150,7 +5157,9 @@ TODO: 暂时用不到
      (let ((inhibit-message t))
        (elfeed-update)))))
 #+end_src
-*** me-daemon.el =emacs server=
+
+=emacs server=
+
 #+begin_src emacs-lisp
 ;; When we start in a non-daemon Emacs, we start a server whe Emacs is idle.
 (+lazy-unless! (daemonp)
@@ -5172,24 +5181,31 @@ TODO: 暂时用不到
     (display-battery-mode -1)
     (display-battery-mode 1)))
 #+end_src
-*** me-daemon.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-daemon)
 ;;; me-daemon.el ends here
 #+end_src
+
 ** me-data.el
 :properties:
 :header-args: :tangle modules/me-data.el
 :end:
 =me-data.el= 一些配置文件相关包(csv, yaml, xml, graphviz, ...)
-*** me-data.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-data.el --- Data and visualizaion formats (csv, yaml, xml, graphviz, ...) -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-data.el =csv-mode=
+
+=csv-mode=
+
 #+begin_src emacs-lisp
 (use-package csv-mode
   :straight t
@@ -5220,7 +5236,9 @@ TODO: 暂时用不到
                for r = (format "^\\([^%c\n]*[%c\n]\\)\\{%d\\}" separator separator i)
                do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c))))))))))
 #+end_src
-*** me-data.el =yaml-mode=
+
+=yaml-mode=
+
 #+begin_src emacs-lisp
 (use-package yaml-mode
   :straight t
@@ -5231,13 +5249,17 @@ TODO: 暂时用不到
   :hook (yaml-mode . yaml-pro-mode)
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
 #+end_src
-*** me-data.el =toml-mode=
+
+=toml-mode=
+
 #+begin_src emacs-lisp
 (use-package toml-mode
   :straight t
   :mode "\\.toml\\'")
 #+end_src
-*** me-data.el =json-mode=
+
+=json-mode=
+
 #+begin_src emacs-lisp
 (use-package json-mode
   :straight t
@@ -5252,29 +5274,36 @@ TODO: 暂时用不到
     "-" #'json-decrement-number-at-point
     "f" #'json-mode-beautify))
 #+end_src
-*** NO me-data.el =graphviz-dot-mode=
-#+begin_src emacs-lisp
-(use-package graphviz-dot-mode
-  :straight (graphviz-dot-mode :files ("graphviz-dot-mode.el" "texinfo"))
-  :custom
-  (graphviz-dot-view-command "xdot %s")
-  (graphviz-dot-preview-extension "svg")
-  :config
-  (+map-local! :keymaps 'graphviz-dot-mode-map
-    "p" #'graphviz-dot-preview
-    "P" #'graphviz-dot-view
-    "l" #'graphviz-turn-on-live-preview
-    "L" #'graphviz-turn-off-live-preview)
-  (+eglot-register 'graphviz-dot-mode '("dot-language-server" "--stdio")))
+
+=graphviz-dot-mode=
+暂时不用
+
+#+begin_src emacs-lisp :tangle no
+;; (use-package graphviz-dot-mode
+;;   :straight (graphviz-dot-mode :files ("graphviz-dot-mode.el" "texinfo"))
+;;   :custom
+;;   (graphviz-dot-view-command "xdot %s")
+;;   (graphviz-dot-preview-extension "svg")
+;;   :config
+;;   (+map-local! :keymaps 'graphviz-dot-mode-map
+;;     "p" #'graphviz-dot-preview
+;;     "P" #'graphviz-dot-view
+;;     "l" #'graphviz-turn-on-live-preview
+;;     "L" #'graphviz-turn-off-live-preview)
+;;   (+eglot-register 'graphviz-dot-mode '("dot-language-server" "--stdio")))
 #+end_src
-*** me-data.el =nxml=
+
+=nxml=
+
 #+begin_src emacs-lisp
 (use-package nxml-mode
   :straight (:type built-in)
   :config
   (+eglot-register '(nxml-mode xml-mode) "lemminx"))
 #+end_src
-*** me-data.el =plantuml-mode=
+
+=plantuml-mode= 是一个用于在 Emacs 编辑器中编辑和预览 PlantUML 图表的插件. PlantUML 是一种使用简单文本描述创建UML图表的工具. 主要用来画uml类图
+
 #+begin_src emacs-lisp
 (use-package plantuml-mode
   :straight t
@@ -5324,7 +5353,9 @@ TODO: 暂时用不到
               (plantuml-enable-debug)))
           :wk "Toggle debug")))
 #+end_src
-*** NO me-data.el =mermaid-mode=
+
+=mermaid-mode= 是一个用于在 Emacs 编辑器中编辑和预览 Mermaid 图表的插件。Mermaid 是一种用简单文本描述创建流程图、时序图、甘特图等各种图表的工具. 主要用来画简单图标
+
 #+begin_src emacs-lisp
 (use-package mermaid-mode
   :straight t
@@ -5346,8 +5377,10 @@ TODO: 暂时用不到
    'org-babel-load-languages
    (append org-babel-load-languages '((mermaid . t)))))
 #+end_src
-*** NO me-data.el =d2-mode=
-#+begin_src emacs-lisp
+
+=d2-mode= 暂时不用
+
+#+begin_src emacs-lisp :tangle no
 (use-package d2-mode
   :straight t
   :mode "\\.d2\\'"
@@ -5373,23 +5406,31 @@ TODO: 暂时用不到
    'org-babel-load-languages
    (append org-babel-load-languages '((d2 . t)))))
 #+end_src
-*** me-data.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-data)
 ;;; me-data.el ends here
 #+end_src
+
 ** me-debug.el
 :properties:
 :header-args: :tangle modules/me-debug.el
 :end:
-*** me-debug.el =HEAD=
+=me-debug.el= 调试器相关 gdb gud
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-debug.el --- debugging stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-debug.el =gdb-mi=
+
+=gdb-mi= 提供了一个与 GDB 交互的界面。使用 gdb-mi，您可以在 Emacs 中设置断点、运行程序、查看调试信息等。
+
 #+begin_src emacs-lisp
 (use-package gdb-mi
   :straight (:type built-in)
@@ -5424,7 +5465,9 @@ TODO: 暂时用不到
      (when (derived-mode-p 'gud-mode)
        (delete-overlay +gud-overlay)))))
 #+end_src
-*** me-debug.el =realgud=
+
+=realgud= 提供了一套集成的调试器前端，用于与多种调试器进行交互.支持多种调试器，包括 GNU GDB、Python 的 pdb、Ruby 的 byebug、JavaScript 的 Node.js 调试器等。它提供了一组命令和快捷键，使您能够设置断点、单步执行、查看变量和堆栈信息等.
+
 #+begin_src emacs-lisp
 (use-package realgud
   :straight t
@@ -5447,8 +5490,10 @@ TODO: 暂时用不到
   :straight t
   :commands (ipdb realgud:ipdb))
 #+end_src
-*** me-debug.el =disaster= 查看汇编
-#+begin_src emacs-lisp
+
+=disaster= 查看汇编
+
+#+begin_src emacs-lisp :tangle no
 (use-package disaster
   :straight t
   :preface
@@ -5458,30 +5503,40 @@ TODO: 暂时用不到
   (+map-local! :keymaps '(c-mode-map c++-mode-map fortran-mode-map)
     "D" #'disaster))
 #+end_src
-*** me-debug.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-debug)
 ;;; me-debug.el ends here
 #+end_src
+
 ** me-docs.el
 :properties:
 :header-args: :tangle modules/me-docs.el
 :end:
-*** me-docs.el =HEAD=
+=me-docs.el= 文档格式相关
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-docs.el --- Documents (PDF, EPUB, DOC...) -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-docs.el =doc-view=
+
+=doc-view= 是 Emacs 内置的一个模式，用于查看和浏览各种格式的文档，如 PDF、PostScript 和 DVI. 它提供了一种方便的方式来阅读和浏览大型文档，无需使用外部程序.
+
 #+begin_src emacs-lisp
 (use-package doc-view
   :straight (:type built-in)
   :custom
   (doc-view-mupdf-use-svg (+emacs-features-p 'rsvg)))
 #+end_src
-*** me-docs.el =pdf-tools=
+
+=pdf-tools= 用于增强 Emacs 对 PDF 文件的支持。它提供了更丰富的功能和更高级的操作选项。
+
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :straight t
@@ -5494,7 +5549,9 @@ TODO: 暂时用不到
   :init
   (+register-build-function #'pdf-tools-install))
 #+end_src
-*** me-docs.el =nov= 查看epub电子书
+
+=nov= 用于在 Emacs 中阅读 EPUB 电子书. 它提供了一个简单而轻量级的 EPUB 阅读器, 使您能够在 Emacs 中舒适地阅读电子书.
+
 #+begin_src emacs-lisp
 (use-package nov
   :straight t
@@ -5558,8 +5615,10 @@ TODO: 暂时用不到
 
   (add-hook 'nov-mode-hook #'+nov-mode-setup))
 #+end_src
-*** me-docs.el =crdt= 协同编辑
-#+begin_src emacs-lisp
+
+=crdt= CRDT包允许在Emacs中使用CRDT数据类型，并提供了一些CRDT操作的函数和命令。它使得在分布式环境中多个Emacs实例之间同步和共享数据变得更加容易。
+
+#+begin_src emacs-lisp :tangle no
 (use-package crdt
   :straight t
   :preface
@@ -5573,7 +5632,9 @@ TODO: 暂时用不到
         (+stunnel-available-p
          (setq crdt-use-stunnel t))))
 #+end_src
-*** me-docs.el [[https://github.com/misohena/el-easydraw][edraw]] 简易绘图
+
+[[https://github.com/misohena/el-easydraw][edraw]] 简易绘图 =edraw-org= 您可以使用 Edraw Max 创建各种类型的图表（如流程图、组织结构图、思维导图等），然后将生成的图表代码插入到 Org 文档中。这样，您可以在 Org 文档中以文本形式编辑和管理图表，并在需要时渲染为实际的图形。
+
 #+begin_src emacs-lisp
 (defconst +easydraw-available-p (+emacs-features-p 'rsvg 'zlib 'libxml2))
 
@@ -5585,7 +5646,9 @@ TODO: 暂时用不到
   :hook (org-mode . edraw-org-setup-default)
   :when +easydraw-available-p)
 #+end_src
-*** me-docs.el =markdown=
+
+=markdown= =poly-markdown= 您可以在 Markdown 文档中嵌入代码块，并使用不同的编程语言编写这些代码块。这些代码块可以包含任何支持的编程语言，如 Python、JavaScript、Ruby 等。您可以在代码块中编写和执行代码，以及查看代码的输出结果。
+
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :straight t
@@ -5597,25 +5660,33 @@ TODO: 暂时用不到
 (use-package poly-markdown
   :straight t)
 #+end_src
-*** me-docs.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-docs)
 ;;; me-docs.el ends here
 #+end_src
 
 [[edraw:][test_edVdraw]]
+
 ** me-eaf.el
 :properties:
 :header-args: :tangle modules/me-eaf.el
 :end:
-*** me-eaf.el =HEAD=
+=me-eaf.el= 在emacs里运行其他程序
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-eaf.el --- EAF applications -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-eaf.el =emacs-application-framework=
+
+=emacs-application-framework= Emacs Application Framework (EAF) 是一个基于 Emacs 的框架，旨在将现代应用程序引入 Emacs 环境。它提供了在 Emacs 中运行 Web 应用程序、图形界面应用程序和其他外部应用程序的能力。
+
 #+begin_src emacs-lisp
 (unless (+emacs-features-p 'lucid)
   (use-package eaf
@@ -5690,24 +5761,31 @@ TODO: 暂时用不到
       (interactive (browse-url-interactive-arg "URL: "))
       (eaf-open-browser (browse-url-encode-url url) args))))
 #+end_src
-*** me-eaf.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-eaf)
 ;;; me-eaf.el ends here
 #+end_src
+
 ** me-editor.el
 :properties:
 :header-args: :tangle modules/me-editor.el
 :end:
-*** me-editor.el =HEAD=
+=me-editor.el= 编辑相关
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-editor.el --- Editing stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-editor.el [[https://github.com/minad/tempel][tempel]]
-Tempel 可以在 org-mode 中使用，通过定义不同的模板，可以根据模板快速生成代码、文档等。Tempel 的模板支持嵌套，可以根据不同的参数值生成不同的代码。
+
+[[https://github.com/minad/tempel][Tempel]] 可以在 org-mode 中使用，通过定义不同的模板，可以根据模板快速生成代码、文档等。Tempel 的模板支持嵌套，可以根据不同的参数值生成不同的代码。
+
 #+begin_src emacs-lisp
 (use-package tempel
   :straight t
@@ -5744,7 +5822,9 @@ Tempel 可以在 org-mode 中使用，通过定义不同的模板，可以根据
   :after tempel
   :demand t)
 #+end_src
-*** me-editor.el header2
+
+=header2= 在新建文件时按照模板生成一个标准的文件头
+
 #+begin_src emacs-lisp
 (use-package header2
   :straight t
@@ -5792,8 +5872,9 @@ Tempel 可以在 org-mode 中使用，通过定义不同的模板，可以根据
      header-code
      header-eof)))
 #+end_src
-*** me-editor.el [[https://github.com/rolandwalker/unicode-fonts][unicode-fonts]]
-unicode-fonts 是一个 Emacs 包，它为 Emacs 中的 Unicode 字符提供了良好的显示效果。在 Emacs 中，如果一个字体不能正确地显示 Unicode 字符，这些字符将以方块或空心的框框代替。unicode-fonts 包可以解决这个问题，它会检测 Emacs 中所使用的字体是否支持 Unicode 字符，并动态地将 Unicode 字符映射到支持它们的字体上，从而让 Unicode 字符在 Emacs 中正常地显示。
+
+[[https://github.com/rolandwalker/unicode-fonts][unicode-fonts]] 它为 Emacs 中的 Unicode 字符提供了良好的显示效果。在 Emacs 中，如果一个字体不能正确地显示 Unicode 字符，这些字符将以方块或空心的框框代替。unicode-fonts 包可以解决这个问题，它会检测 Emacs 中所使用的字体是否支持 Unicode 字符，并动态地将 Unicode 字符映射到支持它们的字体上，从而让 Unicode 字符在 Emacs 中正常地显示。
+
 #+begin_src emacs-lisp
 (use-package unicode-fonts
   :straight t
@@ -5809,9 +5890,9 @@ unicode-fonts 是一个 Emacs 包，它为 Emacs 中的 Unicode 字符提供了�
               (push unicode-font-family (cadr unicode-block))))
           (unicode-fonts-setup))))))
 #+end_src
-*** me-editor.el [[https://github.com/mickeynp/ligature.el][ligature]]
-+ ligature.el 是一个 Emacs 包，它可以在 Emacs 中启用和显示代码连字 (ligatures)。代码连字是指某些字符的特殊组合，可以将它们连接成更好的单个字符，以提高代码的可读性。例如，箭头，等于号，不等号，以及其他一些特殊符号。启用代码连字可以让代码看起来更加美观，也可以使代码更容易阅读。
-+ ligature.el 支持许多字体，包括 Fira Code，Hasklig，Iosevka，JetBrains Mono，Operator Mono 和 PragmataPro。此外，它还可以与许多不同的 Emacs 模式一起使用，包括 Org mode，LaTeX mode 和 Magit mode 等。它还提供了许多自定义选项，以便根据用户的喜好进行配置，例如指定要使用的字体和要使用连字的字符列表。
+
+[[https://github.com/mickeynp/ligature.el][ligature]] 它可以在 Emacs 中启用和显示代码连字(ligatures)。
+
 #+begin_src emacs-lisp
 (when (and (>= emacs-major-version 28) (+emacs-features-p 'harfbuzz 'cairo))
   (use-package ligature
@@ -5841,26 +5922,30 @@ unicode-fonts 是一个 Emacs 包，它为 Emacs 中的 Unicode 字符提供了�
        "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
        "\\\\" "://"))))
 #+end_src
-*** me-editor.el =rainbow-delimiters=
-rainbow-delimiters 是一个用于在 Emacs 中显示彩虹颜色的括号匹配的包。它可以帮助你更容易地识别代码中的括号嵌套结构。当你在编写代码时，每对括号会以不同的颜色进行高亮显示，帮助你更好地理解代码的结构。这对于大型代码文件或深层嵌套的括号非常有用。
+
+=rainbow-delimiters= 在 Emacs 中显示彩虹颜色的括号匹配, 它可以帮助你更容易地识别代码中的括号嵌套结构。当你在编写代码时，每对括号会以不同的颜色进行高亮显示，帮助你更好地理解代码的结构。这对于大型代码文件或深层嵌套的括号非常有用。
+
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :straight t
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
-*** me-editor.el =highlight-numbers=
+
+=highlight-numbers= 用于在代码中高亮数字。它适用于各种编程语言，包括但不限于 Emacs Lisp、Python、C、Java 等。
+
 #+begin_src emacs-lisp
 (use-package highlight-numbers
   :straight t
   :hook (prog-mode . highlight-numbers-mode))
 #+end_src
-*** TODO me-editor.el [[https://github.com/Fuco1/smartparens][smartparens]]
-Smartparens 是一个 Emacs 的插件，它提供了一些智能的括号匹配和操作功能。主要功能包括：
+
+[[https://github.com/Fuco1/smartparens][Smartparens]] 提供了一些智能的括号匹配和操作功能。主要功能包括：
 + 自动匹配括号：输入左括号时自动插入右括号，光标在左括号处时高亮右括号。
 + 括号包围：快速将一个词语包围在括号、引号等符号中。
 + 括号删除：删除一个括号时自动删除匹配的另一个括号，删除一对括号时也可以将中间的内容一起删除。
 + 括号替换：可以快速将一个类型的括号替换成另一个类型的括号。
 + 括号交换：可以快速交换一对括号中的内容，或者将一对括号移动到另一个位置。
+
 #+begin_src emacs-lisp
 (use-package smartparens
   :straight t
@@ -5879,10 +5964,9 @@ Smartparens 是一个 Emacs 的插件，它提供了一些智能的括号匹配�
   :after smartparens
   :demand t)
 #+end_src
-*** me-editor.el [[https://github.com/magnars/expand-region.el][expand-region]]
-+ expand-region.el 是一个 Emacs 的包，它允许你增加当前光标所在位置选定区域的大小。它能够自动检测当前光标所在的语法结构，如单词、句子、段落、函数、括号等，并选中其整个区域。使用它，你可以更快地选择一大段文本，而不必手动一个字符一个字符地选择。
-+ expand-region.el 提供了一个命令 er/expand-region，它用于增加选定区域的大小。你可以通过按多次该命令来逐步扩大选定区域的大小，还可以通过 er/contract-region 命令来缩小选定区域的大小。
-+ expand-region.el 还可以自定义其语法结构的识别方式，以适应不同的编程语言和文本格式。它还提供了许多插件和扩展，例如可以将其与多行编辑、注释等其他编辑功能结合使用。
+
+[[https://github.com/magnars/expand-region.el][expand-region]] 它允许你增加当前光标所在位置选定区域的大小。它能够自动检测当前光标所在的语法结构，如单词、句子、段落、函数、括号等，并选中其整个区域。使用它，你可以更快地选择一大段文本，而不必手动一个字符一个字符地选择。
+
 #+begin_src emacs-lisp
 ;; I learn this trick from ReneFroger, need latest expand-region
 ;; @see https://github.com/redguardtoo/evil-matchit/issues/38
@@ -5891,8 +5975,9 @@ Smartparens 是一个 Emacs 的插件，它提供了一些智能的括号匹配�
   :init
   (+vmap! "v" #'er/expand-region))
 #+end_src
-*** me-editor.el [[https://github.com/minad/goggles][goggles]]
-Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、kill 和 delete 命令
+
+[[https://github.com/minad/goggles][Goggles]] 使用脉冲突出显示修改后的区域 目前支持 undo、yank、kill 和 delete 命令
+
 #+begin_src emacs-lisp
 (use-package goggles
   :straight t
@@ -5904,23 +5989,31 @@ Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、ki
   (goggles-define kill kill-region)
   (goggles-define delete delete-region evil-delete evil-delete-line))
 #+end_src
-*** me-editor.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-editor)
 ;;; me-editor.el ends here
 #+end_src
+
 ** me-email.el
 :properties:
 :header-args: :tangle modules/me-email.el
 :end:
-*** me-email.el =HEAD=
+=me-email.el= 在emacs中完成email
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-email.el --- Editing stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-email.el =mu4e=
+
+=mu4e= 是一个基于 Emacs 的电子邮件客户端，它是针对邮件检索和管理的 mu 邮件搜索引擎的一个前端界面。它提供了一个强大而灵活的界面，使您可以在 Emacs 中方便地阅读、编写和管理电子邮件.
+
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.mailrc\\'" . conf-space-mode))
 
@@ -6130,87 +6223,31 @@ Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、ki
   (setq mu4e-alert-grouped-mail-notification-formatter
         #'+mu4e-alert-grouped-mail-notif-formatter))
 #+end_src
-*** me-email.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-email)
 ;;; me-email.el ends here
 #+end_src
-** [✘] me-embedded.el
-:properties:
-:header-args: :tangle modules/me-embedded.el
-:end:
-嵌入式系统相关的包
-*** me-embedded.el =HEAD=
-#+begin_src emacs-lisp
-;;; me-embedded.el --- Embedded systems stuff -*- lexical-binding: t; -*-
-;;; Author: donney.luck@gmail.com
-;;; Commentary:
-;;; Code:
-#+end_src
-*** me-embedded.el =embedded system=
-#+begin_src emacs-lisp
-(use-package embed
-  :straight (:host github :repo "xal-0/embed-el")
-  :init
-  (+map! :infix "o"
-    "b" '(nil :wk "embed")
-    "bo" #'embed-openocd-start
-    "bO" #'embed-openocd-stop
-    "bg" #'embed-openocd-gdb
-    "bf" #'embed-openocd-flash))
 
-(use-package arduino-mode
-  :straight (:host github :repo "bookest/arduino-mode")
-  :hook (arduino-mode . display-line-numbers-mode)
-  :hook (arduino-mode . hs-minor-mode))
-
-(use-package bitbake-modes
-  :straight (:host bitbucket :repo "olanilsson/bitbake-modes"))
-
-(use-package vhdl-mode
-  :straight (:type built-in)
-  :config
-  ;; Setup vhdl_ls from rust_hdl (AUR: rust_hdl-git)
-  (+eglot-register 'vhdl-mode "vhdl_ls"))
-
-(use-package verilog-mode
-  :straight (:type built-in)
-  :config
-  ;; Setup Verilog/SystemVerilog LSP servers
-  (+eglot-register 'verilog-mode "svls" "verible-verilog-ls" "svlangserver"))
-
-(use-package mips-mode
-  :straight t
-  :mode "\\.mips\\'")
-
-(use-package riscv-mode
-  :straight t
-  :mode "\\.riscv\\'")
-
-(use-package x86-lookup
-  :straight t
-  :custom
-  (x86-lookup-browse-pdf-function 'x86-lookup-browse-pdf-pdf-tools)
-  ;; Get manual from intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
-  (x86-lookup-pdf (concat minemacs-local-dir "x86-lookup/325383-sdm-vol-2abcd.pdf")))
-#+end_src
-*** me-embedded.el =TAIL=
-#+begin_src emacs-lisp
-(provide 'me-embedded)
-;;; me-embedded.el ends here
-#+end_src
 ** me-extra.el
 :properties:
 :header-args: :tangle modules/me-extra.el
 :end:
-*** me-extra.el =HEAD=
+=me-extra.el= 一些扩展函数
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-extra.el --- Some extra functionalities -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-extra.el =better-jumper=
+
+=better-jumper= 它提供了一种更高效的跳转和导航方式，以帮助您在代码中快速定位和跳转到定义、引用和其他关键位置。
+
 #+begin_src emacs-lisp
 (use-package better-jumper
   :straight t
@@ -6219,9 +6256,11 @@ Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、ki
   ;; Map extra mouse buttons to jump forward/backward
   (+mmap!
     "C-o" #'better-jumper-jump-backward
-    "C-S-o" #'better-jumper-jump-forward))
+    "C-S-o" #'better-jump-forward))
 #+end_src
-*** me-extra.el =crux=
+
+=crux= 它提供了一系列有用的命令和函数，旨在提高 Emacs 的操作效率和工作流程。
+
 #+begin_src emacs-lisp
 (use-package crux
   :straight t
@@ -6234,11 +6273,14 @@ Goggles 使用脉冲突出显示修改后的区域 目前支持 undo、yank、ki
     "id" #'crux-insert-date
     "bo" #'crux-kill-other-buffers))
 #+end_src
-*** me-extra.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-extra)
 ;;; me-extra.el ends here
 #+end_src
+
 ** me-files.el
 :properties:
 :header-args: :tangle modules/me-files.el
