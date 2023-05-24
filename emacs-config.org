@@ -1,15 +1,12 @@
 :properties:
 :path:     ~/.emacs.d/
-:header-args:emacs-lisp: :comments no :mkdirp yes
+:header-args: :tangle (concat (org-entry-get nil "path" t) (org-get-heading)) :mkdirp yes :comment no
 :end:
 #+title: Emacs 配置文件
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview nohideblocks
 * early-init.el
-:properties:
-:header-args:emacs-lisp: :tangle (concat (org-entry-get nil "path" t) (org-get-heading))
-:end:
 =early-init.el= 在Emacs刚启动，还未加载主要配置文件时的配置文件。
 
 #+begin_src emacs-lisp
@@ -73,10 +70,8 @@
 #+end_src
 
 * init.el
-:properties:
-:header-args: :tangle init.el
-:end:
 =init.el= 是Emacs的主要配置文件。
+
 文件头
 
 #+begin_src emacs-lisp
@@ -393,11 +388,11 @@ init-tweaks.el  init.el后执行 用户可以微调
 #+end_src
 
 * core/
+:properties:
+:path:     ~/.emacs.d/core/
+:end:
 =core= 目录下是框架的核心配置
 ** me-backports-29.el
-:properties:
-:header-args: :tangle core/me-backports-29.el
-:end:
 =me-backports-29.el= 一些emacs29的函数
 
 文件头
@@ -537,9 +532,6 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 
 ** me-bootstrap.el
-:properties:
-:header-args: :tangle core/me-bootstrap.el
-:end:
 =me-bootstrap.el= 设置包下载器和包安装器
 
 文件头
@@ -654,9 +646,6 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 
 ** me-builtin.el
-:properties:
-:header-args: :tangle core/me-builtin.el
-:end:
 =me-builtin.el= 管理一些内置包
 
 文件头
@@ -693,9 +682,6 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 
 ** me-compat.el
-:properties:
-:header-args: :tangle core/me-compat.el
-:end:
 =me-compat.el= 提供兼容的能力
 
 文件头
@@ -724,9 +710,6 @@ plain variables.  This means that `setopt' will execute any
 #+end_src
 
 ** me-completion.el
-:properties:
-:header-args: :tangle core/me-completion.el
-:end:
 =me-completion.el= 补全相关配置
 
 文件头
@@ -1007,9 +990,6 @@ package [[https://github.com/minad/vertico][vertico]] 完成UI
 #+end_src
 
 ** me-core-ui.el
-:properties:
-:header-args: :tangle core/me-core-ui.el
-:end:
 =me-core-ui.el= 界面相关配置
 
 文件头
@@ -1214,9 +1194,6 @@ package doom-modeline
 #+end_src
 
 ** me-defaults.el
-:properties:
-:header-args: :tangle core/me-defaults.el
-:end:
 =me-defaults.el= 一些默认设置
 
 文件头
@@ -1735,9 +1712,6 @@ or file path may exist now."
 #+end_src
 
 ** me-evil.el
-:properties:
-:header-args: :tangle core/me-evil.el
-:end:
 =me-evil.el= Emacs as Vim
 
 文件头
@@ -1883,9 +1857,6 @@ pacakge =evil= 模拟vim
 #+end_src
 
 ** me-gc.el
-:properties:
-:header-args: :tangle core/me-gc.el
-:end:
 =me-gc.el=  garbage collection 垃圾回收
 
 文件头
@@ -1924,9 +1895,6 @@ gcmh 垃圾回收
 #+end_src
 
 ** me-keybindings.el
-:properties:
-:header-args: :tangle core/me-keybindings.el
-:end:
 =me-keybindings.el= 按键相关设置
 
 文件头
@@ -2162,9 +2130,6 @@ general
 #+end_src
 
 ** me-meow.el
-:properties:
-:header-args: :tangle core/me-meow.el
-:end:
 
 文件头
 
@@ -2281,9 +2246,6 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 ** me-loaddefs.el
 =me-loaddefs.el= 此文件是由 =minemacs-generate-loaddefs= 收集autoload 函数
 ** me-modules.el
-:properties:
-:header-args: :tangle core/me-modules.el
-:end:
 =me-modules.el= 按照模块划分功能
 
 文件头
@@ -2358,9 +2320,6 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 #+end_src
 
 ** me-splash.el
-:properties:
-:header-args: :tangle core/me-splash.el
-:end:
 =me-splash.el= 下载包过程中简易界面 参考 [[github.com/rougier/emacs-splash][emacs-splash]]
 
 文件头
@@ -2469,9 +2428,6 @@ meow 猫态编辑模式 一种不同于evil的按键模式
 #+end_src
 
 ** me-vars.el
-:properties:
-:header-args: :tangle core/me-vars.el
-:end:
 =me-vars.el= 一些自定义变量
 
 文件头
@@ -2680,9 +2636,6 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 
 ** me-use-package-pin-ref.el
-:properties:
-:header-args: :tangle core/me-use-package-pin-ref.el
-:end:
 =me-use-package-pin-ref.el= 使用确定版本的包
 [[https://github.com/radian-software/straight.el#how-do-i-pin-package-versions-or-use-only-tagged-releases][How do I pin package versions or use only tagged releases?]]
 
@@ -2736,9 +2689,6 @@ MinEmacs then save them when calling `+env-save' to be used in GUI sessions as w
 #+end_src
 
 ** minemacs-loaded.el
-:properties:
-:header-args: :tangle core/minemacs-loaded.el
-:end:
 =minemacs-loaded.el= 同步加载
 Virtual module loaded at end of init.el (after custom-vars.el)
 Used to synchronize loading some other stuff after loading Emacs
@@ -2782,9 +2732,6 @@ Used to synchronize loading some other stuff after loading Emacs
 #+end_src
 
 ** minemacs-lazy.el
-:properties:
-:header-args: :tangle core/minemacs-lazy.el
-:end:
 =minemacs-lazy.el= 惰性加载hook
 Virtual module loaded when idle after `minemacs-loaded'.
 Used to synchronize loading some other stuff after loading Emacs.
@@ -2837,11 +2784,11 @@ Used to synchronize loading some other stuff after loading Emacs.
 #+end_src
 
 * elisp/
+:properties:
+:path:     ~/.emacs.d/elisp/
+:end:
 =elisp= 目录下是一些自己实现的扩展
 ** +binary.el
-:properties:
-:header-args: :tangle elisp/+binary.el
-:end:
 =+binary.el= 一些二进制相关的包
 
 文件头
@@ -2956,9 +2903,6 @@ is binary, activate `hexl-mode'."
 #+end_src
 
 ** +buffer.el
-:properties:
-:header-args: :tangle elisp/+buffer.el
-:end:
 =+buffer.el= 一些关于buffer的函数
 
 文件头
@@ -3149,9 +3093,6 @@ When available, use \"fortune\" to add a random quote."
 #+end_src
 
 ** +eglot.el
-:properties:
-:header-args: :tangle elisp/+eglot.el
-:end:
 =+eglot.el=  eglot 扩展
 
 文件头
@@ -3189,9 +3130,6 @@ Examples:
 #+end_src
 
 ** ecryptfs.el
-:properties:
-:header-args: :tangle elisp/ecryptfs.el
-:end:
 =ecryptfs.el= private文件夹的加密解密
 
 文件头
@@ -3318,9 +3256,6 @@ Examples:
 #+end_src
 
 ** +io.el
-:properties:
-:header-args: :tangle elisp/+io.el
-:end:
 =+io= io的扩展函数
 
 文件头
@@ -3636,9 +3571,6 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 #+end_src
 
 ** +emacs.el
-:properties:
-:header-args: :tangle elisp/+emacs.el
-:end:
 =+emacs.el= emacs的一些扩展
 
 文件头
@@ -3812,9 +3744,6 @@ prefix or universal argument, it waits for a moment (defined by
 #+end_src
 
 ** +keybinding.el
-:properties:
-:header-args: :tangle elisp/+keybinding.el
-:end:
 =+keybinding.el= 按键相关的扩展
 
 文件头
@@ -3936,9 +3865,6 @@ It is deferred until `general' gets loaded and configured."
 #+end_src
 
 ** +minemacs.el
-:properties:
-:header-args: :tangle elisp/+minemacs.el
-:end:
 =minemacs.el= 一些宏和方法用来简化配置
 
 文件头
@@ -4312,9 +4238,9 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 ;;; +minemacs.el ends here
 #+end_src
 
-** [✘] netextender.el
+** netextender.el
 :properties:
-:header-args: :tangle elisp/netextender.el
+:header-args: :tangle no
 :end:
 =netextender.el= 程序netextender的封装
 TODO: 暂时用不到
@@ -4416,9 +4342,6 @@ echo \"Y\\n\" | netExtender --auto-reconnect $(gpg -q --for-your-eyes-only --no-
 #+end_src
 
 ** +project.el
-:properties:
-:header-args: :tangle elisp/+project.el
-:end:
 =+project.el= 内置project的扩展
 
 文件头
@@ -4484,9 +4407,6 @@ When DIR is not detected as a project, ask to force it to be by adding a
 #+end_src
 
 ** +primitives.el
-:properties:
-:header-args: :tangle elisp/+primitives.el
-:end:
 =+primitives.el= 一些上古方法
 
 文件头
@@ -4682,9 +4602,6 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 #+end_src
 
 ** +systemd.el
-:properties:
-:header-args: :tangle elisp/+systemd.el
-:end:
 =+systemd.el= 启动 关闭 检查 服务状态 --user
 
 文件头
@@ -4732,9 +4649,6 @@ Return the deserialized object, or nil if the SYM.el file dont exist."
 #+end_src
 
 ** +unix.el
-:properties:
-:header-args: :tangle elisp/+unix.el
-:end:
 =+unix.el=  unix一些命令的包装
 
 文件头
@@ -4791,9 +4705,6 @@ CMD is the command to execute (interactively, `chown')."
 #+end_src
 
 ** valgrind.el
-:properties:
-:header-args: :tangle elisp/valgrind.el
-:end:
 =valgrind.el= 程序 =valgrind= 的包装
 
 文件头
@@ -4863,6 +4774,9 @@ and move to the source code that caused it."
 #+end_src
 
 * modules/
+:properties:
+:path:     ~/.emacs.d/modules/
+:end:
 =modules= 目录下是各个模块
 ** [✘] me-biblio.el
 :properties:
@@ -5030,9 +4944,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-checkers.el
-:properties:
-:header-args: :tangle modules/me-checkers.el
-:end:
 =me-checkers.el= 实时检查和显示源代码中的语法错误
 
 文件头
@@ -5121,9 +5032,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-daemon.el
-:properties:
-:header-args: :tangle modules/me-daemon.el
-:end:
 =me-daemon.el= 后台运行
 
 文件头
@@ -5193,9 +5101,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-data.el
-:properties:
-:header-args: :tangle modules/me-data.el
-:end:
 =me-data.el= 一些配置文件相关包(csv, yaml, xml, graphviz, ...)
 
 文件头
@@ -5418,9 +5323,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-debug.el
-:properties:
-:header-args: :tangle modules/me-debug.el
-:end:
 =me-debug.el= 调试器相关 gdb gud
 
 文件头
@@ -5515,9 +5417,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-docs.el
-:properties:
-:header-args: :tangle modules/me-docs.el
-:end:
 =me-docs.el= 文档格式相关
 
 文件头
@@ -5674,9 +5573,6 @@ TODO: 暂时用不到
 [[edraw:][test_edVdraw]]
 
 ** me-eaf.el
-:properties:
-:header-args: :tangle modules/me-eaf.el
-:end:
 =me-eaf.el= 在emacs里运行其他程序
 
 文件头
@@ -5773,9 +5669,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-editor.el
-:properties:
-:header-args: :tangle modules/me-editor.el
-:end:
 =me-editor.el= 编辑相关
 
 文件头
@@ -6001,9 +5894,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-email.el
-:properties:
-:header-args: :tangle modules/me-email.el
-:end:
 =me-email.el= 在emacs中完成email
 
 文件头
@@ -6235,9 +6125,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-extra.el
-:properties:
-:header-args: :tangle modules/me-extra.el
-:end:
 =me-extra.el= 一些扩展函数
 
 文件头
@@ -6285,9 +6172,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-files.el
-:properties:
-:header-args: :tangle modules/me-files.el
-:end:
 =me-files.el= 文件相关
 
 文件头
@@ -6372,9 +6256,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-fun.el
-:properties:
-:header-args: :tangle modules/me-fun.el
-:end:
 =me-fun.el= 一些有趣的包
 
 文件头
@@ -6442,9 +6323,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-gnus.el
-:properties:
-:header-args: :tangle no
-:end:
 =me-gnus.el= email 的 gnu实现
 
 文件头
@@ -6472,9 +6350,6 @@ TODO: 暂时用不到
 #+end_src
 
 ** me-latex.el
-:properties:
-:header-args: :tangle modules/me-latex.el
-:end:
 =me-latex.el= LaTeX是一种文本排版系统，通常用于制作科技论文、报告、学术出版物、书籍、幻灯片等等。
 
 文件头
@@ -6602,9 +6477,6 @@ TODO: 学习LaTeX
 #+end_src
 
 ** me-lifestyle.el
-:properties:
-:header-args: :tangle modules/me-lifestyle.el
-:end:
 =me-lifestyle.el= 一种生活方式
 
 文件头
@@ -6640,9 +6512,6 @@ TODO: 学习LaTeX
 #+end_src
 
 ** me-lisp.el
-:properties:
-:header-args: :tangle modules/me-lisp.el
-:end:
 =me-lisp.el= lisp相关的包和设置
 
 文件头
@@ -6900,9 +6769,6 @@ TODO: 有空在看
 #+end_src
 
 ** me-lsp.el
-:properties:
-:header-args: :tangle modules/me-lsp.el
-:end:
 =me-lsp.el= lsp-mode相关包
 
 文件头
@@ -7082,9 +6948,6 @@ TODO: 有空在看
 #+end_src
 
 ** me-math.el
-:properties:
-:header-args: :tangle modules/me-math.el
-:end:
 =me-math.el= 对于数学的支持
 
 文件头
@@ -7205,9 +7068,6 @@ TODO: 有空在看
 #+end_src
 
 ** me-media.el
-:properties:
-:header-args: :tangle modules/me-media.el
-:end:
 =me-media.el= 多媒体相关
 
 文件头
@@ -7299,9 +7159,6 @@ TODO: 有空在看
 #+end_src
 
 ** me-multi-cursors.el
-:properties:
-:header-args: :tangle modules/me-multi-cursors.el
-:end:
 =me-multi-cursors.el= 多光标解决方案
 
 文件头
@@ -7410,9 +7267,6 @@ TODO: 有空在看
 #+end_src
 
 ** me-natural-langs.el
-:properties:
-:header-args: :tangle modules/me-natural-langs.el
-:end:
 =me-natural-langs.el= 自然语言拼写翻译
 
 文件头
@@ -7651,9 +7505,6 @@ TODO：暂时不知道干什么用的
 #+end_src
 
 ** me-notes.el
-:properties:
-:header-args: :tangle modules/me-notes.el
-:end:
 =me-notes.el= 笔记相关
 
 文件头
@@ -7732,17 +7583,18 @@ TODO：暂时不知道干什么用的
 #+end_src
 
 ** me-org.el
-:properties:
-:header-args: :tangle modules/me-org.el
-:end:
-*** me-org.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-org.el --- Org related stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-org.el org-mode tweaks
+
+org-mode tweak
+
 #+begin_src emacs-lisp
 (defgroup minemacs-org nil
   "MinEmacs org-mode tweaks."
@@ -8053,11 +7905,14 @@ TODO：暂时不知道干什么用的
   :config
   (evil-org-agenda-set-keys))
 #+end_src
-*** me-org.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide  'me-org)
 ;;; me-org.el ends here
 #+end_src
+
 ** me-prog.el
 :properties:
 :header-args: :tangle modules/me-prog.el
@@ -11454,9 +11309,12 @@ If SKIP-HEADERS is set, do not show include message headers."
 ;;; me-mu4e-extras.el ends here
 #+end_src
 * skel/
+:properties:
+:path:     ~/.emacs.d/skel/
+:end:
 =skel= 目录下是框架的骨架 可以放入自定义的部分
 ** config.el
-#+begin_src emacs-lisp :tangle skel/config.el
+#+begin_src emacs-lisp
 ;;; config.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
@@ -11659,7 +11517,7 @@ If SKIP-HEADERS is set, do not show include message headers."
 (advice-add 'consult-theme :after (lambda (&rest args) (set-org-block-end-line-color)))
 #+end_src
 ** modules.el
-#+begin_src emacs-lisp :tangle skel/modules.el
+#+begin_src emacs-lisp
 ;;; modules.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
@@ -11724,7 +11582,7 @@ If SKIP-HEADERS is set, do not show include message headers."
 ;;          obsolete/me-flycheck))) ; Static checkers (flycheck, ...)       me-window))      ; Frame & window tweaks
 #+end_src
 ** early-config.el
-#+begin_src emacs-lisp :tangle skel/early-config.el
+#+begin_src emacs-lisp
 ;;; early-config.el -*- coding: utf-8-unix; lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
