@@ -6912,6 +6912,7 @@ TODO: 有空在看
 #+end_src
 
 =lsp-mode= 用于提供对 Language Server Protocol（语言服务器协议）的支持。它使 Emacs 能够与各种编程语言的语言服务器进行通信，从而提供代码补全、语法检查、重构等功能。
+
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :straight t
@@ -7408,15 +7409,19 @@ TODO: 有空在看
 :end:
 =me-natural-langs.el= 自然语言拼写翻译
 
-*** me-natural-langs.el =HEAD=
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-natural-langs.el --- Natural languages stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-natural-langs.el spell-fu
-Spell-fu 是一个 Emacs 拼写检查的工具，它支持多种语言和拼写检查引擎，并且提供了许多有用的功能，比如实时检查拼写错误、推荐单词、自定义词典等。它可以与 flyspell 配合使用，也可以直接在 buffer 中检查拼写错误。使用 Spell-fu，你可以在 Emacs 中更加方便地进行拼写检查，提高写作效率和文档质量。
+
+
+=Spell-fu= 是一个 Emacs 拼写检查的工具，它支持多种语言和拼写检查引擎，并且提供了许多有用的功能，比如实时检查拼写错误、推荐单词、自定义词典等,
+它可以与 flyspell 配合使用，也可以直接在 buffer 中检查拼写错误。使用 Spell-fu，你可以在 Emacs 中更加方便地进行拼写检查，提高写作效率和文档质量。
+
 #+begin_src emacs-lisp
 (defconst +aspell-available-p (executable-find "aspell"))
 
@@ -7485,8 +7490,10 @@ Spell-fu 是一个 Emacs 拼写检查的工具，它支持多种语言和拼写�
      (when-let (excluded (cdr (cl-find-if #'derived-mode-p +spell-excluded-faces-alist :key #'car)))
        (setq-local spell-fu-faces-exclude excluded)))))
 #+end_src
-*** me-natural-langs.el go-translate
+
 go-translate 是一款基于 Google Translate 的 Emacs 翻译插件。它可以将当前 buffer 中的选中文本翻译成另一种语言，并将翻译结果显示在另一个 buffer 中。
+TODO: 看一下怎么用
+
 #+begin_src emacs-lisp
 (use-package go-translate
   :straight (:host github :repo "lorniu/go-translate")
@@ -7574,6 +7581,7 @@ go-translate 是一款基于 Google Translate 的 Emacs 翻译插件。它可以
               (t (gts-google-engine)))
         :render (gts-buffer-render))))))
 #+end_src
+
 *** me-natural-langs.el lexic
 lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询多个在线词典（如 Wiktionary、Free Dictionary 等），以及一个本地的词典查询器（基于 sdcv）。它可以用来快速查询单词的含义、拼写、发音等信息。
 使用 lexic 包，你可以在 Emacs 中方便地查找单词的定义，而无需切换到浏览器或其他外部应用程序。如果你经常需要查询单词的含义或者需要翻译文本，lexic 是一个非常有用的工具。
