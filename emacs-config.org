@@ -1,12 +1,15 @@
+:properties:
+:path:     ~/.emacs.d/
+:header-args:emacs-lisp: :comments no :mkdirp yes
+:end:
 #+title: Emacs 配置文件
 #+author: donney.luck
 #+date: 2023/04/15 14:23:50
 #+startup: overview nohideblocks
-#+property: header-args:emacs-lisp :comments no :mkdirp yes
 * early-init.el
 :properties:
-:header-args: :tangle early-init.el
-:end:
+:header-args:emacs-lisp: :tangle (concat (org-entry-get nil "path" t) (org-get-heading))
+:end::end:
 =early-init.el= 在Emacs刚启动，还未加载主要配置文件时的配置文件。
 
 #+begin_src emacs-lisp
@@ -74,7 +77,6 @@
 :header-args: :tangle init.el
 :end:
 =init.el= 是Emacs的主要配置文件。
-
 文件头
 
 #+begin_src emacs-lisp
@@ -1300,7 +1302,8 @@ EMACS 中的 UTF-8：无处不在，永远不变
  newsticker-dir (+directory-ensure minemacs-local-dir "newsticker/data/")
  nsm-settings-file (concat minemacs-local-dir "nsm-settings.el")
  org-clock-persist-file (concat minemacs-cache-dir "org/clock-persist.el")
- org-id-locations-file (concat minemacs-cache-dir "org/id-locations.el")
+ ;; org-id-locations-file (concat minemacs-cache-dir "org/id-locations.el")
+ org-id-locations-file (concat minemacs-local-dir "id-locations.el")
  org-persist-directory (+directory-ensure minemacs-cache-dir "org/persist/")
  org-preview-latex-image-directory (+directory-ensure minemacs-cache-dir "org/preview/latex-image/")
  org-publish-timestamp-directory (+directory-ensure minemacs-cache-dir "org/publish/timestamps/")
@@ -7329,8 +7332,7 @@ TODO: 有空在看
   (define-key global-map iedit-toggle-key-default #'evil-iedit-state/iedit-mode))
 #+end_src
 
-+ evil-mc 的主要功能是在一个 Emacs 缓冲区中使用多个光标，用于在多个地方进行同时编辑。它的设计初衷是模仿 Sublime Text 中的多光标功能。evil-mc 可以使用类似于 Sublime Text 中的快捷键来添加或删除光标，以及在多个光标之间切换。它还支持在多个缓冲区之间进行多光标编辑，并提供了一些用于自定义光标样式的选项。
-+ evil-multiedit 的主要功能是进行文本匹配和替换，以及删除或插入一些文本。它的设计初衷是提供类似于 Sublime Text 的多选编辑和替换的功能。evil-multiedit 提供了一些可以用于匹配和选定多个文本区域的快捷键。它还支持使用正则表达式和 Emacs Lisp 表达式进行文本匹配和替换。
+=evil-mc= 的主要功能是在一个 Emacs 缓冲区中使用多个光标，用于在多个地方进行同时编辑。它的设计初衷是模仿 Sublime Text 中的多光标功能。evil-mc 可以使用类似于 Sublime Text 中的快捷键来添加或删除光标，以及在多个光标之间切换。它还支持在多个缓冲区之间进行多光标编辑，并提供了一些用于自定义光标样式的选项。
 
 #+begin_src emacs-lisp
 (use-package evil-mc
@@ -7374,7 +7376,11 @@ TODO: 有空在看
 (use-package me-evil-mc-evil-escape
   :after evil-mc evil-escape
   :demand t)
+#+end_src
 
+=evil-multiedit= 的主要功能是进行文本匹配和替换，以及删除或插入一些文本。它的设计初衷是提供类似于 Sublime Text 的多选编辑和替换的功能。evil-multiedit 提供了一些可以用于匹配和选定多个文本区域的快捷键。它还支持使用正则表达式和 Emacs Lisp 表达式进行文本匹配和替换。
+
+#+begin_src emacs-lisp
 (use-package evil-multiedit
   :straight t
   :after iedit evil
@@ -7417,7 +7423,6 @@ TODO: 有空在看
 ;;; Commentary:
 ;;; Code:
 #+end_src
-
 
 =Spell-fu= 是一个 Emacs 拼写检查的工具，它支持多种语言和拼写检查引擎，并且提供了许多有用的功能，比如实时检查拼写错误、推荐单词、自定义词典等,
 它可以与 flyspell 配合使用，也可以直接在 buffer 中检查拼写错误。使用 Spell-fu，你可以在 Emacs 中更加方便地进行拼写检查，提高写作效率和文档质量。
@@ -7491,7 +7496,7 @@ TODO: 有空在看
        (setq-local spell-fu-faces-exclude excluded)))))
 #+end_src
 
-go-translate 是一款基于 Google Translate 的 Emacs 翻译插件。它可以将当前 buffer 中的选中文本翻译成另一种语言，并将翻译结果显示在另一个 buffer 中。
+=go-translate= 是一款基于 Google Translate 的 Emacs 翻译插件。它可以将当前 buffer 中的选中文本翻译成另一种语言，并将翻译结果显示在另一个 buffer 中。
 TODO: 看一下怎么用
 
 #+begin_src emacs-lisp
@@ -7649,15 +7654,19 @@ TODO：暂时不知道干什么用的
 :properties:
 :header-args: :tangle modules/me-notes.el
 :end:
-*** me-notes.el =HEAD=
+=me-notes.el= 笔记相关
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-notes.el --- Notes management -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-notes.el org-roam
-Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图的形式呈现笔记之间的联系。Org-roam 基于 Org-mode，是 Emacs 社区中目前最热门的笔记管理工具之一。
+
+=Org-roam= 用于构建个人笔记库，并以交互式图的形式呈现笔记之间的联系。Org-roam 基于 Org-mode，是 Emacs 社区中目前最热门的笔记管理工具之一。
+
 #+begin_src emacs-lisp
 (use-package org-roam
   :straight t
@@ -7714,11 +7723,14 @@ Org-roam 是一个 Emacs 包，用于构建个人笔记库，并以交互式图�
   ;; Eventually suppress previewing for certain functions
   (consult-customize consult-org-roam-forward-links :preview-key (kbd "M-.")))
 #+end_src
-*** me-notes.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-notes)
 ;;; me-notes.el ends here
 #+end_src
+
 ** me-org.el
 :properties:
 :header-args: :tangle modules/me-org.el
@@ -11544,7 +11556,6 @@ If SKIP-HEADERS is set, do not show include message headers."
 
 ;; Module: `me-org' -- Package: `org'
 (with-eval-after-load 'org
-  (setq org-hide-emphasis-markers t) ;; 隐藏折叠时生成的长黑条
   ;; Set Org-mode director
   (setq org-directory "~/Org/" ; let's put files here
         org-default-notes-file (concat org-directory "inbox.org"))

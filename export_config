@@ -3,7 +3,28 @@
 ;;;learn from here
 ;;;https://github.com/lujun9972/emacs-document/blob/master/elisp-common/emacs-script%E4%B8%AD%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91.org
 (require 'org)
-(setq org-id-locations '(""))
-(message "Tanging ...")
-(org-babel-tangle-file "emacs-config.org")
-(message "Tanging done") 
+(setq org-id-locations-file "local/.id-locations.el")
+
+(defun org-babel-tangle-linked-files (file-path)
+  "Tangle code blocks in files linked in the specified buffer FILE-PATH."
+  (let* ((buffer (find-file-noselect file-path))
+         (link-file-paths '())
+         link-file-path)
+    (with-current-buffer buffer
+      (goto-char (point-min))
+      (while (search-forward-regexp "\\[\\[id:\\(.*?\\)\\]\\[\\(.*?\\)\\]\\]" nil t)
+        (let* ((id (match-string 1))
+               (file (match-string 2))
+               (full-path (org-id-find-id-file id)))
+          (when full-path
+            (message id)
+            (push full-path link-file-paths))))
+      (dolist (path link-file-paths)
+        (message "Tangling file: %s" path)
+        (org-babel-tangle-file path))
+      (message "Tangle Done"))
+    (kill-buffer buffer)))
+
+(let ((org-file-path "emacs-config.org"))
+  (org-babel-tangle-linked-files org-file-path)
+  (org-babel-tangle-file org-file-path))
