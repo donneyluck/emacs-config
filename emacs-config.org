@@ -9,7 +9,7 @@
 * early-init.el
 :properties:
 :header-args:emacs-lisp: :tangle (concat (org-entry-get nil "path" t) (org-get-heading))
-:end::end:
+:end:
 =early-init.el= 在Emacs刚启动，还未加载主要配置文件时的配置文件。
 
 #+begin_src emacs-lisp
