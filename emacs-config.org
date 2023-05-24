@@ -7582,9 +7582,9 @@ TODO: 看一下怎么用
         :render (gts-buffer-render))))))
 #+end_src
 
-*** me-natural-langs.el lexic
-lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询多个在线词典（如 Wiktionary、Free Dictionary 等），以及一个本地的词典查询器（基于 sdcv）。它可以用来快速查询单词的含义、拼写、发音等信息。
+=lexic= 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询多个在线词典（如 Wiktionary、Free Dictionary 等），以及一个本地的词典查询器（基于 sdcv）。它可以用来快速查询单词的含义、拼写、发音等信息。
 使用 lexic 包，你可以在 Emacs 中方便地查找单词的定义，而无需切换到浏览器或其他外部应用程序。如果你经常需要查询单词的含义或者需要翻译文本，lexic 是一个非常有用的工具。
+
 #+begin_src emacs-lisp
 (use-package lexic
   :straight t
@@ -7618,7 +7618,10 @@ lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询�
     "C-n" #'lexic-search-history-forwards
     "/" `(,(+cmdfy! (call-interactively #'lexic-search)) :wk "Search")))
 #+end_src
-*** me-natural-langs.el me-eglot-ltex
+
+=me-eglot-ltex=
+TODO：暂时不知道干什么用的
+
 #+begin_src emacs-lisp
 ;; Add this to .dir-locals.el
 ;; ((nil (eglot-workspace-configuration
@@ -7635,11 +7638,13 @@ lexic 是一个 Emacs 的扩展包，它提供了一个简单的界面来查询�
     `("localhost" ,ltex-ls-server-port)))
 #+end_src
 
-*** me-natura-langs.el =TAIL=
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-natura-langs)
 ;;; me-natural-langs.el ends here
 #+end_src
+
 ** me-notes.el
 :properties:
 :header-args: :tangle modules/me-notes.el
