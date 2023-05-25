@@ -3969,11 +3969,11 @@ If NO-MESSAGE-LOG is non-nil, do not print any message to *Messages* buffer."
   ;; TODO: use (font-family-list) to check if the font is available
   (custom-set-faces
    `(default
-      ((t (:font ,(format "%s %d"
-                   (or (plist-get minemacs-fonts :font-family)
-                    (plist-get minemacs-default-fonts :font-family))
-                   (or (plist-get minemacs-fonts :font-size)
-                    (plist-get minemacs-default-fonts :font-size)))))))
+     ((t (:font ,(format "%s %d"
+                  (or (plist-get minemacs-fonts :font-family)
+                   (plist-get minemacs-default-fonts :font-family))
+                  (or (plist-get minemacs-fonts :font-size)
+                   (plist-get minemacs-default-fonts :font-size)))))))
    `(fixed-pitch
      ((t (:inherit (default)))))
    `(fixed-pitch-serif
@@ -7106,9 +7106,9 @@ TODO: 有空在看
   :config
   (defun +empv--dl-playlist (playlist &optional dist)
     (let ((default-directory
-            (or dist
-                (let ((d (expand-file-name "empv-downloads" empv-audio-dir)))
-                  (unless (file-directory-p d) (mkdir d t)) d)))
+           (or dist
+               (let ((d (expand-file-name "empv-downloads" empv-audio-dir)))
+                 (unless (file-directory-p d) (mkdir d t)) d)))
           (vids (seq-filter
                  #'identity ;; Filter nils
                  (mapcar
@@ -7583,6 +7583,7 @@ TODO：暂时不知道干什么用的
 #+end_src
 
 ** me-org.el
+=me-org.el= org tweak
 
 文件头
 
@@ -7849,9 +7850,9 @@ org-mode tweak
   (setq org-present-text-scale 2.5)
 
   (defvar-local +org-present--vcm-params
-    '(:enabled nil
-      :width nil
-      :center-text nil)
+      '(:enabled nil
+        :width nil
+        :center-text nil)
     "Variable to hold `visual-fill-column-mode' parameters")
 
   (add-hook
@@ -7914,18 +7915,19 @@ org-mode tweak
 #+end_src
 
 ** me-prog.el
-:properties:
-:header-args: :tangle modules/me-prog.el
-:end:
-*** me-prog.el =HEAD=
+=me-prog.el= 编程相关
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-prog.el --- Programming stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-prog.el =tree-sitter=
-+ Tree-sitter是一种用于解析源代码的工具,它可以生成一棵抽象语法树(AST),用于语法高亮、自动补全、代码重构等应用
+
+=Tree-sitter= 是一种用于解析源代码的工具,它可以生成一棵抽象语法树(AST),用于语法高亮、自动补全、代码重构等应用
+
 #+begin_src emacs-lisp
 (if (not (+emacs-features-p 'tree-sitter))
     ;; Use the external `tree-sitter' module
@@ -7949,8 +7951,9 @@ org-mode tweak
     ;; Install all languages when calling `treesit-auto-install-all'
     (setq treesit-language-source-alist (treesit-auto--build-treesit-source-alist))))
 #+end_src
-*** me-prog.el =hideif=
-hideif 是一个 Emacs 包，提供了一个命令 hide-ifdef-mode，可以根据预处理指令 #ifdef、#ifndef、#else、#endif 来折叠和展开代码块，以达到在不同条件下隐藏和显示代码的目的。
+
+=hideif= hide-ifdef-mode，可以根据预处理指令 #ifdef、#ifndef、#else、#endif 来折叠和展开代码块，以达到在不同条件下隐藏和显示代码的目的。
+
 #+begin_src emacs-lisp
 (use-package hideif
   :straight (:type built-in)
@@ -7964,8 +7967,10 @@ hideif 是一个 Emacs 包，提供了一个命令 hide-ifdef-mode，可以根�
   (hide-ifdef-shadow t)
   (hide-ifdef-initially t))
 #+end_src
-*** me-prog.el =eglot=
-eglot 是 Emacs 的一个包，提供了一个通用的 Emacs 客户端来连接不同的语言服务器，比如 LSP（Language Server Protocol）服务器，以提供对编程语言的支持。这样可以在 Emacs 中使用许多高级 IDE 功能，如代码补全、代码导航、错误检查等。
+
+
+=eglot= 提供了一个通用的 Emacs 客户端来连接不同的语言服务器，比如 LSP（Language Server Protocol）服务器，以提供对编程语言的支持。这样可以在 Emacs 中使用许多高级 IDE 功能，如代码补全、代码导航、错误检查等。
+
 #+begin_src emacs-lisp
 (use-package eglot
   :straight `(:type ,(if (< emacs-major-version 29) 'git 'built-in))
@@ -8076,9 +8081,10 @@ the children of class at point."
   (unless (memq 'me-lsp minemacs-modules)
     (defalias 'consult-lsp-file-symbols #'consult-eglot-symbols)))
 #+end_src
-*** me-prog.el =eldoc=
-+ eldoc会在编辑Lisp代码时在minibuffer中显示当前函数的签名和一些文档。
-+ eldoc-box 是一个 Emacs 的 minor mode，它增强了 eldoc-mode 的体验，为 eldoc-mode 提供了更好的可读性和可视化效果。在默认情况下，eldoc-mode 会在 minibuffer 中显示函数和变量的签名和文档。但是，当签名和文档很长时，可能会出现问题，因为它们会占用 minibuffer 的大部分空间。而 eldoc-box 将函数和变量的签名和文档显示在 Emacs 的当前窗口中，使用一种称为 "box" 的方式。它还提供了其他功能，例如可以调整 box 的大小、更改颜色等。
+
+=eldoc= 会在编辑Lisp代码时在minibuffer中显示当前函数的签名和一些文档。
+=eldoc-box= 增强了 eldoc-mode 的体验，为 eldoc-mode 提供了更好的可读性和可视化效果。在默认情况下，eldoc-mode 会在 minibuffer 中显示函数和变量的签名和文档。但是，当签名和文档很长时，可能会出现问题，因为它们会占用 minibuffer 的大部分空间。而 eldoc-box 将函数和变量的签名和文档显示在 Emacs 的当前窗口中，使用一种称为 "box" 的方式。它还提供了其他功能，例如可以调整 box 的大小、更改颜色等。
+
 #+begin_src emacs-lisp
 (use-package eldoc
   :straight (:type built-in)
@@ -8090,8 +8096,9 @@ the children of class at point."
   :hook (prog-mode . eldoc-box-hover-at-point-mode)
   :hook (eglot-managed-mode . eldoc-box-hover-at-point-mode))
 #+end_src
-*** me-prog.el =cov=
-第三方包cov，它可以在Emacs中对C/C++代码的测试覆盖率进行分析，并在代码中高亮显示哪些代码行被测试覆盖到
+
+=cov= 它可以在Emacs中对C/C++代码的测试覆盖率进行分析，并在代码中高亮显示哪些代码行被测试覆盖到
+
 #+begin_src emacs-lisp
 (use-package cov
   :straight (:host github :repo "abougouffa/cov" :branch "feat/gcov-cmake")
@@ -8108,8 +8115,11 @@ the children of class at point."
       (message "Enabled coverage mode."))
     (cov-update)))
 #+end_src
-*** me-prog.el =compile-multi=
-compile-multi 是一个 Emacs 包，它允许你在一个窗口中运行多个编译命令，并将它们分别输出到不同的缓冲区中。它可以提高你的工作效率，因为你可以在一个窗口中同时运行和监视多个编译任务，而不必切换到不同的窗口和缓冲区。此外，它还提供了一些方便的快捷键，以方便你快速地切换和管理不同的编译任务。
+
+=compile-multi=
++ 它允许你在一个窗口中运行多个编译命令，并将它们分别输出到不同的缓冲区中。
++ 它可以提高你的工作效率，因为你可以在一个窗口中同时运行和监视多个编译任务，而不必切换到不同的窗口和缓冲区。此外，它还提供了一些方便的快捷键，以方便你快速地切换和管理不同的编译任务。
+
 #+begin_src emacs-lisp
 (use-package compile-multi
   :straight t
@@ -8127,8 +8137,10 @@ compile-multi 是一个 Emacs 包，它允许你在一个窗口中运行多个�
                compilation-buffer-name-function)))
       (call-interactively #'compile-multi))))
 #+end_src
-*** me-prog.el =compile=
-compile是Emacs自带的编译命令，可以用来编译和运行各种程序。它可以在Emacs中启动一个子进程来执行编译和运行命令，并将输出显示在一个专门的 buffer 中。通常，你可以通过 M-x compile 命令来打开 *compilation* buffer，并在其中运行你需要的编译命令，例如 make
+
+=compile= 是Emacs自带的编译命令，可以用来编译和运行各种程序。它可以在Emacs中启动一个子进程来执行编译和运行命令，并将输出显示在一个专门的 buffer 中。
+通常，你可以通过 M-x compile 命令来打开 *compilation* buffer，并在其中运行你需要的编译命令，例如 make
+
 #+begin_src emacs-lisp
 (use-package compile
   :straight (:type built-in)
@@ -8170,10 +8182,11 @@ compile是Emacs自带的编译命令，可以用来编译和运行各种程序�
       (message "Enabled burying compilation buffer.")
       (add-hook 'compilation-finish-functions #'+compilation--bury-if-successful-h))))
 #+end_src
-*** me-prog.el =apheleia=
-Apheleia 是一个自动化代码格式化和修复工具，可以用于Emacs和VSCode编辑器。
+
+=Apheleia= 是一个自动化代码格式化和修复工具，可以用于Emacs和VSCode编辑器。
 它使用LSP协议，支持各种语言和格式器，并可以集成到编辑器中进行自动化格式化、保存前格式化等操作。
 它的目的是提高代码质量、一致性和可读性，并减少手动格式化代码的时间和工作量。
+
 #+begin_src emacs-lisp
 (use-package apheleia
   :straight t
@@ -8185,10 +8198,12 @@ Apheleia 是一个自动化代码格式化和修复工具，可以用于Emacs和
                    (sh-mode . shfmt)))
     (add-to-list 'apheleia-mode-alist alist)))
 #+end_src
-*** me-prog.el =editorconfig=
-EditorConfig是一种跨编辑器的文件格式，旨在通过定义和维护一致的编码风格，从而使跨多个编辑器和IDE的协作更容易。
-在一个项目中，您可以创建一个名为 =.editorconfig= 的文件，指定您希望项目中的各种文件的格式规则。这些规则可以是缩进类型、缩进大小、换行符类型等等。不同的编辑器和IDE都有支持EditorConfig的插件或者内置支持，能够自动识别 =.editorconfig= 文件并将其中的规则应用到项目中的相应文件。
-EditorConfig能够减轻协作过程中由于使用不同的编辑器或IDE而产生的格式差异所带来的困难。
+
+=Editorconfig= 是一种跨编辑器的文件格式，旨在通过定义和维护一致的编码风格，从而使跨多个编辑器和IDE的协作更容易。
++ 在一个项目中，您可以创建一个名为 =.editorconfig= 的文件，指定您希望项目中的各种文件的格式规则。这些规则可以是缩进类型、缩进大小、换行符类型等等。
++ 不同的编辑器和IDE都有支持EditorConfig的插件或者内置支持，能够自动识别 =.editorconfig= 文件并将其中的规则应用到项目中的相应文件。
++ =EditorConfig= 能够减轻协作过程中由于使用不同的编辑器或IDE而产生的格式差异所带来的困难。
+
 #+begin_src emacs-lisp
 (use-package editorconfig
   :straight t
@@ -8198,10 +8213,11 @@ EditorConfig能够减轻协作过程中由于使用不同的编辑器或IDE而�
     "fc" '(editorconfig-find-current-editorconfig :wk "Find current EditorConfig")
     "cfe" #'editorconfig-format-buffer))
 #+end_src
-*** me-prog.el =clang-format=
-clang-format 是一个由 Clang 项目提供的代码格式化工具，可以自动将代码格式化为符合某个指定的格式规范。
-clang-format 支持的语言非常广泛，包括 C、C++、Objective-C、Java、JavaScript、TypeScript、Swift、Protobuf、WebAssembly 等等，支持大部分常见的格式化规则，并且可以通过配置文件自定义格式化规则。
-在 Emacs 中，可以使用 clang-format.el 这个 package 来调用 clang-format，从而在 Emacs 中实现代码格式化的功能。
+
++ =clang-format= 是一个由 Clang 项目提供的代码格式化工具，可以自动将代码格式化为符合某个指定的格式规范。
++ =clang-format= 支持的语言非常广泛，包括 C、C++、Objective-C、Java、JavaScript、TypeScript、Swift、Protobuf、WebAssembly 等等，支持大部分常见的格式化规则，并且可以通过配置文件自定义格式化规则。
++ 在 Emacs 中，可以使用 clang-format.el 这个 package 来调用 clang-format，从而在 Emacs 中实现代码格式化的功能。
+
 #+begin_src emacs-lisp
 (use-package clang-format
   :straight t
@@ -8211,15 +8227,18 @@ clang-format 支持的语言非常广泛，包括 C、C++、Objective-C、Java�
     "cfc" #'clang-format-buffer))
 #+end_src
 
-*** me-prog.el =vimrc-mode=
++ =vimrc-mode=
+
 #+begin_src emacs-lisp
 ;;; Modes
 (use-package vimrc-mode
   :straight t
   :mode "\\.vim\\(rc\\)?\\'")
 #+end_src
-*** me-prog.el =cmake-mode=
-cmake-mode 本身提供了基本的语法高亮功能，但是 cmake-font-lock 可以增强这一功能，提供更好的语法高亮效果。cmake-font-lock 会在 cmake-mode 基础上添加一些额外的语法高亮规则，如高亮变量、宏等。因此，如果你需要更好的 CMake 语法高亮效果，可以考虑使用 cmake-font-lock。
+
++ =cmake-mode= 本身提供了基本的语法高亮功能，但是 cmake-font-lock 可以增强这一功能，提供更好的语法高亮效果。
++ =cmake-font-lock= 会在 =cmake-mode= 基础上添加一些额外的语法高亮规则，如高亮变量、宏等。因此，如果你需要更好的 CMake 语法高亮效果，可以考虑使用 cmake-font-lock。
+
 #+begin_src emacs-lisp
 (use-package cmake-mode
   :straight (:host github :repo "emacsmirror/cmake-mode" :files (:defaults "*"))
@@ -8230,10 +8249,11 @@ cmake-mode 本身提供了基本的语法高亮功能，但是 cmake-font-lock �
   :straight (:host github :repo "Lindydancer/cmake-font-lock" :files (:defaults "*"))
   :hook (cmake-mode . cmake-font-lock-activate))
 #+end_src
-*** me-prog.el =rust-mode=
+
 + Rust 是一种现代的编程语言，由 Mozilla 公司的 Graydon Hoare 在 2006 年创建。它在内存安全和并发方面具有出色的表现，并且具有高度的可靠性和性能。Rust 的设计目标是成为一种具有高效性和安全性的系统级编程语言。
 + Rust 自发布以来一直受到广泛关注和使用。它在 Stack Overflow 的开发者调查中被评为“最喜欢的编程语言”和“最希望学习的编程语言”多年，并且在 TIOBE 编程语言排行榜中也一直位居前列。
 + Rust 的高可靠性、高安全性和高性能等特点，以及其逐渐成熟的生态系统，使其成为一种备受推崇的编程语言之一。
+
 #+begin_src emacs-lisp
 (use-package rust-mode
   :straight t
@@ -8256,8 +8276,11 @@ cmake-mode 本身提供了基本的语法高亮功能，但是 cmake-font-lock �
     "F" #'rust-goto-format-problem
     "S" #'rust-enable-format-on-save))
 #+end_src
-*** me-prog.el =dumb-jump=
-dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、声明或引用。它不依赖于任何索引或 tags 文件，而是使用简单的搜索算法（例如 grep）来查找匹配项。dumb-jump 支持多种编程语言，并且易于配置。它可以根据需要与其他包集成，例如 projectile 或 helm。
+
++ =dumb-jump= 用于在代码库中快速跳转到定义、声明或引用。
++ 它不依赖于任何索引或 tags 文件，而是使用简单的搜索算法（例如 grep）来查找匹配项。
++ =dumb-jump= 支持多种编程语言，并且易于配置。它可以根据需要与其他包集成，例如 projectile 或 helm。
+
 #+begin_src emacs-lisp
 (use-package dumb-jump
   :straight t
@@ -8284,10 +8307,11 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
     ("l" dumb-jump-quick-look "Quick look")
     ("b" dumb-jump-back "Back")))
 #+end_src
-*** me-prog.el =hl-todo=
-=hl-todo= 是一个Emacs的包，用于在代码中高亮显示注释中的特殊标记。
-它可以用来标记TODO，FIXME，BUG等，以便更容易地找到和处理它们。
-它还提供了一些有用的功能，例如列表所有标记，定位到下一个或前一个标记，删除标记等。
+
++ =hl-todo=  用于在代码中高亮显示注释中的特殊标记。
++ 它可以用来标记TODO，FIXME，BUG等，以便更容易地找到和处理它们。
++ 它还提供了一些有用的功能，例如列表所有标记，定位到下一个或前一个标记，删除标记等。
+
 #+begin_src emacs-lisp
 (use-package hl-todo
   :straight (:host github :repo "tarsius/hl-todo")
@@ -8303,8 +8327,9 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
            ("TWEAK" . "#fe9030")
            ("PERF" . "#e09030")))))
 #+end_src
-*** me-prog.el =rainbow-mode=
-=Rainbow mode= 是一个 Emacs 插件，可以让括号、中括号、大括号、引号、字符串等不同的文本块以不同颜色显示，提高代码的可读性和可视化效果。
+
++ =Rainbow mode= 为代表颜色的字符串着色
+
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :straight t
@@ -8312,28 +8337,19 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
   (+map! :keymaps '(prog-mode-map conf-mode-map text-mode-map)
     "tR" #'rainbow-mode))
 #+end_src
-*** me-prog.el =lua-mode=
+
++ =lua-mode=
+
 #+begin_src emacs-lisp
 (use-package lua-mode
   :straight t
   :custom
   (lua-indent-level 2))
 #+end_src
-*** me-prog.el =csharp-mode=
-#+begin_src emacs-lisp
-;; (use-package csharp-mode
-;;   :straight `(:type ,(if (< emacs-major-version 29) 'git 'built-in))
-;;   :mode "\\.cs\\'"
-;;   :custom
-;;   (csharp-ts-mode-indent-offset 2) ; customize variables
-;;   (imenu-generic-expression
-;;    '(("Variables" "^\\s-*[a-zA-Z0-9._ ]* \\([a-zA-Z0-9_]*\\)\\( = \\sw*\\|\\s-*\\);$" 1)
-;;      ("Functions" "^\\s-*[^/]* \\([a-zA-Z0-9_]+\\)(.*)\\(\\s-*.*\n\\|\\ *\\)\\s-*{" 1)
-;;      ("Classes" "^\\s-*\\(.*\\)class +\\([a-zA-Z0-9_]+\\)" 2)
-;;      ("Namespaces" "^namespace +\\([a-z0-9_]*\\)" 1)))
-;;   :init
-;;   :config)
 
+=csharp-mode=
+
+#+begin_src emacs-lisp
 (use-package csharp-ts-mode
   :straight `(:type ,(if (< emacs-major-version 29) 'git 'built-in))
   :mode "\\.cs\\'"
@@ -8348,11 +8364,14 @@ dumb-jump 是一个 Emacs 插件，用于在代码库中快速跳转到定义、
   :config
   (+eglot-register '(csharp-mode csharp-ts-mode) "omnisharp"))
 #+end_src
-*** me-prog.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-prog)
 ;;; me-prog.el ends here
 #+end_src
+
 ** me-project.el
 :properties:
 :header-args: :tangle modules/me-project.el
@@ -11021,11 +11040,11 @@ will also be the width of all other printable characters."
   (advice-add #'mu4e--main-action :override #'+mu4e--main-action-prettier-a))
 
 (defun +m u4e-ui-setup ()
-  (if (display-graphic-p)
-      (+mu4e--ui-setup)
-    (+hook-once! server-after-make-frame-hook
-      (when (display-graphic-p)
-        (+mu4e--ui-setup)))))
+       (if (display-graphic-p)
+           (+mu4e--ui-setup)
+         (+hook-once! server-after-make-frame-hook
+           (when (display-graphic-p)
+             (+mu4e--ui-setup)))))
 #+end_src
 *** me-mu4e-ui.el =TAIL=
 #+begin_src emacs-lisp
@@ -11339,10 +11358,10 @@ If SKIP-HEADERS is set, do not show include message headers."
  ;; - JetBrains Mono
  minemacs-fonts
  '(:font-family "Iosevka Fixed Curly Slab"
- ;;'(:font-family "Sarasa Gothic SC"
+   ;;'(:font-family "Sarasa Gothic SC"
    :font-size 12
-;;   :unicode-font-family "Sarasa Gothic SC"
-;;   :unicode-font-size 12
+   ;;   :unicode-font-family "Sarasa Gothic SC"
+   ;;   :unicode-font-size 12
    :variable-pitch-font-family "IBM Plex Serif"
    :variable-pitch-font-size 12))
 
@@ -11572,14 +11591,14 @@ If SKIP-HEADERS is set, do not show include message headers."
         ;; me-workspaces ; Workspace separation (tabspaces, tab-bar, ...). NOTE: This is a WIP
         ;; me-binary        ; Display binary files in hex or decompile them (hexl, ...) ...
 
-;; You can use the obsolete configurations by adding the `obsolete/me-*' modules to `minemacs-modules'
-;; (setq minemacs-modules
-;;       (append
-;;        minemacs-modules
-;;        '(obsolete/me-yasnippet   ; Yasnippet (yasnippet, cape-yasnippet, yasnippet-snippets, ...)
-;;          obsolete/me-writeroom   ; Replacement for `+writing-mode' (writeroom-mode, ...)
-;;          obsolete/me-projectile  ; Project management (projectile, consult-projectile, treemacs-projectile, ...)
-;;          obsolete/me-flycheck))) ; Static checkers (flycheck, ...)       me-window))      ; Frame & window tweaks
+        ;; You can use the obsolete configurations by adding the `obsolete/me-*' modules to `minemacs-modules'
+        ;; (setq minemacs-modules
+        ;;       (append
+        ;;        minemacs-modules
+        ;;        '(obsolete/me-yasnippet   ; Yasnippet (yasnippet, cape-yasnippet, yasnippet-snippets, ...)
+        ;;          obsolete/me-writeroom   ; Replacement for `+writing-mode' (writeroom-mode, ...)
+        ;;          obsolete/me-projectile  ; Project management (projectile, consult-projectile, treemacs-projectile, ...)
+        ;;          obsolete/me-flycheck))) ; Static checkers (flycheck, ...)       me-window))      ; Frame & window tweaks
 #+end_src
 ** early-config.el
 #+begin_src emacs-lisp
@@ -11620,40 +11639,40 @@ EMACS=emacs
 EMACS_BATCH=emacs --batch --script init.el
 
 all:
-  @echo "Cleaning options are: clean, clean_all, prune, loaddefs."
-  @echo "Straight options are: pull, rebuild, check."
+@echo "Cleaning options are: clean, clean_all, prune, loaddefs."
+@echo "Straight options are: pull, rebuild, check."
 
 clean:
-  rm -rf $(EMACS_DIR)/eln-cache $(EMACS_DIR)/local/eln-cache $(EMACS_DIR)/local/cache $(EMACS_DIR)/local/straight/build-*
+rm -rf $(EMACS_DIR)/eln-cache $(EMACS_DIR)/local/eln-cache $(EMACS_DIR)/local/cache $(EMACS_DIR)/local/straight/build-*
 
 clean_pcache:
-  rm -rf $(EMACS_DIR)/local/cache/pcache
+rm -rf $(EMACS_DIR)/local/cache/pcache
 
 clean_all: clean
-  cp $(EMACS_DIR)/local/straight/versions/default.el /tmp/straight-versions-default.el
-  rm -rf $(EMACS_DIR)/local/straight/
-  mkdir -p $(EMACS_DIR)/local/straight/versions/
-  cp /tmp/straight-versions-default.el $(EMACS_DIR)/local/straight/versions/default.el
+cp $(EMACS_DIR)/local/straight/versions/default.el /tmp/straight-versions-default.el
+rm -rf $(EMACS_DIR)/local/straight/
+mkdir -p $(EMACS_DIR)/local/straight/versions/
+cp /tmp/straight-versions-default.el $(EMACS_DIR)/local/straight/versions/default.el
 
 prune: clean
-  cp $(EMACS_DIR)/local/straight/versions/default.el /tmp/straight-versions-default.el
-  rm -rf $(EMACS_DIR)/local
-  mkdir -p $(EMACS_DIR)/local/straight/versions/
-  cp /tmp/straight-versions-default.el $(EMACS_DIR)/local/straight/versions/default.el
+cp $(EMACS_DIR)/local/straight/versions/default.el /tmp/straight-versions-default.el
+rm -rf $(EMACS_DIR)/local
+mkdir -p $(EMACS_DIR)/local/straight/versions/
+cp /tmp/straight-versions-default.el $(EMACS_DIR)/local/straight/versions/default.el
 
 loaddefs:
-  rm $(EMACS_DIR)/core/me-loaddefs.el
+rm $(EMACS_DIR)/core/me-loaddefs.el
 
 pull:
-  $(EMACS_BATCH) --eval='(straight-pull-all)'
+$(EMACS_BATCH) --eval='(straight-pull-all)'
 
 rebuild:
-  $(EMACS_BATCH) --eval='(straight-rebuild-all)'
+$(EMACS_BATCH) --eval='(straight-rebuild-all)'
 
 check:
-  $(EMACS_BATCH) --eval='(straight-check-all)'
+$(EMACS_BATCH) --eval='(straight-check-all)'
 
 update:
-  $(EMACS_BATCH) --eval='(minemacs-update)'
+$(EMACS_BATCH) --eval='(minemacs-update)'
 #+end_src
 
