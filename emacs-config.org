@@ -4243,7 +4243,7 @@ DEPTH and LOCAL are passed as is to `add-hook'."
 :header-args: :tangle no
 :end:
 =netextender.el= 程序netextender的封装
-TODO: 暂时用不到
+UNUSED: 暂时用不到
 
 文件头
 
@@ -4783,7 +4783,7 @@ and move to the source code that caused it."
 :header-args: :tangle no
 :end:
 =me-biblio.el= bibliography 用来做文献引用
-TODO: 暂时用不到
+UNUSED: 暂时用不到
 
 文件头
 
@@ -8315,7 +8315,9 @@ the children of class at point."
 #+begin_src emacs-lisp
 (use-package hl-todo
   :straight (:host github :repo "tarsius/hl-todo")
-  :hook (prog-mode . hl-todo-mode)
+  :hook
+  (prog-mode . hl-todo-mode)
+  (org-mode . hl-todo-mode)
   :config
   (setq hl-todo-keyword-faces
         (append
@@ -8324,6 +8326,8 @@ the children of class at point."
            ("PROJ" . "#447f44")
            ("IDEA" . "#0fa050")
            ("INFO" . "#0e9030")
+           ("FIX" . "#Fe0030")
+           ("UNUSED" . "#8b8989")
            ("TWEAK" . "#fe9030")
            ("PERF" . "#e09030")))))
 #+end_src
@@ -8373,18 +8377,18 @@ the children of class at point."
 #+end_src
 
 ** me-project.el
-:properties:
-:header-args: :tangle modules/me-project.el
-:end:
-*** me-project.el =HEAD=
+=me-project.el= 项目管理
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-project.el --- Projects stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-project.el =project=
-project.el是Emacs 27及更高版本中默认启用的项目管理库。它为项目提供了一些基本功能，例如：查找项目中的文件、列出项目中的文件等等。您可以使用project.el来创建和管理项目。
+
++ =project.el= 是Emacs 27及更高版本中默认启用的项目管理库。它为项目提供了一些基本功能，例如：查找项目中的文件、列出项目中的文件等等。您可以使用project.el来创建和管理项目。
 #+begin_src emacs-lisp
 (use-package project
   :straight (:type built-in)
@@ -8395,11 +8399,11 @@ project.el是Emacs 27及更高版本中默认启用的项目管理库。它为�
   (project-vc-extra-root-markers '(".projectile.el" ".project.el" ".project"))
   (project-ignores '("*.meta" "*.prefab" "*.dll" "*.png" "*.asset"))
   :init
-  (+map! "."  #'project-find-file)
+  ;;(+map! "."  #'project-find-file)
   (+map!
     ;; project
     :infix "p"
-    "p"  #'project-switch-project
+    "P"  #'project-switch-project
     "c"  #'project-compile
     "d"  #'project-find-dir
     "f"  #'project-find-file
@@ -8429,34 +8433,39 @@ project.el是Emacs 27及更高版本中默认启用的项目管理库。它为�
     "sr" #'project-query-replace-regexp
     "sf" #'project-find-regexp))
 #+end_src
-*** me-project.el =consult-project-extra=
-project-find-file是Emacs内置的函数，用于在当前项目中查找文件，而 consult-project-extra-find 则是 consult-project-extra 提供的功能，可以更加智能和高效地查找项目文件，例如可以使用快速搜索和过滤来定位文件，支持使用FZF和Ripgrep等工具进行快速匹配和搜索，还可以快速地跳转到项目的版本控制系统（如git）中。此外， consult-project-extra-find 还提供了其他一些高级功能，例如可以针对不同的文件类型使用不同的外部命令，或者使用不同的搜索模式来查找文件。
+
++ =project-find-file=  project-find-file是Emacs内置的函数，用于在当前项目中查找文件
++ =consult-project-extra=  consult-project-extra-find 则是 consult-project-extra 提供的功能，可以更加智能和高效地查找项目文件，例如可以使用快速搜索和过滤来定位文件，支持使用FZF和Ripgrep等工具进行快速匹配和搜索，还可以快速地跳转到项目的版本控制系统（如git）中。
++ 此外， consult-project-extra-find 还提供了其他一些高级功能，例如可以针对不同的文件类型使用不同的外部命令，或者使用不同的搜索模式来查找文件。
+
 #+begin_src emacs-lisp
 (use-package consult-project-extra
   :straight t
   :init
   (+map!
-    "pp" #'consult-project-extra-find
-    "pP" #'consult-project-extra-find-other-window))
+    "." #'consult-project-extra-find
+    "pp" #'consult-project-extra-find-other-window))
 #+end_src
-*** me-project.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-project)
 ;;; me-project.el ends here
 #+end_src
+
 ** me-rss.el
-:properties:
-:header-args: :tangle modules/me-rss.el
-:end:
-*** me-rss.el =HEAD=
+=me-rss.el= rss客户端
+
 #+begin_src emacs-lisp
 ;;; me-rss.el --- News and RSS -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-rss.el =elfeed=
-elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elfeed 在 Emacs 中管理和阅读各种博客、新闻和其他类型的 RSS 订阅。
+
++ =elfeed= 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elfeed 在 Emacs 中管理和阅读各种博客、新闻和其他类型的 RSS 订阅。
+
 #+begin_src emacs-lisp
 (defgroup minemacs-elfeed nil
   "MinEmacs elfeed tweaks."
@@ -8512,16 +8521,19 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
       (mapc #'elfeed-search-update-entry entries)
       (unless (use-region-p) (forward-line)))))
 #+end_src
-*** me-rss.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-rss)
 ;;; me-rss.el ends here
 #+end_src
+
 ** me-tools.el
-:properties:
-:header-args: :tangle modules/me-tools.el
-:end:
-*** me-tools.el =HEAD=
+=me-tools.el= 工具相关
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-tools.el --- tools stuff -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -8532,8 +8544,10 @@ elfeed 是一个用于阅读 RSS 订阅源的 Emacs 扩展。您可以使用 elf
 
 ;;; Code:
 #+end_src
-*** me-tools.el =ssh-deploy=
-SSH-Deploy 是一个 Emacs 插件，用于将文件通过 SSH 协议部署到远程服务器。它提供了一套方便的命令和函数，使您能够轻松地将文件同步到远程服务器上，以便在开发过程中进行实时的部署和更新。
+
+
++ =SSH-Deploy= 用于将文件通过 SSH 协议部署到远程服务器。它提供了一套方便的命令和函数，使您能够轻松地将文件同步到远程服务器上，以便在开发过程中进行实时的部署和更新。
+
 #+begin_src emacs-lisp
 (use-package ssh-deploy
   :straight t
@@ -8544,8 +8558,9 @@ SSH-Deploy 是一个 Emacs 插件，用于将文件通过 SSH 协议部署到远
   :config
   (ssh-deploy-hydra "C-c C-z"))
 #+end_src
-*** me-tools.el =tldr=
-TLDR（Too Long; Didn't Read）是一个命令行工具，提供了简洁和易于理解的命令行指南。它的目标是以简洁的方式呈现常用命令的用法和示例，以便用户能够快速查阅和理解命令的功能和用法。
+
++ =TLDR= (Too Long; Didn't Read) 是一个命令行工具，提供了简洁和易于理解的命令行指南。它的目标是以简洁的方式呈现常用命令的用法和示例，以便用户能够快速查阅和理解命令的功能和用法。
+
 #+begin_src emacs-lisp
 (use-package tldr
   :straight t
@@ -8554,10 +8569,12 @@ TLDR（Too Long; Didn't Read）是一个命令行工具，提供了简洁和易�
   :custom
   (tldr-enabled-categories '("common" "linux" "osx")))
 #+end_src
-*** me-tools.el =vterm=
-+ vterm 是一个 Emacs 中的终端模拟器，它提供了在 Emacs 中运行交互式终端会话的功能。vterm 基于 libvterm 库，支持终端的基本功能，包括命令行编辑、光标移动、颜色显示、文本选择等。
-+ multi-vterm 是一个 Emacs 插件，它建立在 vterm 的基础上，提供了在 Emacs 中管理多个终端会话的能力。它使得同时打开和切换多个 vterm 窗口变得更加便捷和高效。
-#+begin_src emacs-lisp
+
++ =vterm= 它提供了在 Emacs 中运行交互式终端会话的功能。vterm 基于 libvterm 库，支持终端的基本功能，包括命令行编辑、光标移动、颜色显示、文本选择等。
++ =multi-vterm= 它建立在 vterm 的基础上，提供了在 Emacs 中管理多个终端会话的能力。它使得同时打开和切换多个 vterm 窗口变得更加便捷和高效。
+UNUSED: 使用 =i3wm= 不需要在emacs中使用终端
+
+#+begin_src emacs-lisp :tangle no
 (use-package vterm
   :straight t
   :init
@@ -8604,7 +8621,9 @@ TLDR（Too Long; Didn't Read）是一个命令行工具，提供了简洁和易�
     ",p" #'multi-vterm-prev
     "<return>" #'evil-insert-resume))
 #+end_src
-*** me-tools.el =docker=
+
++ =docker= 相关
+
 #+begin_src emacs-lisp
 (use-package docker
   :straight t
@@ -8622,17 +8641,17 @@ TLDR（Too Long; Didn't Read）是一个命令行工具，提供了简洁和易�
   (use-package dockerfile-mode
     :straight t))
 #+end_src
-*** me-tools.el =systemd=
-Major mode for editing systemd units.
+
++ =systemd= Major mode for editing systemd units.
 #+begin_src emacs-lisp
 (use-package systemd
   :straight t)
-
-
 #+end_src
-*** me-tools.el =pkgbuild-mode=
-pkgbuild-mode 是一个用于编辑 PKGBUILD 文件的 Emacs 模式。PKGBUILD 是 Arch Linux 发行版中用于构建软件包的脚本文件，其中包含了软件包的构建、安装和配置信息。
-#+begin_src emacs-lisp
+
+UNUSED: 暂时用不到
++ =pkgbuild-mode= 是一个用于编辑 PKGBUILD 文件的 Emacs 模式。PKGBUILD 是 Arch Linux 发行版中用于构建软件包的脚本文件，其中包含了软件包的构建、安装和配置信息。
+
+#+begin_src emacs-lisp :tangle no
 (use-package pkgbuild-mode
   :straight t
   :config
@@ -8645,8 +8664,9 @@ pkgbuild-mode 是一个用于编辑 PKGBUILD 文件的 Emacs 模式。PKGBUILD �
     "s" #'pkgbuild-update-srcinfo
     "e" #'pkgbuild-etags))
 #+end_src
-*** me-tools.el =journalctl-mode=
-=journalctl-mode= 是一个用于查看和编辑 systemd 日志的 Emacs 模式。它提供了在 Emacs 中浏览和搜索 systemd journal 的功能，并以可读的方式显示日志消息。
+
++ =journalctl-mode= 是一个用于查看和编辑 systemd 日志的 Emacs 模式。它提供了在 Emacs 中浏览和搜索 systemd journal 的功能，并以可读的方式显示日志消息。
+
 #+begin_src emacs-lisp
 (use-package journalctl-mode
   :straight t
@@ -8655,17 +8675,42 @@ pkgbuild-mode 是一个用于编辑 PKGBUILD 文件的 Emacs 模式。PKGBUILD �
     "J" #'journalctl-next-chunk
     "K" #'journalctl-previous-chunk))
 #+end_src
-*** me-tools.el =logview=
+
+TODO: 自定义日志格式还是有点问题
 =logview= 是一个 Emacs 包，用于在 Emacs 中浏览和过滤日志文件。它提供了一套交互式的界面和工具，使您可以方便地查看和分析日志数据。
+
 #+begin_src emacs-lisp
 (use-package logview
   :straight t
   :custom
   (logview-views-file (concat minemacs-local-dir "logview-views.el"))
-  (logview-cache-filename (concat minemacs-cache-dir "logview-cache.el")))
+  (logview-cache-filename (concat minemacs-cache-dir "logview-cache.el"))
+  :config
+  (setq logview-additional-level-mappings
+        '(("SkynetFramework"
+           (error       "[E]")
+           (warning     "[W]")
+           (information "[I]")
+           (debug       "[D]")
+           (trace       "[T]")
+           (aliases "Skynet")))
+
+        logview-additional-timestamp-formats
+        '(("SkynetFramework"
+           (java-pattern . "dd/MM/yy HH:mm:ss.SS")
+           (datetime-options :any-decimal-separator t)
+           (aliases "Skynet")))
+
+        logview-additional-submodes
+        '(("SkynetFramework"
+           (format . "TIMESTAMP LEVEL MESSAGE")
+           (levels . "RobotFramework")
+           (timestamp "RobotFramework")
+           (aliases "Skynet")))))
 #+end_src
-*** me-tools.el =tramp=
-TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，用于在 Emacs 中透明地访问和编辑远程文件。它允许您使用 Emacs 的编辑功能与远程主机交互，就像在本地文件上一样。
+
++ =TRAMP= (Transparent Remote Access, Multiple Protocols) 用于在 Emacs 中透明地访问和编辑远程文件。它允许您使用 Emacs 的编辑功能与远程主机交互，就像在本地文件上一样。
+
 #+begin_src emacs-lisp
 (use-package tramp
   :straight (:type built-in)
@@ -8676,7 +8721,9 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
   :custom
   (tramp-default-remote-shell "/bin/bash"))
 #+end_src
-*** me-tools.el =bitwarden=
+
++ =bitwarden= 密码管理
+
 #+begin_src emacs-lisp
 (use-package bitwarden
   :straight (:host github :repo "seanfarley/emacs-bitwarden")
@@ -8696,8 +8743,9 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
            (if (functionp pass) (funcall pass) pass))
        ""))))
 #+end_src
-*** me-tools.el =screenshot=
-图形界面下精美的代码截图工具 结合了上传到黑洞的工具
+
++ =screenshot= 图形界面下精美的代码截图工具 结合了上传到黑洞的工具
+
 #+begin_src emacs-lisp
 (defun g-screenshot-on-buffer-creation ()
   (setq display-fill-column-indicator-column nil)
@@ -8721,31 +8769,36 @@ TRAMP（Transparent Remote Access, Multiple Protocols）是一个 Emacs 包，�
   :hook
   ((screenshot-buffer-creation . g-screenshot-on-buffer-creation)))
 #+end_src
-*** me-tools.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-tools)
 ;;; me-tools.el ends here
 #+end_src
+
 ** me-tty.el
-:properties:
-:header-args: :tangle modules/me-tty.el
-:end:
-*** me-tty.el =HEAD=
+=me-tty.el= emacs 终端
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-tty.el --- Emacs from terminal -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-tty.el =xt-mouse=
-=xt-mouse= 是 Emacs 内置的一个功能，用于在终端环境中启用鼠标操作。=在终端中运行 Emacs 时，默认情况下是没有鼠标支持的，通过启用 xt-mouse，你可以在终端中使用鼠标进行一些操作，如点击、拖拽、滚动等。
+
++ =xt-mouse= 是 Emacs 内置的一个功能，用于在终端环境中启用鼠标操作。=在终端中运行 Emacs 时，默认情况下是没有鼠标支持的，通过启用 xt-mouse，你可以在终端中使用鼠标进行一些操作，如点击、拖拽、滚动等。
+
 #+begin_src emacs-lisp
 (use-package xt-mouse
   :straight (:type built-in)
   :hook (tty-setup . xterm-mouse-mode))
 #+end_src
-*** me-tty.el =xclip=
-Emacs 在终端环境中使用 xclip 命令进行剪贴板操作。
+
++ =xclip= Emacs 在终端环境中使用 xclip 命令进行剪贴板操作。
+
 #+begin_src emacs-lisp
 (use-package xclip
   :straight t
@@ -8754,11 +8807,14 @@ Emacs 在终端环境中使用 xclip 命令进行剪贴板操作。
   (defun +xclip--enable-in-tty-h ()
     (with-demoted-errors "%s" (xclip-mode 1))))
 #+end_src
-*** me-tty.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-tty)
 ;;; me-tty.el ends here
 #+end_src
+
 ** me-ui.el
 :properties:
 :header-args: :tangle modules/me-ui.el
