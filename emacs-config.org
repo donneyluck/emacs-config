@@ -8939,18 +8939,19 @@ mixed-pitch 提供了一些自定义选项，你可以根据自己的喜好进�
 #+end_src
 
 ** me-undo.el
-:properties:
-:header-args: :tangle modules/me-undo.el
-:end:
-*** me-undo.el =HEAD=
+=me-undo.el= undo 和 redo
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-undo.el --- Undo -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-undo.el =vundo=
-vundo 是一个用于撤销和重做操作的插件，它扩展了 Vim 的撤销系统，提供了更强大的撤销和重做功能。它可以跟踪编辑会话的历史记录，包括文本更改、光标位置、窗口布局等，并允许您在编辑过程中回溯和重做这些操作。
+
++ =vundo= 是一个用于撤销和重做操作的插件，它扩展了 Vim 的撤销系统，提供了更强大的撤销和重做功能。它可以跟踪编辑会话的历史记录，包括文本更改、光标位置、窗口布局等，并允许您在编辑过程中回溯和重做这些操作。
+
 #+begin_src emacs-lisp
 ;; Visual Undo
 (use-package vundo
@@ -8962,9 +8963,9 @@ vundo 是一个用于撤销和重做操作的插件，它扩展了 Vim 的撤销
   (vundo-window-max-height 8)
   (vundo-glyph-alist vundo-unicode-symbols))
 #+end_src
-*** me-undo.el =undo-fu=
-+ undo-fu 是一个用于增强 Vim 撤销系统的插件。它提供了更灵活和强大的撤销和重做功能，使您能够更好地管理和控制您的编辑历史记录。
-+ undo-fu-session 是一个 Emacs 插件，用于管理撤销会话。它可以保存和恢复 Emacs 中的撤销历史，允许您在重新启动 Emacs 后继续撤销和重做操作。
+
++ =undo-fu= 是一个用于增强 Vim 撤销系统的插件。它提供了更灵活和强大的撤销和重做功能，使您能够更好地管理和控制您的编辑历史记录。
++ =undo-fu-session= 是一个 Emacs 插件，用于管理撤销会话。它可以保存和恢复 Emacs 中的撤销历史，允许您在重新启动 Emacs 后继续撤销和重做操作。
 #+begin_src emacs-lisp
 (use-package undo-fu
   :straight t
@@ -8985,32 +8986,30 @@ vundo 是一个用于撤销和重做操作的插件，它扩展了 Vim 的撤销
   :config
   (global-undo-fu-session-mode 1))
 #+end_src
-*** me-undo.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-undo)
 ;;; me-undo.el ends here
 #+end_src
+
 ** me-vc.el
-:properties:
-:header-args: :tangle modules/me-vc.el
-:end:
-*** me-vc.el =HEAD=
+=me-ve.el= 代码版本管理
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-vc.el --- Git and version control -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-vc.el =magit=
-Magit 是一个用于 Git 版本控制的 Emacs 插件，它提供了一套强大的界面和工具，使得在 Emacs 中进行 Git 操作变得更加方便和高效。
 
-使用 Magit，您可以在 Emacs 中执行 Git 命令、查看和比较提交、分支、标签等，进行分支合并、重置、回滚等操作，以及提交和推送代码等常见的 Git 操作。它提供了一个交互式的界面，让您可以直观地查看和处理 Git 存储库的状态，并提供了许多快捷键和命令，使得在 Emacs 中进行 Git 工作变得更加便捷和高效。
-
-Magit 还提供了一些额外的功能，如代码提交信息编辑、补丁管理、日志查看等。它与 Emacs 的其他功能和插件集成得很好，例如与代码编辑模式的集成、与项目管理工具的集成等，使得在开发过程中使用 Git 变得更加无缝和流畅。
-
-要使用 Magit，您需要先安装它。您可以通过使用包管理器（如 straight.el、use-package）来安装 Magit，并在您的 Emacs 配置文件中进行相应的配置。安装完成后，您可以使用 M-x magit-status 命令来打开 Magit 状态界面，并通过界面上的命令和快捷键进行各种 Git 操作。
-
-Magit 是一个功能丰富且高度可定制的 Git 客户端，适用于那些希望在 Emacs 中进行 Git 工作的开发者和用户。它提供了一种更加集成和灵活的方式来管理和操作 Git 存储库，使得版本控制变得更加愉快和高效。
++ =Magit= 是一个用于 Git 版本控制的 Emacs 插件，它提供了一套强大的界面和工具，使得在 Emacs 中进行 Git 操作变得更加方便和高效。
++ 您可以在 Emacs 中执行 Git 命令、查看和比较提交、分支、标签等，进行分支合并、重置、回滚等操作，以及提交和推送代码等常见的 Git 操作。
++ =Magit= 还提供了一些额外的功能，如代码提交信息编辑、补丁管理、日志查看等。它与 Emacs 的其他功能和插件集成得很好，例如与代码编辑模式的集成、与项目管理工具的集成等，使得在开发过程中使用 Git 变得更加无缝和流畅。
+
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
@@ -9030,8 +9029,9 @@ Magit 是一个功能丰富且高度可定制的 Git 客户端，适用于那些
   ;; Show in new window
   (magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1))
 #+end_src
-*** me-vc.el =magit-todo=
-magit-todos 是 Magit 的一个插件，它可以帮助您在 Git 存储库中查找和管理待办事项。
+
+=magit-todos= 是 Magit 的一个插件，它可以帮助您在 Git 存储库中查找和管理待办事项。
+
 #+begin_src emacs-lisp
 (use-package magit-todos
   :straight t
@@ -9040,24 +9040,25 @@ magit-todos 是 Magit 的一个插件，它可以帮助您在 Git 存储库中�
   :config
   (magit-todos-mode 1))
 #+end_src
-*** me-vc.el =magit-imerge=
-magit-imerge 是一个与 magit 集成的插件，用于进行 Git 中的交互式合并（Interactive Merging）。它提供了一个用户界面，让您可以更方便地进行合并操作
+
+=magit-imerge= 是一个与 magit 集成的插件，用于进行 Git 中的交互式合并（Interactive Merging）。它提供了一个用户界面，让您可以更方便地进行合并操作
 #+begin_src emacs-lisp
 (use-package magit-imerge
   :straight t)
 #+end_src
-*** me-vc.el =closql=
+
 + closql 是一个 Emacs 包，用于在 EmacSQL 数据库中存储和检索 EIEIO 对象（Emacs Lisp 中的对象系统）。它使用 SQLite 作为后端数据库。
 + EIEIO（Emacs Lisp Object System）是Emacs中的一种面向对象编程系统。它提供了一套类和对象的概念，允许开发者使用面向对象的编程风格来组织和管理代码。
-
+
 #+begin_src emacs-lisp
 (use-package closql
   :straight t)
 #+end_src
-*** me-vc.el =forge=
-Forge 和 Magit 都是 Emacs 中与 Git 和 GitHub 集成的包，但它们的功能和重点略有不同。
+
+=Forge= 和 =Magit= 都是 Emacs 中与 Git 和 GitHub 集成的包，但它们的功能和重点略有不同。
 Magit 是一个强大的 Git 客户端，它提供了全面的 Git 操作支持，使您可以在 Emacs 中管理和操作 Git 存储库。Magit 提供了直观的界面，可以浏览和修改提交历史、分支、标签等，并支持提交、拉取、推送、合并等操作。它使得在 Emacs 中进行 Git 工作变得非常方便和高效。
 Forge 则是建立在 Magit 之上的一个包，它提供了与 GitHub 的集成功能。Forge 允许您在 Emacs 中与 GitHub 存储库进行交互，包括查看和处理问题、处理拉取请求、浏览存储库文件等。Forge 扩展了 Magit 的功能，使您可以直接在 Emacs 中完成与 GitHub 相关的工作，而无需切换到浏览器或其他工具。
+
 #+begin_src emacs-lisp
 (use-package forge
   :straight t
@@ -9079,14 +9080,12 @@ Forge 则是建立在 Magit 之上的一个包，它提供了与 GitHub 的集�
   (forge-database-connector (if (+emacs-features-p 'sqlite3) 'sqlite-builtin 'sqlite))
   (forge-database-file (concat minemacs-local-dir "forge/database.sqlite")))
 #+end_src
-*** me-vc.el =emojify=
-Emojify 是一个 Emacs 包，用于在 Emacs 中显示和处理表情符号（Emojis）。它可以将文本中的表情符号替换为相应的图标，并且还提供了一些有用的功能来管理和插入表情符号。
 
-Emojify 使用 Unicode 字符来表示表情符号，并提供了一个预定义的表情符号集合。当你编辑或查看包含表情符号的文本时，Emojify 可以自动将其替换为相应的图标，使文本更加生动和有趣。
-
-此外，Emojify 还提供了一些交互命令，使你可以快速搜索和插入表情符号。你可以使用命令来浏览可用的表情符号列表，并选择要插入的符号。
-
-Emojify 包的使用可以增加在 Emacs 中处理文本时的乐趣和个性化，尤其在聊天、编写注释或编辑包含表情符号的文档时非常有用。
++ =Emojify= 是一个 Emacs 包，用于在 Emacs 中显示和处理表情符号（Emojis）。它可以将文本中的表情符号替换为相应的图标，并且还提供了一些有用的功能来管理和插入表情符号。
++ =Emojify= 使用 Unicode 字符来表示表情符号，并提供了一个预定义的表情符号集合。当你编辑或查看包含表情符号的文本时，Emojify 可以自动将其替换为相应的图标，使文本更加生动和有趣。
++ =Emojify= 还提供了一些交互命令，使你可以快速搜索和插入表情符号。你可以使用命令来浏览可用的表情符号列表，并选择要插入的符号。
++ =Emojify= 包的使用可以增加在 Emacs 中处理文本时的乐趣和个性化，尤其在聊天、编写注释或编辑包含表情符号的文档时非常有用。
+
 #+begin_src emacs-lisp
 (use-package emojify ;; Needed by `code-review'
   :straight t
@@ -9099,8 +9098,9 @@ Emojify 包的使用可以增加在 Emacs 中处理文本时的乐趣和个性�
   (when (< emacs-major-version 29)
     (+map! "ie" '(emojify-insert-emoji :wk "Emoji"))))
 #+end_src
-*** me-vc.el =code-review=
-code-review 包是一个用于在 Emacs 中进行代码审查的工具。它提供了一组功能和界面，使你能够在 Emacs 中查看、评论和处理代码审查请求。
+
++ =code-review= 包是一个用于在 Emacs 中进行代码审查的工具。它提供了一组功能和界面，使你能够在 Emacs 中查看、评论和处理代码审查请求。
+
 #+begin_src emacs-lisp
 (use-package code-review
   :straight (:host github :repo "phelrine/code-review" :branch "fix/closql-update")
@@ -9119,8 +9119,9 @@ code-review 包是一个用于在 Emacs 中进行代码审查的工具。它提�
     (transient-append-suffix 'forge-dispatch "c u"
       '("c r" "review pull-request" code-review-forge-pr-at-point))))
 #+end_src
-*** me-vc.el =diff-hl=
-diff-hl 是一个 Emacs 包，用于在代码编辑器中显示版本控制系统（如 Git）的差异信息。它会在代码的左侧边栏或行号处以不同的颜色或符号显示文件中的差异部分，让你更容易地识别出哪些行发生了更改、添加或删除。
+
+=diff-hl= 用于在代码编辑器中显示版本控制系统（如 Git）的差异信息。它会在代码的左侧边栏或行号处以不同的颜色或符号显示文件中的差异部分，让你更容易地识别出哪些行发生了更改、添加或删除。
+
 #+begin_src emacs-lisp
 (use-package diff-hl
   :straight t
@@ -9136,8 +9137,9 @@ diff-hl 是一个 Emacs 包，用于在代码编辑器中显示版本控制系�
   (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))
 #+end_src
-*** me-vc.el =git-timemachine=
-git-timemachine 是一个用于在 Emacs 中浏览 Git 仓库历史的包。它提供了一个类似于时间机器的界面，允许你逐步回溯和比较 Git 仓库中的不同版本。
+
+=git-timemachine= 是一个用于在 Emacs 中浏览 Git 仓库历史的包。它提供了一个类似于时间机器的界面，允许你逐步回溯和比较 Git 仓库中的不同版本。
+
 #+begin_src emacs-lisp
 (use-package git-timemachine
   :straight t
@@ -9146,12 +9148,13 @@ git-timemachine 是一个用于在 Emacs 中浏览 Git 仓库历史的包。它�
   :custom
   (git-timemachine-show-minibuffer-details t))
 #+end_src
-*** me-vc.el =git-commit=
-这段代码使用了 Emacs 中的 git-commit 包，并配置了一些选项和钩子函数来强制执行 Git 提交规范。
+
+这段代码使用了 Emacs 中的 =git-commit= 包，并配置了一些选项和钩子函数来强制执行 Git 提交规范。
 + 限制提交信息的摘要行长度不超过 50 个字符。
 + 在创建新的提交信息时可以直接进行编辑
 + 置局部变量 fill-column 的值为 72，将提交信息编辑缓冲区的行宽限制为 72 个字符。
 + 需要检查的 Git 提交风格约定，如过长的摘要行和非空的第二行。
+
 #+begin_src emacs-lisp
 ;; Enforce git commit conventions.
 ;; See: chris.beams.io/posts/git-commit/
@@ -9177,25 +9180,29 @@ git-timemachine 是一个用于在 Emacs 中浏览 Git 仓库历史的包。它�
        (evil-insert-state))))
   (global-git-commit-mode 1))
 #+end_src
-*** me-vc.el =git-mode=
-git-modes 是一个 Emacs 包，提供了用于 Git 相关文件的模式和功能。
+
+
+=git-modes= 提供了用于 Git 相关文件的模式和功能。
 它包含以下几个模式：
 + git-commit-mode：用于编辑 Git 提交消息的模式 提供了一些快捷键和辅助功能来编写符合约定的提交消息。
 + git-rebase-mode：用于进行 Git 变基操作的模式 提供了一些快捷键和辅助功能来编辑和管理变基操作。
 + gitignore-mode：用于编辑 Git 忽略文件（例如.gitignore）的模式 提供了语法高亮和辅助功能来编辑和管理忽略规则。
+
 #+begin_src emacs-lisp
 (use-package git-modes
   :straight t
   :init
   :mode ("/.dockerignore\\'" . gitignore-mode))
 #+end_src
-*** me-vc.el =ediff=
-ediff-split-window-function 设置为 split-window-horizontally，表示使用水平分割窗口来显示比较结果。
-ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同一个框架中设置所有窗口，而不是创建新的框架来显示比较结果。
+
+=ediff=
++ ediff-split-window-function 设置为 split-window-horizontally，表示使用水平分割窗口来显示比较结果。
++ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同一个框架中设置所有窗口，而不是创建新的框架来显示比较结果。
 接下来定义了一个变量 +ediff--saved-window-config，用于保存当前窗口配置。
 在 ediff 启动之前，通过 ediff-before-setup-hook 钩子，将当前窗口配置保存到 +ediff--saved-window-config。
 另外，还添加了两个钩子 ediff-quit-hook 和 ediff-suspend-hook，当退出或挂起 ediff 时，会执行函数 +ediff--restore-window-config-h，将保存的窗口配置恢复到之前的状态。
 这样的配置使得 ediff 在水平分割窗口并在同一框架中显示比较结果，同时还可以在退出或挂起时恢复之前的窗口配置。
+
 #+begin_src emacs-lisp
 (use-package ediff
   :straight (:type built-in)
@@ -9222,10 +9229,10 @@ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同�
          (set-window-configuration +ediff--saved-window-config)))
      101)))
 #+end_src
-*** me-vc.el =smerge-mode=
-=smerge-mode= 是 Emacs 中用于解决代码冲突的工具。它可以在 Git 或其他版本控制系统中发生代码冲突时使用。
 
+=smerge-mode= 是 Emacs 中用于解决代码冲突的工具。它可以在 Git 或其他版本控制系统中发生代码冲突时使用。
 当你在编辑一个文件时，如果发生代码冲突，Emacs 会自动进入 smerge-mode。在 smerge-mode 中，冲突的代码块会被高亮显示，并且你可以使用一系列命令来处理冲突，如合并代码块、接受当前版本或其他版本的修改等。
+
 #+begin_src emacs-lisp
 (use-package smerge-mode
   :straight t
@@ -9274,16 +9281,19 @@ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同�
     ("n" (progn (smerge-vc-next-conflict) (recenter-top-bottom (/ (window-height) 8))))
     ("q" nil :color blue)))
 #+end_src
-*** me-vc.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-vc)
 ;;; me-vc.el ends here
 #+end_src
+
 ** me-window.el
-:properties:
-:header-args: :tangle modules/me-window.el
-:end:
-*** me-window.el =HEAD=
+=me-window.el= 窗口相关
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-window.el --- Windows and frames -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -9295,7 +9305,9 @@ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同�
 
 ;;; Code:
 #+end_src
-*** me-window.el =window-adjust=
+
+=window-adjust= 窗口平衡
+
 #+begin_src emacs-lisp
 (+deferred!
  (add-to-list
@@ -9378,11 +9390,14 @@ ediff-window-setup-function 设置为 ediff-setup-windows-plain，表示在同�
      :infix "w"
      "a" '(+window-adjust-size/body :wk "Adjust window size"))))
 #+end_src
-*** me-window.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-window)
 ;;; me-window.el ends here
 #+end_src
+
 * modules/extras/
 =modules/extra= 一些扩展
 ** me-gdb.el
