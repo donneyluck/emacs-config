@@ -9399,19 +9399,24 @@ Forge 则是建立在 Magit 之上的一个包，它提供了与 GitHub 的集�
 #+end_src
 
 * modules/extras/
-=modules/extra= 一些扩展
-** me-gdb.el
 :properties:
-:header-args: :tangle modules/extras/me-gdb.el
+:path:     ~/.emacs.d/modules/extras/
 :end:
-*** me-gdb.el =HEAD=
+=modules/extra= 一些扩展
+
+** me-gdb.el
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-gdb.el --- Extra tweaks for GDB, and opt-in emacs-gdb integration -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-gdb.el =autoload funcitons=
+
++ =autoload funcitons=
+
 #+begin_src emacs-lisp
 (defun +gdb--set-layout (&optional c-buffer)
   ;; from stackoverflow.com/q/39762833/846686
@@ -9491,22 +9496,26 @@ This will overwrite the built-in \"gdb-mi\" for this session."
           (gdb-ignore-gdbinit nil)))
     (message "Cannot enable \"emacs-gdb\", Emacs was built without modules support!")))
 #+end_src
-*** me-gdb.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-gdb.el ends here
 #+end_src
+
 ** me-dap-utils.el
-:properties:
-:header-args: :tangle modules/extras/me-dap-utils.el
-:end:
-*** me-dap-utils.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-dap-utils.el --- Utility functions for DAP mode -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-dap-utils.el =autoload functions=
+
++ =autoload functions=
+
 #+begin_src emacs-lisp
 ;;;###autoload
 (defun +github-latest-release (user repo &optional fallback-release)
@@ -9526,15 +9535,17 @@ Fallback to FALLBACK-RELEASE when it can't get the last one."
        "v")
     fallback-release))
 #+end_src
-*** me-dap-utils.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-dap-utils.el ends here
 #+end_src
+
 ** me-eglot-ltex.el
-:properties:
-:header-args: :tangle modules/extras/me-eglot-ltex.el
-:end:
-*** me-eglot-ltex-extras.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-eglot-ltex.el --- Extra functionality for Eglot+LTeX-LS -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -9565,7 +9576,9 @@ Fallback to FALLBACK-RELEASE when it can't get the last one."
 
 ;;; Code:
 #+end_src
-*** me-eglot-ltex-extras.el
+
+=me-eglot-ltex-extras.el=
+
 #+begin_src emacs-lisp
 (defvar-local eglot-ltex-language "auto")
 (defvar eglot-ltex-user-rules-path (concat minemacs-local-dir "eglot/ltex/"))
@@ -9661,23 +9674,26 @@ When STORE is non-nil, this will also store the new plist in the directory
   (advice-remove 'eglot-execute-command #'eglot-ltex--can-process-client-commands-a))
 #+end_src
 
-*** me-eglot-ltex-extras.el =TAIL=
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-eglot-ltex)
 ;;; me-eglot-ltex.el ends here
 #+end_src
+
 ** me-elisp-extras.el
-:properties:
-:header-args: :tangle modules/extras/me-elisp-extras.el
-:end:
-*** me-elisp-extras.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-elisp-extras.el --- Extra font locks and enhancements for Elisp -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-eslip-extras.el
+
+=me-eslip-extras.el=
+
 #+begin_src emacs-lisp
 (defvar +emacs-lisp--face nil)
 
@@ -9908,16 +9924,18 @@ library/userland functions"
 (+compile-functions #'+emacs-lisp--highlight-vars-and-faces
                     #'+emacs-lisp--calculate-lisp-indent-a)
 #+end_src
-*** me-elisp-extras.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-elisp-extras)
 ;;; me-elisp-extras.el ends here
 #+end_src
+
 ** me-evil-mc-evil-escape.el
-:properties:
-:header-args: :tangle modules/extras/me-evil-mc-evil-escape.el
-:end:
-*** me-evil-mc-evil-escape.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-evil-mc-evil-escape.el --- Hackish integration of `evil-mc' with `evil-escape' -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -9930,7 +9948,9 @@ library/userland functions"
 
 ;;; Code:
 #+end_src
-*** me-evil-mc-evil-escape.el =mc-evil-escape=
+
+=mc-evil-escape=
+
 #+begin_src emacs-lisp
 (+after-load! '(:all evil-escape evil-mc)
   (defun +evil-mc--evil-escape-move-back-fake-cursors ()
@@ -9953,16 +9973,18 @@ library/userland functions"
    '(+evil-mc--evil-escape-move-back-fake-cursors
      (:default . evil-mc-execute-default-call))))
 #+end_src
-*** me-evil-mc-evil-escape.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-evil-mc-evil-escape)
 ;;; me-evil-mc-evil-escape.el ends here
 #+end_src
+
 ** me-latex-fonts.el
-:properties:
-:header-args: :tangle modules/extras/me-latex-fonts.el
-:end:
-*** me-latex-fonts.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-latex-fonts.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -9972,7 +9994,9 @@ library/userland functions"
 
 ;;; Code:
 #+end_src
-*** me-latex-fonts.el
+
+=me-latex-fonts.el=
+
 #+begin_src emacs-lisp
 ;; Fontification taken from https://tex.stackexchange.com/a/86119/81279.
 (setq font-latex-match-reference-keywords
@@ -10059,16 +10083,18 @@ library/userland functions"
         ("restartlist" "{")
         ("crefname" "{")))
 #+end_src
-*** me-latex-fonts.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-latex-fonts)
 ;;; me-latex-fonts.el ends here
 #+end_src
+
 ** me-org-export-async-init.el
-:properties:
-:header-args: :tangle modules/extras/me-org-export-async-init.el
-:end:
-*** me-org-export-async-init.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-org-export-async-init.el --- An init file for exporting Org documents asynchronously -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -10085,7 +10111,9 @@ library/userland functions"
 
 ;;; Code:
 #+end_src
-*** me-org-export-async-init.el
+
+=me-org-export-async-init.el=
+
 #+begin_src emacs-lisp
 (message "Using MinEmacs' \"me-org-export-async-init.el\" as init file.")
 
@@ -10101,22 +10129,26 @@ library/userland functions"
 
 (message "Loaded %d modules!" (+ (length minemacs-core-modules) (length minemacs-modules)))
 #+end_src
-*** me-org-export-async-init.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-org-export-async-init.el ends here
 #+end_src
+
 ** me-org-extras.el
-:properties:
-:header-args: :tangle modules/extras/me-org-extras.el
-:end:
-*** me-org-extras.el =HEAD=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-org-extras.el --- Extra tweaks Org mode -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-org-extras.el
+
+=me-org-extras.el=
+
 #+begin_src emacs-lisp
 (defcustom +org-responsive-image-percentage 0.4
   "Maximum image width as a percentage of the window width."
@@ -10402,16 +10434,18 @@ Example: \"#+TITLE\" -> \"#+title\"
   (+org-extras-multifiles-document-setup)
   (+org-extras-lower-case-keywords-and-properties-setup))
 #+end_src
-*** me-org-extras.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-org-extras)
 ;;; me-org-extras.el ends here
 #+end_src
+
 ** me-realgud.el
-:properties:
-:header-args: :tangle modules/extras/me-realgud.el
-:end:
-*** me-realgud.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-realgud.el --- Extra commands for RealGUD with better evil integration -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -10422,7 +10456,9 @@ Example: \"#+TITLE\" -> \"#+title\"
 
 ;;; Code:
 #+end_src
-*** me-realgud.el =autoload functions=
+
+=autoload functions=
+
 #+begin_src emacs-lisp
 ;;;###autoload(autoload '+realgud:start "../modules/extras/me-realgud" "Start the RealGUD debugger suitable for the current mode." t)
 (evil-define-command +realgud:start (&optional path)
@@ -10522,22 +10558,26 @@ Example: \"#+TITLE\" -> \"#+title\"
   ("q"  nil "quit" :color blue) ;; :exit
   ("Qq" realgud:cmd-quit :color blue)) ;; :exit
 #+end_src
-*** me-realgud.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 ;;; me-realgud.el ends here
 #+end_src
+
 ** me-spell-fu.el
-:properties:
-:header-args: :tangle modules/extras/me-spell-fu.el
-:end:
-*** me-spell-fu.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-spell-fu.el --- Better integraion of spell-fu -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-spell-fu.el
+
+=me-spell-fu.el=
+
 #+begin_src emacs-lisp
 ;; Adapted from Doom Emacs
 (defun +spell-fu--correct (replace poss word orig-pt start end)
@@ -10653,23 +10693,27 @@ Example: \"#+TITLE\" -> \"#+title\"
       (add-to-list 'closure `(+spell-fu--add-dictionary ,lang) t))
     (append '(add-hook (quote spell-fu-mode-hook)) (list closure))))
 #+end_src
-*** me-spell-fu.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-spell-fu)
 ;;; me-spell-fu.el ends here
 #+end_src
+
 ** me-writing-mode.el
-:properties:
-:header-args: :tangle modules/extras/me-writing-mode.el
-:end:
-*** me-writing-mode.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-write-mode.el --- Simple writing-centered mode -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-writing-mode.el
+
+=me-writing-mode.el=
+
 #+begin_src emacs-lisp
 (require 'visual-fill-column)
 (require 'mixed-pitch nil t)
@@ -10760,16 +10804,18 @@ Example: \"#+TITLE\" -> \"#+title\"
       (text-scale-set (if +writing-mode +writing-text-scale 0.0))
       (visual-fill-column-adjust))))
 #+end_src
-*** me-writing-mode.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-writing-mode)
 ;;; me-writing-mode.el ends here
 #+end_src
+
 ** me-mu4e-gmail.el
-:properties:
-:header-args: :tangle modules/extras/me-mu4e-gmail.el
-:end:
-*** me-mu4e-gmail.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-mu4e-gmail.el --- Better integration of mu4e with Gmail accounts -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -10779,7 +10825,9 @@ Example: \"#+TITLE\" -> \"#+title\"
 
 ;;; Code:
 #+end_src
-*** me-mu4e-gmail.el
+
+=me-mu4e-gmail.el=
+
 #+begin_src emacs-lisp
 (defcustom +mu4e-gmail-accounts nil
   "Gmail accounts that do not contain \"gmail\" in address and maildir.
@@ -10879,16 +10927,18 @@ from the envelope of the current message."
          ('flag (mu4e-action-retag-message msg "+\\Starred"))
          ('unflag (mu4e-action-retag-message msg "-\\Starred")))))))
 #+end_src
-*** me-mu4e-gmail.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-mu4e-gmail)
 ;;; me-mu4e-gmail.el ends here
 #+end_src
+
 ** me-mu4e-ui.el
-:properties:
-:header-args: :tangle modules/extras/me-mu4e-ui.el
-:end:
-*** me-mu4e-ui.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-mu4e-ui.el --- Better UI for mu4e -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -10898,7 +10948,9 @@ from the envelope of the current message."
 
 ;;; Code:
 #+end_src
-*** me-mu4e-ui.el
+
+=me-mu4e-ui.el=
+
 #+begin_src emacs-lisp
 (defvar +mu4e-main-bullet "⦿"
   "Prefix to use instead of \"  *\" in the mu4e main view.
@@ -11125,23 +11177,27 @@ will also be the width of all other printable characters."
            (when (display-graphic-p)
              (+mu4e--ui-setup)))))
 #+end_src
-*** me-mu4e-ui.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-mu4e-ui)
 ;;; me-mu4e-ui.el ends here
 #+end_src
+
 ** me-mu4e-extras.el
-:properties:
-:header-args: :tangle modules/extras/me-mu4e-extras.el
-:end:
-*** me-mu4e-extras.el =HEAD=
+
+文件头
+
 #+begin_src emacs-lisp
 ;;; me-mu4e-extras.el --- Extra tweaks and utilities for mu4e -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
 ;;; Commentary:
 ;;; Code:
 #+end_src
-*** me-mu4e-extras.el
+
+=me-mu4e-extras.el=
+
 #+begin_src emacs-lisp
 (defcustom +mu4e-account-aliases nil
   "Per-account alias list."
@@ -11401,17 +11457,21 @@ If SKIP-HEADERS is set, do not show include message headers."
   (add-to-list 'mu4e-view-actions '("all attachements save" . +mu4e-view-save-all-attachments))
   (add-to-list 'mu4e-view-actions '("Save message" . +mu4e-save-message-at-point)))
 #+end_src
-*** me-mu4e-extras.el =TAIL=
+
+文件尾
+
 #+begin_src emacs-lisp
 (provide 'me-mu4e-extras)
 ;;; me-mu4e-extras.el ends here
 #+end_src
+
 * skel/
 :properties:
 :path:     ~/.emacs.d/skel/
 :end:
 =skel= 目录下是框架的骨架 可以放入自定义的部分
 ** config.el
+
 #+begin_src emacs-lisp
 ;;; config.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -11614,7 +11674,9 @@ If SKIP-HEADERS is set, do not show include message headers."
 
 (advice-add 'consult-theme :after (lambda (&rest args) (set-org-block-end-line-color)))
 #+end_src
+
 ** modules.el
+
 #+begin_src emacs-lisp
 ;;; modules.el -*- lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -11679,7 +11741,9 @@ If SKIP-HEADERS is set, do not show include message headers."
         ;;          obsolete/me-projectile  ; Project management (projectile, consult-projectile, treemacs-projectile, ...)
         ;;          obsolete/me-flycheck))) ; Static checkers (flycheck, ...)       me-window))      ; Frame & window tweaks
 #+end_src
+
 ** early-config.el
+
 #+begin_src emacs-lisp
 ;;; early-config.el -*- coding: utf-8-unix; lexical-binding: t; -*-
 ;;; Author: donney.luck@gmail.com
@@ -11706,6 +11770,7 @@ If SKIP-HEADERS is set, do not show include message headers."
 ;; Setup a `debug-on-message' to catch a wired message!
 ;; (setq debug-on-message "Package cl is deprecated")
 #+end_src
+
 * Makefile
 :properties:
 :header-args: :tangle Makefile
