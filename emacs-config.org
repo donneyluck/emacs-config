@@ -297,7 +297,7 @@ init-tweaks.el  init.el后执行 用户可以微调
     ;; evaluate Elisp code, so we switch to Elisp mode in the scratch buffer
     ;; when Emacs is idle for 10 seconds.
     (+eval-when-idle-for! 10.0
-      (setq initial-major-mode 'emacs-lisp-mode)
+      (setq initial-major-mode 'lisp-interaction-mode)
       (with-current-buffer (get-scratch-buffer-create)
         (emacs-lisp-mode))))
 
@@ -1374,8 +1374,7 @@ EMACS 中的 UTF-8：无处不在，永远不变
                              (condition-case nil
                                  ;; Android may raise permission-denied error
                                  (with-temp-buffer
-                                   (insert-file-contents
-                                    "/proc/sys/fs/pipe-max-size")
+                                   (insert-file-contents "/proc/sys/fs/pipe-max-size")
                                    (string-to-number (buffer-string)))
                                ;; If an error occured, fallback to the default value
                                (error read-process-output-max))
@@ -1386,8 +1385,6 @@ EMACS 中的 UTF-8：无处不在，永远不变
  frame-resize-pixelwise t
  ;; Stretch cursor to the glyph width
  x-stretch-cursor t
- ;; Show trailing whitespaces
- show-trailing-whitespace t
  ;; Resize window combinations proportionally
  window-combination-resize t
  ;; Enable time in the mode-line
@@ -1503,16 +1500,6 @@ EMACS 中的 UTF-8：无处不在，永远不变
  desktop-restore-eager 5
  ;; Avoid writing contents unchanged between auto-saves
  desktop-file-checksum t
-
- ;; ====== Compilation ======
- ;; Scroll compilation buffer
- compilation-scroll-output t ; 'first-error can be a good option
- ;; Always kill current compilation process before starting a new one
- compilation-always-kill t
- ;; Skip visited messages on compilation motion commands
- compilation-skip-visited t
- ;; Keep it readable
- compilation-window-height 12
 
  ;; ====== Misc ======
  ;; Set `webjump' sites to manily search engins
@@ -1636,13 +1623,18 @@ or file path may exist now."
 (add-hook 'conf-mode-hook #'visual-line-mode)
 (add-hook 'text-mode-hook #'visual-line-mode)
 
+;; Show trailing whitespace in `prog-mode' and `conf-mode'
+(defun +show-trailing-whitespace-h () (setq show-trailing-whitespace t))
+(add-hook 'prog-mode-hook #'+show-trailing-whitespace-h)
+(add-hook 'conf-mode-hook #'+show-trailing-whitespace-h)
+
 ;; When MinEmacs is running in an asynchronous Org export context, there is no
 ;; need to enable these modes. So we load them only if we haven't been launched
 ;; through the `me-org-export-async-init' file.
 ;; All modes and tweaks are enabled after MinEmacs is gets loaded
 (+deferred-unless! (featurep 'me-org-export-async-init)
   ;; Navigate windows using Shift+Direction
-  (windmove-default-keybindings)
+  (windmove-default-keybindings 'shift)
 
   ;; ====== Modes enabled globally ======
   ;; Show the battery status (if available) in the mode-line
@@ -3275,9 +3267,9 @@ Examples:
   "Get MIME type for FILE based on magic codes provided by the 'file' command.
 Return a symbol of the MIME type, ex: `text/x-lisp', `text/plain',
 `application/x-object', `application/octet-stream', etc."
-  (if (executable-find "file")
-      (let ((mime-type (shell-command-to-string (format "file --brief --mime-type %s" file))))
-        (intern (string-trim-right mime-type)))
+  (if-let ((file-cmd (executable-find "file"))
+           (mime-type (shell-command-to-string (format "%s --brief --mime-type %s" file-cmd file))))
+      (intern (string-trim-right mime-type))
     (error "The \"file\" command isn't installed.")))
 #+end_src
 
@@ -3293,9 +3285,9 @@ If \"file.ext\" exists, returns \"file-0.ext\"."
          (file (file-name-base filename))
          (filename-regex (concat "^" file "\\(?:-\\(?1:[[:digit:]]+\\)\\)?" (if ext (concat "\\." ext) "")))
          (last-file (car (last (directory-files dir nil filename-regex))))
-         (last-file-num (when (and last-file (string-match filename-regex last-file) (match-string 1 last-file))))
-         (num (1+ (string-to-number (or last-file-num "-1")))))
-    (file-name-concat dir (format "%s%s%s" file (if last-file (format "-%d" num) "") (if ext (concat "." ext) "")))))
+         (last-file-num (when (and last-file (string-match filename-regex last-file) (match-string 1 last-file)))
+                        (num (1+ (string-to-number (or last-file-num "-1")))))
+         (file-name-concat dir (format "%s%s%s" file (if last-file (format "-%d" num) "") (if ext (concat "." ext) "")))))
 #+end_src
 
 读取文件内容放入buffer
@@ -3473,49 +3465,45 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   "Convert HTML file INFILE to PDF and save it to OUTFILE.
 When BACKEND is provided, the corresponding program is used, otherwise, the
 value of `+html2pdf-default-backend' is used."
-  (let ((default-directory (file-name-directory infile))
-        (backend (or backend +html2pdf-default-backend)))
-    (pcase backend
-      ('weasyprint
-       (call-process
-        "weasyprint" nil nil nil
-        "--encoding" "utf-8"
-        "--stylesheet" (expand-file-name "templates/weasyprint-pdf.css" minemacs-assets-dir)
-        infile outfile))
-      ('htmldoc
-       (call-process
-        "htmldoc" nil nil nil
-        "--charset" "utf-8"
-        "--bodyfont" "sans" "--textfont" "sans" "--headfootfont" "sans"
-        "--top" "10#mm" "--bottom" "10#mm" "--right" "10#mm" "--left" "10#mm"
-        "--fontsize" "11"
-        "--size" "a4"
-        "--continuous"
-        "--outfile" outfile infile))
-      ('wkhtmltopdf
-       (call-process
-        "wkhtmltopdf" nil nil nil
-        "--images" "--disable-javascript" "--enable-local-file-access"
-        "--encoding" "utf-8"
-        infile outfile))
-      ('pandoc+context
-       (call-process
-        "pandoc" nil nil nil
-        "--pdf-engine=context"
-        "--variable" "fontsize=10pt"
-        "--variable" "linkstyle=slanted"
-        "-o" outfile infile)))))
+   (if-let ((default-directory (file-name-directory infile))
+            (backend (or backend +html2pdf-default-backend))
+            (backend-command
+             (pcase backend
+               ('weasyprint
+                (list "weasyprint"
+                      "--encoding" "utf-8"
+                      "--stylesheet" (expand-file-name "templates/weasyprint-pdf.css" minemacs-assets-dir)
+                      infile outfile))
+               ('htmldoc
+                (list "htmldoc"
+                      "--charset" "utf-8"
+                      "--bodyfont" "sans" "--textfont" "sans" "--headfootfont" "sans"
+                      "--top" "10#mm" "--bottom" "10#mm" "--right" "10#mm" "--left" "10#mm"
+                      "--fontsize" "11"
+                      "--size" "a4"
+                      "--continuous"
+                      "--outfile" outfile infile))
+               ('wkhtmltopdf
+                (list "wkhtmltopdf"
+                      "--images" "--disable-javascript" "--enable-local-file-access"
+                      "--encoding" "utf-8"
+                      infile outfile))
+               ('pandoc+context
+                (list "pandoc"
+                      "--pdf-engine=context"
+                      "--variable" "fontsize=10pt"
+                      "--variable" "linkstyle=slanted"
+                      "-o" outfile infile)))))
+       (apply #'call-process (append (list (car backend-command) nil nil nil) (cdr backend-command)))
+     (user-error "Backend \"%s\" not available." backend)))
 
 ;;;###autoload
 (defun +txt2html (infile outfile &optional mail-mode-p)
   "Convert plain-text file INFILE to HTML and save it to OUTFILE.
 When MAIL-MODE-P is non-nil, --mailmode is passed to \"txt2html\"."
-  (apply
-   #'call-process
-   (append '("txt2html" nil nil nil "-8")
-           (when mail-mode-p '("--mailmode"))
-           (list "--outfile" outfile infile))))
-
+  (apply #'call-process (append '("txt2html" nil nil nil "-8")
+                                (when mail-mode-p '("--mailmode"))
+                                (list "--outfile" outfile infile))))
 (defvar +save-as-pdf-filename nil
   "File name to use, if non-nil, for the output file.")
 
@@ -3546,7 +3534,7 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
       (user-error
        (if (file-exists-p outfile)
            "PDF created but with some errors!"
-         "An error occured, cannot create the PDF!")))))
+         "An error occurred, cannot create the PDF!")))))
 
 ;;;###autoload
 (defcustom +single-file-executable (executable-find "single-file")
@@ -3555,14 +3543,15 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
 ;;;###autoload
 (defun +single-file (url out-file)
   "Save URL into OUT-FILE as a standalone HTML file."
-  (when +single-file-executable
-    (make-process
-     :name "single-file-cli"
-     :buffer "*single-file*"
-     :command (list
-               +single-file-executable
-               "--browser-executable-path" browse-url-chromium-program
-               url out-file))))
+  (if (and +single-file-executable (executable-find +single-file-executable))
+      (make-process
+       :name "single-file-cli"
+       :buffer "*single-file*"
+       :command (list
+                 +single-file-executable
+                 "--browser-executable-path" browse-url-chromium-program
+                 url out-file))
+    (user-error "Please set `+single-file-executable' accordingly.")))
 #+end_src
 
 文件尾
@@ -4850,23 +4839,23 @@ UNUSED: 暂时用不到
   (org-cite-activate-processor 'citar)
   (citar-symbol-separator "  ")
   :config
-  (defun +citar--set-symbols ()
-    (setq citar-symbols
-          `((file ,(all-the-icons-octicon "file-pdf"      :face 'error) . " ")
-            (note ,(all-the-icons-octicon "file-text"     :face 'warning) . " ")
-            (link ,(all-the-icons-octicon "link-external" :face 'org-link) . " "))))
+  (with-eval-after-load 'all-the-icons
+    (defun +citar--set-symbols ()
+      (setq citar-symbols
+            `((file ,(all-the-icons-octicon "file-pdf" :face 'error) . " ")
+              (note ,(all-the-icons-octicon "file-text" :face 'warning) . " ")
+              (link ,(all-the-icons-octicon "link-external" :face 'org-link) . " "))))
 
-  ;; Properly setup citar-symbols
-  (if (display-graphic-p)
-      (+citar--set-symbols)
-    (add-hook
-     'server-after-make-frame-hook
-     (defun +citar--set-symbols-once-h ()
-       (when (display-graphic-p)
-         (+citar--set-symbols)
-         (remove-hook 'server-after-make-frame-hook
-                      #'+citar--set-symbols-once-h))))))
-
+    ;; Properly setup citar-symbols
+    (if (display-graphic-p)
+        (+citar--set-symbols)
+      (add-hook
+       'server-after-make-frame-hook
+       (defun +citar--set-symbols-once-h ()
+         (when (display-graphic-p)
+           (+citar--set-symbols)
+           (remove-hook 'server-after-make-frame-hook
+                        #'+citar--set-symbols-once-h)))))))
 (use-package citar-org-roam
   :straight t
   :after citar org-roam
@@ -4964,9 +4953,6 @@ UNUSED: 暂时用不到
   (+map! "tf" #'flymake-mode)
   :custom
   (flymake-fringe-indicator-position 'right-fringe)
-  (flymake-error-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-error))
-  (flymake-warning-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-warning))
-  (flymake-note-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-info))
   :config
   (+map-local! :keymaps 'flymake-mode-map
     "f"  '(nil :wk "flymake")
@@ -4991,6 +4977,7 @@ UNUSED: 暂时用不到
        #b00111110
        #b01111100
        #b11111000])
+
     (define-fringe-bitmap '+flymake-bitmap-arrow-hi-res
       [#b01111000000
        #b00111100000
@@ -5005,6 +4992,7 @@ UNUSED: 暂时用不到
        #b00111100000
        #b01111000000]
       nil 13)
+
     (define-fringe-bitmap '+flymake-bitmap-left-arrow-hi-res
       [#b00000011110
        #b00000111100
@@ -5018,7 +5006,27 @@ UNUSED: 暂时用不到
        #b00001111000
        #b00000111100
        #b00000011110]
-      nil 13)))
+      nil 13)
+
+    (setq flymake-error-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-error)
+          flymake-warning-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-warning)
+          flymake-note-bitmap '(+flymake-bitmap-left-arrow-hi-res compilation-info))))
+
+;;   (defhydra +flycheck-main (:color blue :hint nil :foreign-keys warn)
+;;     "
+;; [Flymake]                                              [_q_] quit
+;;   ├──────────────────────────────────────────────────────────────────────╮
+;;   │  [_B_] Buffer diagnostics  [_P_] Project diagnostics  [_L_] Log buffer     │
+;;   │  [_n_] Next error          [_N_] Prev error           [_S_] Start          │
+;;   ╰──────────────────────────────────────────────────────────────────────╯
+;; "
+;;     ("B" flymake-show-buffer-diagnostics)
+;;     ("P" flymake-show-project-diagnostics)
+;;     ("L" flymake-switch-to-log-buffer)
+;;     ("n" flymake-goto-next-error)
+;;     ("N" flymake-goto-prev-error)
+;;     ("S" flymake-start)
+;;     ("q" nil :color blue)))
 
 (use-package flymake-easy
   :straight t)
@@ -5600,7 +5608,7 @@ UNUSED: 暂时用不到
     :custom
     ;; Generic
     (eaf-apps-to-install
-     '(browser mindmap jupyter pdf-viewer file-sender video-player markdown-previewer))
+     '(browser mindmap jupyter file-sender video-player markdown-previewer))
     (eaf-start-python-process-when-require t)
     (eaf-kill-process-after-last-buffer-closed t)
     (eaf-fullscreen-p nil)
@@ -5832,7 +5840,10 @@ UNUSED: 暂时用不到
 #+begin_src emacs-lisp
 (use-package highlight-numbers
   :straight t
-  :hook (prog-mode . highlight-numbers-mode))
+  :hook ((prog-mode conf-mode) . highlight-numbers-mode)
+  :config
+  ;; Original "\\_<[[:digit:]].*?\\_>"
+  (setq highlight-numbers-generic-regexp "\\_<[[:digit:]]+\\(?:\\.[0-9]*\\)?\\_>"))
 #+end_src
 
 [[https://github.com/Fuco1/smartparens][Smartparens]] 提供了一些智能的括号匹配和操作功能。主要功能包括：
@@ -7082,10 +7093,26 @@ TODO: 有空在看
 =empv= 是一款 Emacs 下的音乐播放器，可以播放本地音乐文件和网络音乐资源，支持多种音频格式。empv 的特点是使用简单，快捷键容易记忆，并支持集成到 Emacs 窗口中。empv 可以使用 Emacs Lisp 的方式进行配置，例如自定义快捷键、主题等。empv 依赖于其他工具，例如 MPlayer、mpv 等。
 
 #+begin_src emacs-lisp
+(defcustom +mpv-command (executable-find "mpv")
+  "The MPV command."
+  :group 'minemacs-utils)
+
+(defvar +mpv-buffer-name " *MPV*")
+(defvar +mpv-process-name "mpv")
+
+(when (executable-find +mpv-command)
+  (defun +browse-url-mpv (url &optional args)
+    "Open URL with MPV."
+    (start-process +mpv-process-name +mpv-buffer-name +mpv-command url))
+
+  (setq browse-url-browser-function
+        `((,(rx (seq "http" (? ?s) "://" (? "www.") (or "youtube.com" "youtu.be"))) . +browse-url-mpv)
+          ("." . browse-url-default-browser))))
+
 (use-package empv
   :straight (:host github :repo "isamert/empv.el")
   :preface
-  (defconst +mpv-available-p (executable-find "mpv"))
+  (defconst +mpv-available-p (executable-find +mpv-command))
   :when +mpv-available-p
   :init
   (+map! :infix "o"
@@ -8147,6 +8174,11 @@ the children of class at point."
   :commands +toggle-burry-compilation-buffer-if-successful
   ;; Enable ANSI colors in compilation buffer
   :hook (compilation-filter . ansi-color-compilation-filter)
+  :custom
+  (compilation-scroll-output t) ; Keep scrolling the compilation buffer, `first-error' can be interesting
+  (compilation-always-kill t) ; Always kill current compilation process before starting a new one
+  (compilation-skip-visited t) ; Skip visited messages on compilation motion commands
+  (compilation-window-height 12) ; Keep it readable
   :config
   ;; Integration of `compile' with `savehist'
   (with-eval-after-load 'savehist
@@ -9577,7 +9609,7 @@ Fallback to FALLBACK-RELEASE when it can't get the last one."
 ;;; Code:
 #+end_src
 
-=me-eglot-ltex-extras.el=
+=me-eglot-ltex.el=
 
 #+begin_src emacs-lisp
 (defgroup minemacs-eglot-ltex nil
@@ -11470,7 +11502,7 @@ If SKIP-HEADERS is set, do not show include message headers."
 
 (setq
  ;; Set a theme for MinEmacs, supported themes include these from `doom-themes'
- ;; and `modus-themes'.
+ ;; or built-in themes
  minemacs-theme 'doom-xcode ; `doom-one' is a dark theme, `doom-one-light' is the light one
  ;; Set Emacs fonts, some good choices include:
  ;; - Cascadia Code
