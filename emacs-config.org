@@ -7282,10 +7282,10 @@ TODO: 有空在看
 它可以与 flyspell 配合使用，也可以直接在 buffer 中检查拼写错误。使用 Spell-fu，你可以在 Emacs 中更加方便地进行拼写检查，提高写作效率和文档质量。
 
 #+begin_src emacs-lisp
-(defconst +aspell-available-p (executable-find "aspell"))
-
 (use-package spell-fu
   :straight t
+  :preface
+  (defconst +aspell-available-p (executable-find "aspell"))
   :when +aspell-available-p
   ;;:hook (text-mode . spell-fu-mode)
   :custom
