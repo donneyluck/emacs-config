@@ -893,9 +893,9 @@ package [[https://github.com/minad/marginalia][marginalia]] 旁注
   :straight t
   :hook (minemacs-after-startup . marginalia-mode))
 
-(use-package all-the-icons-completion
+(use-package nerd-icons-completion
   :straight t
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup))
+  :hook (marginalia-mode . nerd-icons-completion-mode))
 #+end_src
 
 package [[https://github.com/oantolin/orderless][orderless]] 正则匹配
@@ -1090,13 +1090,6 @@ Useful for keeping track of the enabled theme."
 图标icon相关
 
 #+begin_src emacs-lisp
-(use-package all-the-icons
-  :straight t
-  :config
-  ;; Show .m files as matlab/octave files
-  (setcdr (assoc "m" all-the-icons-extension-icon-alist)
-          (cdr (assoc "matlab" all-the-icons-extension-icon-alist))))
-
 (use-package nerd-icons
   :straight t
   :config
@@ -4834,9 +4827,9 @@ UNUSED: 暂时用不到
   (with-eval-after-load 'all-the-icons
     (defun +citar--set-symbols ()
       (setq citar-symbols
-            `((file ,(all-the-icons-octicon "file-pdf" :face 'error) . " ")
-              (note ,(all-the-icons-octicon "file-text" :face 'warning) . " ")
-              (link ,(all-the-icons-octicon "link-external" :face 'org-link) . " "))))
+            `((file ,(nerd-icons-codicon "nf-cod-file_pdf" :face 'error) . " ")
+              (note ,(nerd-icons-faicon "nf-fa-file_text" :face 'warning) . " ")
+              (link ,(nerd-icons-mdicon "nf-md-link" :face 'org-link) . " "))))
 
     ;; Properly setup citar-symbols
     (if (display-graphic-p)
@@ -6193,7 +6186,7 @@ UNUSED: 暂时用不到
   :straight t
   :hook (minemacs-after-startup . dirvish-override-dired-mode)
   :custom
-  (dirvish-attributes '(subtree-state all-the-icons file-size vc-state git-msg))
+  (dirvish-attributes '(subtree-state nerd-icons file-size vc-state git-msg))
   (dirvish-cache-dir (+directory-ensure minemacs-cache-dir "dirvish/"))
   (dirvish-mode-line-format '(:left (sort file-time symlink) :right (omit yank index)))
   (dirvish-side-width 30)
@@ -6243,12 +6236,12 @@ UNUSED: 暂时用不到
   :after treemacs evil
   :demand t)
 
-(use-package treemacs-all-the-icons
+(use-package treemacs-nerd-icons
   :straight t
-  :after treemacs all-the-icons
+  :after treemacs nerd-icons
   :demand t
   :config
-  (treemacs-load-theme "all-the-icons"))
+  (treemacs-load-theme "nerd-icons"))
 #+end_src
 
 文件尾
@@ -6503,8 +6496,8 @@ TODO: 学习LaTeX
   ;; calculation method, either by setting the right angles for Fajr and Isha,
   ;; or by using one of the predefined presets (see `awqat' for more
   ;; information).
-  (awqat-mode-line-format " 🕌 ${prayer} (${hours}h${minutes}m) ")
-  (awqat-update-interval 30.0))
+ (awqat-mode-line-format (concat " " (nerd-icons-mdicon "nf-md-mosque") " ${prayer} (${hours}h${minutes}m) "))
+ (awqat-update-interval 30.0))
 #+end_src
 
 文件尾
@@ -8947,12 +8940,12 @@ mixed-pitch 提供了一些自定义选项，你可以根据自己的喜好进�
   (+map! "tF" #'focus-mode))
 #+end_src
 
-=all-the-icons-ibuffer= 在ibuffer显示icons
+=nerd-icons-ibuffer= 在ibuffer显示icons
 
 #+begin_src emacs-lisp
-(use-package all-the-icons-ibuffer
+(use-package nerd-icons-ibuffer
   :straight t
-  :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 #+end_src
 
 文件尾
@@ -10965,52 +10958,52 @@ This is enacted by `+mu4e--main-action-str-prettier-a' and
 `+mu4e--main-keyval-str-prettier-a'.")
 
 (defvar +mu4e-header-colorized-faces
-  '(all-the-icons-green
-    all-the-icons-lblue
-    all-the-icons-purple-alt
-    all-the-icons-blue-alt
-    all-the-icons-purple
-    all-the-icons-yellow)
+  '(nerd-icons-green
+    nerd-icons-lblue
+    nerd-icons-purple-alt
+    nerd-icons-blue-alt
+    nerd-icons-purple
+    nerd-icons-yellow
+    nerd-icons-maroon
+    nerd-icons-dorange)
   "Faces to use when coloring folders and account stripes.")
 
 (defun +mu4e-colorize-str (str &optional unique herring)
   "Apply a face from `+mu4e-header-colorized-faces' to STR.
 If HERRING is set, it will be used to determine the face instead of STR.
 Will try to make unique when non-nil UNIQUE,
-a quot  ed symbol for a alist of current strings and faces provided."
-  (unless herring
-    (setq herring str))
-  (put-text-property
-   0 (length str)
-   'face
-   (list
-    (if (not unique)
-        (+mu4e--str-color-face herring str)
-      (let ((unique-alist (eval unique)))
-        (unless (assoc herring unique-alist)
-          (if (> (length unique-alist) (length +mu4e-header-colorized-faces))
-              (push (cons herring (+mu4e--str-color-face herring)) unique-alist)
-            (let ((offset 0) color color?)
-              (while (not color)
-                (setq color? (+mu4e--str-color-face herring offset))
-                (if (not (rassoc color? unique-alist))
-                    (setq color color?)
-                  (setq offset (1+ offset))
-                  (when (> offset (length +mu4e-header-colorized-faces))
-                    (message "Warning: +mu4e-colorize-str was called with non-unique-alist UNIQUE-alist alist.")
-                    (setq color (+mu4e--str-color-face herring)))))
-              (push (cons herring color) unique-alist)))
-          (set unique unique-alist))
-        (cdr (assoc herring unique-alist))))
-    'default)
-   str)
-  str)
+a quoted symbol for a alist of current strings and faces provided."
+  (let ((herring (or herring str)))
+    (put-text-property
+     0 (length str) 'face
+     (list
+      (if (null unique)
+          (+mu4e--str-color-face herring str)
+        (let ((unique-alist (eval unique)))
+          (unless (assoc herring unique-alist)
+            (if (> (length unique-alist) (length +mu4e-header-colorized-faces))
+                (push (cons herring (+mu4e--str-color-face herring)) unique-alist)
+              (let ((offset 0) color color?)
+                (while (not color)
+                  (setq color? (+mu4e--str-color-face herring offset))
+                  (if (not (rassoc color? unique-alist))
+                      (setq color color?)
+                    (setq offset (1+ offset))
+                    (when (> offset (length +mu4e-header-colorized-faces))
+                      (message "Warning: +mu4e-colorize-str was called with non-unique-alist UNIQUE-alist alist.")
+                      (setq color (+mu4e--str-color-face herring)))))
+                (push (cons herring color) unique-alist)))
+            (set unique unique-alist))
+          (cdr (assoc herring unique-alist))))
+      'default)
+     str)
+    str))
 
 (defun +mu4e--str-color-face (str &optional offset)
-  "Select a face from `+mu4e-header-colorized-faces' based on
-STR and any integer OFFSET."
+  "Select a face from `+mu4e-header-colorized-faces' based on STR and any
+integer OFFSET."
   (let* ((str-sum (apply #'+ (mapcar (lambda (c) (% c 3)) str)))
-         (color (nth (% (+ str-sum (if offset offset 0))
+         (color (nth (% (+ str-sum (or offset 0))
                         (length +mu4e-header-colorized-faces))
                      +mu4e-header-colorized-faces)))
     color))
@@ -11018,8 +11011,7 @@ STR and any integer OFFSET."
 (defun +mu4e--main-action-prettier-a (title cmd &optional bindstr alt)
   (let* ((bindstr (or bindstr (mu4e-key-description cmd) (and alt (string alt))
                       (mu4e-error "No binding for %s" cmd)))
-         (bindstr
-          (if (and alt (> (length bindstr) 1)) alt bindstr))
+         (bindstr (if (and alt (> (length bindstr) 1)) alt bindstr))
          (title ;; remove first letter afrer [] if it equal last of binding
           (mu4e-string-replace
            (concat "[@]" (substring bindstr -1)) "[@]" title))
@@ -11068,49 +11060,21 @@ will also be the width of all other printable characters."
       (car (window-text-pixel-size)))))
 
 (cl-defun +normalized-icon (name &key set color height v-adjust)
-  "Convert :icon declaration to icon"
-  (let* ((icon-set (intern (concat "all-the-icons-" (or set "material"))))
+  "Convert icon declaration to nerd icon with width normalized to space-width."
+  (let* ((set (or set "fa"))
+         (icon-set (intern (format "nerd-icons-%sicon" set)))
          (v-adjust (or v-adjust 0.02))
          (height (or height 0.8))
+         (name (format "nf-%s-%s" set name))
          (icon (if color
-                   (apply icon-set `(,name :face ,(intern (concat "all-the-icons-" color)) :height ,height :v-adjust ,v-adjust))
-                 (apply icon-set `(,name  :height ,height :v-adjust ,v-adjust))))
+                   (apply icon-set `(,name :face ,(intern (format "nerd-icons-%s" color)) :height ,height :v-adjust ,v-adjust))
+                 (apply icon-set `(,name :height ,height :v-adjust ,v-adjust))))
          (icon-width (+mu4e--get-string-width icon))
          (space-width (+mu4e--get-string-width " "))
          (space-factor (- 2.0 (/ (float icon-width) space-width))))
     (concat (propertize " " 'display `(space . (:width ,space-factor))) icon)))
 
 (defun +mu4e--ui-setup ()
-  (setq
-   mu4e-use-fancy-chars t
-   mu4e-headers-draft-mark      (cons "D" (+normalized-icon "edit"))
-   mu4e-headers-flagged-mark    (cons "F" (+normalized-icon "flag"))
-   mu4e-headers-new-mark        (cons "N" (+normalized-icon "file_download" :color "dred"))
-   mu4e-headers-passed-mark     (cons "P" (+normalized-icon "forward"))
-   mu4e-headers-replied-mark    (cons "R" (+normalized-icon "reply"))
-   mu4e-headers-seen-mark       (cons "S" "")
-   mu4e-headers-trashed-mark    (cons "T" (+normalized-icon "delete"))
-   mu4e-headers-attach-mark     (cons "a" (+normalized-icon "attach_file"))
-   mu4e-headers-encrypted-mark  (cons "x" (+normalized-icon "lock"))
-   mu4e-headers-signed-mark     (cons "s" (+normalized-icon "verified_user" :color "dpurple"))
-   mu4e-headers-unread-mark     (cons "u" (+normalized-icon "remove_red_eye" :color "dred"))
-   mu4e-headers-list-mark       (cons "l" (+normalized-icon "list"))
-   mu4e-headers-personal-mark   (cons "p" (+normalized-icon "person"))
-   mu4e-headers-calendar-mark   (cons "c" (+normalized-icon "date_range"))
-   mu4e-headers-date-format "%d/%m/%y"
-   mu4e-headers-time-format "%H:%M"
-   mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶")
-   mu4e-headers-thread-orphan-prefix        '("┬>" . "┬▶ ")
-   mu4e-headers-thread-connection-prefix    '("│ " . "│ ")
-   mu4e-headers-thread-first-child-prefix   '("├>" . "├▶")
-   mu4e-headers-thread-child-prefix         '("├>" . "├▶")
-   mu4e-headers-thread-last-child-prefix    '("└>" . "╰▶")
-   mu4e-headers-fields '((:account-stripe . 2)
-                         (:flags . 6) ;; 3 flags
-                         (:human-date . 8)
-                         (:from-or-to . 25)
-                         (:subject-truncated)))
-
   ;; Add a column to display what email account the email belongs to,
   ;; and an account color stripe column
   (defvar +mu4e-header--maildir-colors nil)
@@ -11119,7 +11083,7 @@ will also be the width of all other printable characters."
    '((:account
       . (:name "Account"
          :shortname "Account"
-         :help "which account/maildir this email belongs to"
+         :help "Which account/maildir this email belongs to"
          :function
          (lambda (msg)
            (let ((maildir (replace-regexp-in-string
@@ -11153,7 +11117,7 @@ will also be the width of all other printable characters."
      (:account-stripe
       . (:name "Account"
          :shortname "▐"
-         :help "Which account/maildir this email belongs to"
+         :help "Which account/maildir this email belongs to, as a colorized stripe"
          :function
          (lambda (msg)
            (let ((account
@@ -11172,17 +11136,45 @@ will also be the width of all other printable characters."
            (propertize (format "%2d"
                         (+ (length (mu4e-message-field msg :to))
                          (length (mu4e-message-field msg :cc))))
-            'face 'mu4e-footer-face))))))
+            'face 'mu4e-footer-face)))))
+   mu4e-headers-date-format "%d/%m/%y"
+   mu4e-headers-time-format "%H:%M"
+   mu4e-use-fancy-chars t
+   mu4e-headers-attach-mark    (cons "a" (+normalized-icon 'attachment :set 'md))
+   mu4e-headers-calendar-mark  (cons "c" (+normalized-icon 'calendar :set 'md))
+   mu4e-headers-draft-mark     (cons "D" (+normalized-icon 'edit))
+   mu4e-headers-encrypted-mark (cons "x" (+normalized-icon 'lock))
+   mu4e-headers-flagged-mark   (cons "F" (+normalized-icon 'flag :set 'md))
+   mu4e-headers-list-mark      (cons "l" (+normalized-icon 'list_ul))
+   mu4e-headers-new-mark       (cons "N" (+normalized-icon 'download :set 'oct :color 'dred))
+   mu4e-headers-passed-mark    (cons "P" (+normalized-icon 'mail_forward))
+   mu4e-headers-personal-mark  (cons "p" (+normalized-icon 'person :set 'oct))
+   mu4e-headers-replied-mark   (cons "R" (+normalized-icon 'mail_reply))
+   mu4e-headers-seen-mark      (cons "S" "")
+   mu4e-headers-signed-mark    (cons "s" (+normalized-icon 'verified :set 'oct :color 'dpurple))
+   mu4e-headers-trashed-mark   (cons "T" (+normalized-icon 'trash_can_outline :set 'md))
+   mu4e-headers-unread-mark    (cons "u" (+normalized-icon 'unread :set 'oct :color 'dred))
+   mu4e-headers-thread-child-prefix         '("├>" . "├▶")
+   mu4e-headers-thread-connection-prefix    '("│ " . "│ ")
+   mu4e-headers-thread-first-child-prefix   '("├>" . "├▶")
+   mu4e-headers-thread-last-child-prefix    '("└>" . "╰▶")
+   mu4e-headers-thread-orphan-prefix        '("┬>" . "┬▶")
+   mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶")
+   mu4e-headers-fields '((:account-stripe . 2)
+                         (:flags . 6) ;; 3 flags
+                         (:human-date . 8)
+                         (:from-or-to . 25)
+                         (:subject-truncated)))
 
   (advice-add #'mu4e--key-val :filter-return #'+mu4e--main-keyval-str-prettier-a)
   (advice-add #'mu4e--main-action :override #'+mu4e--main-action-prettier-a))
 
-(defun +m u4e-ui-setup ()
-       (if (display-graphic-p)
-           (+mu4e--ui-setup)
-         (+hook-once! server-after-make-frame-hook
-           (when (display-graphic-p)
-             (+mu4e--ui-setup)))))
+(defun +mu4e-ui-setup ()
+  (if (display-graphic-p)
+      (+mu4e--ui-setup)
+    (+hook-once! server-after-make-frame-hook
+      (when (display-graphic-p)
+        (+mu4e--ui-setup)))))
 #+end_src
 
 文件尾
