@@ -8417,9 +8417,7 @@ the children of class at point."
   (project-ignores '("*.meta" "*.prefab" "*.dll" "*.png" "*.asset"))
   :init
   ;;(+map! "."  #'project-find-file)
-  (+map!
-    ;; project
-    :infix "p"
+  (+map! :infix "p" ;; project
     "P"  #'project-switch-project
     "c"  #'project-compile
     "d"  #'project-find-dir
