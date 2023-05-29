@@ -672,6 +672,19 @@ plain variables.  This means that `setopt' will execute any
 
 (use-package let-alist
   :straight (:type built-in))
+
+(use-package password-cache
+  :straight (:type built-in)
+  :custom
+  (password-cache t) ; Enable password caching
+  (password-cache-expiry 60)) ; One minute, default is 16
+
+(use-package auth-source
+  :straight (:type built-in)
+  :custom
+  (auth-sources '("~/.authinfo.gpg")) ; Default auth-sources to GPG
+  (auth-source-do-cache t) ; Enable caching, do not keep asking about GPG key
+  (auth-source-cache-expiry 86400)) ; All day, default is 2h (7200)
 #+end_src
 
 文件尾
@@ -1353,18 +1366,6 @@ EMACS 中的 UTF-8：无处不在，永远不变
  enable-recursive-minibuffers t
  ;; Kill the shell buffer after exit
  shell-kill-buffer-on-exit t
-
- ;; ====== Passwords and encryption ======
- ;; Enable password caching
- password-cache t
- ;; One minute, default is 16
- password-cache-expiry 60
- ;; Default auth-sources to GPG
- auth-sources '("~/.authinfo.gpg")
- ;; Enable caching, do not keep asking about GPG key
- auth-source-do-cache t
- ;; All day, default is 2h (7200)
- auth-source-cache-expiry 86400
 
  ;; ====== Performances ======
  ;; Don’t compact font caches during GC
