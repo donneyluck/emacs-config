@@ -2018,7 +2018,7 @@ general
     "wU"  #'winner-redo
 
     ;; ====== Applications (Open) ======
-    "o"   '(nil   :wk "app/open")
+    "o"   '(nil :wk "app/open")
     "o-"  '(dired :wk "Dired") ;; Will be overwritten if dirvish is used
     "oa"  #'org-agenda
     "oe"  #'eshell
@@ -7085,7 +7085,7 @@ TODO: 有空在看
 =empv= 是一款 Emacs 下的音乐播放器，可以播放本地音乐文件和网络音乐资源，支持多种音频格式。empv 的特点是使用简单，快捷键容易记忆，并支持集成到 Emacs 窗口中。empv 可以使用 Emacs Lisp 的方式进行配置，例如自定义快捷键、主题等。empv 依赖于其他工具，例如 MPlayer、mpv 等。
 
 #+begin_src emacs-lisp
-(defcustom +mpv-command (executable-find "mpv")
+(defcustom +mpv-command "mpv"
   "The MPV command."
   :group 'minemacs-utils)
 
@@ -9607,6 +9607,7 @@ Fallback to FALLBACK-RELEASE when it can't get the last one."
   :group 'minemacs)
 
 (defvar-local eglot-ltex-language "auto")
+;;;###autoload(put 'eglot-ltex-language 'safe-local-variable 'stringp)
 
 (defcustom eglot-ltex-user-rules-path (concat minemacs-local-dir "eglot/ltex/")
   "Path to save user rules."
