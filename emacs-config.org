@@ -595,49 +595,6 @@ plain variables.  This means that `setopt' will execute any
 (require 'me-use-package-pin-ref)
 #+end_src
 
-备份并且更新 =minemacs= 的函数
-
-#+begin_src emacs-lisp
-(defvar minemacs--build-functions nil
-  "These functions are run after completing package updates.")
-
-(defun +register-build-function (fn)
-  "Register build function FN to be called at the end of `minemacs-update'."
-  (add-to-list 'minemacs--build-functions fn))
-
-(defun minemacs-update ()
-  "Update MinEmacs packages."
-  (interactive)
-  ;; Backup the current installed versions, this file can be restored if version
-  ;; upgrade does break some packages.
-  (message "[MinEmacs]: Creating backups for the current versions of packages")
-  (let* ((backup-dir (concat minemacs-local-dir "minemacs/versions/"))
-         (dest-file (concat backup-dir (format-time-string "default-%Y%m%d%H%M%S.el")))
-         (src-file (concat straight-base-dir "straight/versions/default.el")))
-    (unless (file-directory-p backup-dir) (mkdir backup-dir 'parents))
-    (when (file-exists-p src-file)
-      (message "[MinEmacs]: Creating backup from \"%s\" to \"%s\"" src-file dest-file)
-      (copy-file src-file dest-file)))
-
-  ;; Run `straight's update cycle, taking into account the explicitly pinned
-  ;; packages versions.
-  (message "[MinEmacs]: Pulling packages")
-  (straight-x-pull-all)
-  (message "[MinEmacs]: Freezing packages")
-  (straight-x-freeze-versions)
-  (message "[MinEmacs]: Rebuilding packages")
-  (straight-rebuild-all)
-
-  ;; Runn package-specific build functions (ex: `pdf-tools-install-noverify')
-  (message "[MinEmacs]: Running additional package-specific build functions")
-  (dolist (fn minemacs--build-functions)
-    (message "MinEmacs: Running `%s'" fn)
-    ;; Do not ask before installing
-    (cl-letf (((symbol-function 'yes-or-no-p) #'always)
-              ((symbol-function 'y-or-n-p) #'always))
-      (funcall-interactively fn))))
-#+end_src
-
 文件尾
 
 #+begin_src emacs-lisp
@@ -4211,6 +4168,51 @@ DEPTH and LOCAL are passed as is to `add-hook'."
       (add-to-list 'recentf-exclude root))))
 #+end_src
 
+=minemacs= 更新更新相关
+
+#+begin_src emacs-lisp
+(defvar minemacs--build-functions nil
+  "These functions are run after completing package updates.")
+
+;;;###autoload
+(defmacro +register-build-function! (fn)
+  "Register build function FN to be called at the end of `minemacs-update'."
+  `(add-to-list 'minemacs--build-functions #',fn))
+
+;;;###autoload
+(defun minemacs-update ()
+  "Update MinEmacs packages."
+  (interactive)
+  ;; Backup the current installed versions, this file can be restored if version
+  ;; upgrade does break some packages.
+  (message "[MinEmacs]: Creating backups for the current versions of packages")
+  (let* ((backup-dir (concat minemacs-local-dir "minemacs/versions/"))
+         (dest-file (concat backup-dir (format-time-string "default-%Y%m%d%H%M%S.el")))
+         (src-file (concat straight-base-dir "straight/versions/default.el")))
+    (unless (file-directory-p backup-dir) (mkdir backup-dir 'parents))
+    (when (file-exists-p src-file)
+      (message "[MinEmacs]: Creating backup from \"%s\" to \"%s\"" src-file dest-file)
+      (copy-file src-file dest-file)))
+
+  ;; Run `straight's update cycle, taking into account the explicitly pinned
+  ;; packages versions.
+  (message "[MinEmacs]: Pulling packages")
+  (straight-x-pull-all)
+  (message "[MinEmacs]: Freezing packages")
+  (straight-x-freeze-versions)
+  (message "[MinEmacs]: Rebuilding packages")
+  (straight-rebuild-all)
+
+  ;; Runn package-specific build functions (ex: `pdf-tools-install-noverify')
+  (message "[MinEmacs]: Running additional package-specific build functions")
+  (dolist (fn minemacs--build-functions)
+    (message "MinEmacs: Running `%s'" fn)
+    ;; Do not ask before installing
+    (cl-letf (((symbol-function 'yes-or-no-p) #'always)
+              ((symbol-function 'y-or-n-p) #'always))
+      (funcall-interactively fn))))
+#+end_src
+
 文件尾
 
 #+begin_src emacs-lisp
@@ -5447,7 +5449,7 @@ UNUSED: 暂时用不到
   (pdf-view-image-relief 2)
   (pdf-view-use-scaling t)
   :init
-  (+register-build-function #'pdf-tools-install))
+  (+register-build-function! pdf-tools-install))
 #+end_src
 
 =nov= 用于在 Emacs 中阅读 EPUB 电子书. 它提供了一个简单而轻量级的 EPUB 阅读器, 使您能够在 Emacs 中舒适地阅读电子书.
@@ -5593,7 +5595,7 @@ UNUSED: 暂时用不到
     ;; Evil integration doesn't work, start `eaf-mode' in `emacs-state'.
     (with-eval-after-load 'evil
       (evil-set-initial-state 'eaf-mode 'emacs))
-    (+register-build-function #'eaf-install-and-update)
+    (+register-build-function! eaf-install-and-update)
     :commands eaf-file-sender-qrcode-in-dired +eaf-open-mail-as-html +browse-url-eaf eaf-open-browser
     :custom
     ;; Generic
@@ -7963,7 +7965,7 @@ org-mode tweak
     :custom
     (treesit-auto-install 'prompt)
     :init
-    (+register-build-function #'treesit-auto-install-all)
+    (+register-build-function! treesit-auto-install-all)
     :config
     ;; Install all languages when calling `treesit-auto-install-all'
     (setq treesit-language-source-alist (treesit-auto--build-treesit-source-alist))))
@@ -8609,7 +8611,7 @@ UNUSED: 使用 =i3wm= 不需要在emacs中使用终端
    `(" \\*Install vterm\\*"
      (display-buffer-no-window)
      (allow-no-window . t)))
-  (+register-build-function #'vterm-module-compile)
+  (+register-build-function! vterm-module-compile)
   :custom
   (vterm-always-compile-module t)
   (vterm-max-scrollback 5000)
