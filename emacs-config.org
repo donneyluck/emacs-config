@@ -10690,7 +10690,7 @@ Example: \"#+TITLE\" -> \"#+title\"
     (spell-fu-dictionary-add (spell-fu-get-personal-dictionary (format "%s-personal" lang) personal-dict-file))))
 
 ;;;###autoload
-(defmacro +spell-fu-register-dictionaries (&rest langs)
+(defmacro +spell-fu-register-dictionaries! (&rest langs)
   "Register dictionaries for `LANGS` to spell-fu's multi-dict."
   (let* ((fn-name (intern (format "+spell-fu--multi-langs-%s-h" (string-join langs "-"))))
          (closure `(defun ,fn-name ())))
@@ -11527,9 +11527,9 @@ If SKIP-HEADERS is set, do not show include message headers."
 
 ;; Module: `me-natural-langs' -- Package: `spell-fu'
 (with-eval-after-load 'spell-fu
-  ;; We can use MinEmacs' helper macro `+spell-fu-register-dictionaries'
+  ;; We can use MinEmacs' helper macro `+spell-fu-register-dictionaries!'
   ;; to enable multi-language spell checking.
-  (+spell-fu-register-dictionaries "en" "cn"))
+  (+spell-fu-register-dictionaries! "en" "cn"))
 
 ;; Module: `me-rss' -- Package: `elfeed'
 (with-eval-after-load 'elfeed
