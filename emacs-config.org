@@ -1107,6 +1107,7 @@ pacakge [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]] 仪表
   :straight t
   :after evil evil-collection
   :demand t
+  :when (not (bound-and-true-p +dashboard-disable))
   :init
   (+map! "oD" #'dashboard-open)
   :custom
@@ -6497,8 +6498,8 @@ TODO: 学习LaTeX
   ;; calculation method, either by setting the right angles for Fajr and Isha,
   ;; or by using one of the predefined presets (see `awqat' for more
   ;; information).
- (awqat-mode-line-format (concat " " (nerd-icons-mdicon "nf-md-mosque") " ${prayer} (${hours}h${minutes}m) "))
- (awqat-update-interval 30.0))
+  (awqat-mode-line-format (concat " " (nerd-icons-mdicon "nf-md-mosque") " ${prayer} (${hours}h${minutes}m) "))
+  (awqat-update-interval 30.0))
 #+end_src
 
 文件尾
@@ -11760,6 +11761,10 @@ If SKIP-HEADERS is set, do not show include message headers."
 ;; Set log level to `info' rather than `error'
 (unless minemacs-verbose
   (setq minemacs-msg-level 2))
+
+;; Disable `dashboard'
+;; (setq +dashboard-disable t)
+
 
 ;; Enable full screen at startup
 ;; (if-let ((fullscreen (assq 'fullscreen default-frame-alist)))
