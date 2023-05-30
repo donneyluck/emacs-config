@@ -1318,6 +1318,8 @@ EMACS 中的 UTF-8：无处不在，永远不变
  enable-recursive-minibuffers t
  ;; Kill the shell buffer after exit
  shell-kill-buffer-on-exit t
+ ;; Boarder mark left
+ indicate-buffer-boundaries 'left
 
  ;; ====== Performances ======
  ;; Don’t compact font caches during GC
@@ -2044,6 +2046,7 @@ general
     "tV"  '(netextender-toggle :wk "NetExtender")
     "te"  '(ecryptfs-toggle-mount-private :wk "eCryptfs")
     "tv"  #'visible-mode
+    "ti"  #'display-fill-column-indicator-mode
 
     ;; ====== Code ======
     "c"   '(nil :wk "code")
@@ -8870,6 +8873,15 @@ TODO: 自定义日志格式还是有点问题
   :custom
   (visual-fill-column-width nil)
   (visual-fill-column-center-text t))
+#+end_src
+
+显示出一道边界  防止代码写的过长
+
+#+begin_src emacs-lisp
+(use-package display-fill-column-indicator
+  :straight (:type built-in)
+  :custom
+  (display-fill-column-indicator-character ?\u254e))
 #+end_src
 
 =mixed-pitch= 它提供了在 Emacs 缓冲区中使用不同字体宽度的能力，以实现更好的阅读体验。传统的等宽字体在编辑代码等文本时非常有用，但对于阅读长段落的文章或文档可能不够理想。mixed-pitch 允许你在 Emacs 缓冲区中使用变宽字体来提高可读性。
