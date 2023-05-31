@@ -2779,10 +2779,10 @@ Used to synchronize loading some other stuff after loading Emacs.
   "MinEmacs binary files."
   :group 'minemacs)
 
-(defcustom +binary-objdump-executable (executable-find "objdump")
-  "Path to the executable \"objdump\" utility."
+(defcustom +binary-objdump-executable "objdump"
+  "The \"objdump\" command."
   :group 'minemacs-binary
-  :type 'string)
+  :type '(choice file string))
 
 (defcustom +binary-objdump-enable t
   "Enable or disable disassembling suitable files with objdump."
@@ -2801,6 +2801,7 @@ Used to synchronize loading some other stuff after loading Emacs.
        (when-let* ((file (buffer-file-name (or buffer (current-buffer))))
                    (file (file-truename file)))
          (and +binary-objdump-executable
+              (executable-find +binary-objdump-executable)
               (file-exists-p file)
               (not (file-directory-p file))
               (not (zerop (file-attribute-size (file-attributes file))))
@@ -2817,9 +2818,7 @@ Used to synchronize loading some other stuff after loading Emacs.
 ;; emacs.stackexchange.com/q/10277/37002)
 (defun +binary-buffer-p (&optional buffer)
   "Return whether BUFFER or the current buffer is binary.
-
 A binary buffer is defined as containing at least one null byte.
-
 Returns either nil, or the position of the first null byte."
   (with-current-buffer (or buffer (current-buffer))
     (save-excursion
@@ -3495,13 +3494,13 @@ When MAIL-MODE-P is non-nil, treat INFILE as a mail."
          "An error occurred, cannot create the PDF!")))))
 
 ;;;###autoload
-(defcustom +single-file-executable (executable-find "single-file")
+(defcustom +single-file-executable "single-file"
   "The executable for \"single-file\" which is used archive HTML pages.")
 
 ;;;###autoload
 (defun +single-file (url out-file)
   "Save URL into OUT-FILE as a standalone HTML file."
-  (if (and +single-file-executable (executable-find +single-file-executable))
+  (if (executable-find +single-file-executable)
       (make-process
        :name "single-file-cli"
        :buffer "*single-file*"
@@ -8515,7 +8514,7 @@ the children of class at point."
   (defcustom +elfeed-images-dir "~/Pictures/elfeed/"
     "Directory of downloaded pictures."
     :group 'minemacs-elfeed)
-  (defcustom +yt-dlp-command (executable-find "yt-dlp")
+  (defcustom +yt-dlp-command "yt-dlp"
     "The \"yt-dlp\" command."
     :group 'minemacs-tools)
   :custom
