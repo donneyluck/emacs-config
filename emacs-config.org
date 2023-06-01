@@ -1125,8 +1125,8 @@ pacakge [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]] 仪表
   (evil-collection-dashboard-setup)
 
   ;; Avoid openning the dashboard when Emacs starts with an open file.
-   (unless (cl-some #'buffer-file-name (buffer-list))
-     (dashboard-open)))
+  unless (cl-some #'buffer-file-name (buffer-list))
+  (dashboard-open)))
 #+end_src
 
 package doom-modeline
@@ -2856,8 +2856,8 @@ Returns either nil, or the position of the first null byte."
   "If `hexl-mode' is not already active, and the current buffer
 is binary, activate `hexl-mode'."
   (interactive)
-(when (and (not (eq major-mode 'hexl-mode)) (+binary-hexl-buffer-p))
-    (hexl-mode 1)))
+   (when (and (not (eq major-mode 'hexl-mode)) (+binary-hexl-buffer-p))
+     (hexl-mode 1)))
 ;;;###autoload
 (defun +binary-setup-modes ()
   (add-to-list 'magic-fallback-mode-alist '(+binary-objdump-buffer-p . objdump-disassemble-mode) t)
@@ -4916,7 +4916,9 @@ UNUSED: 暂时用不到
 (+deferred!
  ;; BUG: Loading continuously on `dirvish'.
  ;; BUG: Showing up randomly on `tramp' files.
- (setq +binary-objdump-enable nil)
+ ;; BUG: GPG files are opened in `hexl-mode' in some contexts (#67).
+ (setq +binary-objdump-enable nil
+       +binary-hexl-enable nil)
  (+binary-setup-modes))
 #+end_src
 
