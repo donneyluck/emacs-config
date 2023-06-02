@@ -7365,11 +7365,11 @@ TODO: 有空在看
     "Faces in certain major modes that spell-fu will not spellcheck."
     :group 'minemacs-ui
     :type '(repeat (cons symbol (repeat face))))
-    :config
-    (defun +spell-fu--init-excluded-faces-h ()
-        "Set `spell-fu-faces-exclude' according to `+spell-excluded-faces-alist'."
-        (when-let (excluded (cdr (cl-find-if #'derived-mode-p +spell-excluded-faces-alist :key #'car)))
-        (setq-local spell-fu-faces-exclude excluded))))
+  onfig
+  (defun +spell-fu--init-excluded-faces-h ()
+    "Set `spell-fu-faces-exclude' according to `+spell-excluded-faces-alist'."
+    (when-let (excluded (cdr (cl-find-if #'derived-mode-p +spell-excluded-faces-alist :key #'car)))
+      (setq-local spell-fu-faces-exclude excluded))))
 #+end_src
 
 =go-translate= 是一款基于 Google Translate 的 Emacs 翻译插件。它可以将当前 buffer 中的选中文本翻译成另一种语言，并将翻译结果显示在另一个 buffer 中。
@@ -10175,6 +10175,13 @@ Functions are differentiated into \"special forms\", \"built-in functions\" and
   :group 'minemacs-org
   :type '(cons natnum natnum))
 
+(defcustom +org-use-lower-case-keywords-and-properties t
+  "Automatically convert Org keywords and properties to lowercase on save."
+  :group 'minemacs-org
+  :type 'boolean)
+
+(put '+org-use-lower-case-keywords-and-properties 'safe-local-variable 'booleanp)
+
 (defvar-local +org-export-to-pdf-main-file nil
   "The main (entry point) Org file for a multi-files document.")
 
@@ -10437,7 +10444,7 @@ Example: \"#+TITLE\" -> \"#+title\"
   (add-hook
    'before-save-hook
    (defun +org--lower-case-keywords-and-properties-h ()
-     (when (derived-mode-p 'org-mode)
+     (when (and +org-use-lower-case-keywords-and-properties (derived-mode-p 'org-mode))
        (+org-lower-case-keywords-and-properties)))))
 
 (defun +org-extras-setup ()
