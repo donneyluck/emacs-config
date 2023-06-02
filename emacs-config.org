@@ -2856,8 +2856,8 @@ Returns either nil, or the position of the first null byte."
   "If `hexl-mode' is not already active, and the current buffer
 is binary, activate `hexl-mode'."
   (interactive)
-   (when (and (not (eq major-mode 'hexl-mode)) (+binary-hexl-buffer-p))
-     (hexl-mode 1)))
+  when (and (not (eq major-mode 'hexl-mode)) (+binary-hexl-buffer-p))
+  (hexl-mode 1)))
 ;;;###autoload
 (defun +binary-setup-modes ()
   (add-to-list 'magic-fallback-mode-alist '(+binary-objdump-buffer-p . objdump-disassemble-mode) t)
@@ -11619,17 +11619,20 @@ If SKIP-HEADERS is set, do not show include message headers."
            "projects.org"))))
 
 ;; Module: `me-notes' -- Package: `org-roam'
-(with-eval-after-load 'org-roam
-  (setq org-roam-directory (concat org-directory "slip-box/")
-        org-roam-db-location (concat org-roam-directory "org-roam.db"))
+;; For better integration with other packages (like `citar-org-roam'), it is
+;; recommended to set the `org-roam-directory' before loading the package.
+(setq org-roam-directory "~/Org/slip-box/")
 
-  ;; Register capture template (via Org-Protocol)
-  ;; Add this as bookmarklet in your browser
-  ;; javascript:location.href='org-protocol://roam-ref?template=r&ref=%27+encodeURIComponent(location.href)+%27&title=%27+encodeURIComponent(document.title)+%27&body=%27+encodeURIComponent(window.getSelection())
-  (setq org-roam-capture-ref-templates
-        '(("r" "ref" plain "%?"
-           :if-new (file+head "web/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+created: %U\n\n${body}\n")
-           :unnarrowed t))))
+(with-eval-after-load 'org-roam
+  org-roam-db-location (concat org-roam-directory "org-roam.db"))
+
+;; Register capture template (via Org-Protocol)
+;; Add this as bookmarklet in your browser
+;; javascript:location.href='org-protocol://roam-ref?template=r&ref=%27+encodeURIComponent(location.href)+%27&title=%27+encodeURIComponent(document.title)+%27&body=%27+encodeURIComponent(window.getSelection())
+(setq org-roam-capture-ref-templates
+      '(("r" "ref" plain "%?"
+         :if-new (file+head "web/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+created: %U\n\n${body}\n")
+         :unnarrowed t))))
 
 ;; Module: `me-media' -- Package: `empv'
 (with-eval-after-load 'empv
