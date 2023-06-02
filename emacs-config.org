@@ -1120,7 +1120,7 @@ pacakge [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]] 仪表
   (dashboard-image-banner-max-width 600)
   (dashboard-projects-backend 'project-el)
   (dashboard-startup-banner (concat minemacs-assets-dir "images/anonymous.png"))
- :config
+  :config
   ;; Ensure setting the keybindings before openning the dashboard
   (evil-collection-dashboard-setup)
 
@@ -8234,6 +8234,8 @@ the children of class at point."
   (+map!
     "fc" '(editorconfig-find-current-editorconfig :wk "Find current EditorConfig")
     "cfe" #'editorconfig-format-buffer))
+
+
 #+end_src
 
 + =clang-format= 是一个由 Clang 项目提供的代码格式化工具，可以自动将代码格式化为符合某个指定的格式规范。
@@ -11802,52 +11804,3 @@ If SKIP-HEADERS is set, do not show include message headers."
 ;; (setq debug-on-message "Package cl is deprecated")
 #+end_src
 
-* Makefile
-:properties:
-:header-args: :tangle Makefile
-:end:
-用于清理 更新 重新编译整个包
-
-#+begin_src makefile
-EMACS_DIR=.
-EMACS=emacs
-EMACS_BATCH=emacs --batch --script init.el
-
-all:
-@echo "Cleaning options are: clean, clean_all, prune, loaddefs."
-@echo "Straight options are: pull, rebuild, check."
-
-clean:
-rm -rf $(EMACS_DIR)/eln-cache $(EMACS_DIR)/local/eln-cache $(EMACS_DIR)/local/cache $(EMACS_DIR)/local/straight/build-*
-
-clean_pcache:
-rm -rf $(EMACS_DIR)/local/cache/pcache
-
-clean_all: clean
-cp $(EMACS_DIR)/local/straight/versions/default.el /tmp/straight-versions-default.el
-rm -rf $(EMACS_DIR)/local/straight/
-mkdir -p $(EMACS_DIR)/local/straight/versions/
-cp /tmp/straight-versions-default.el $(EMACS_DIR)/local/straight/versions/default.el
-
-prune: clean
-cp $(EMACS_DIR)/local/straight/versions/default.el /tmp/straight-versions-default.el
-rm -rf $(EMACS_DIR)/local
-mkdir -p $(EMACS_DIR)/local/straight/versions/
-cp /tmp/straight-versions-default.el $(EMACS_DIR)/local/straight/versions/default.el
-
-loaddefs:
-rm $(EMACS_DIR)/core/me-loaddefs.el
-
-pull:
-$(EMACS_BATCH) --eval='(straight-pull-all)'
-
-rebuild:
-$(EMACS_BATCH) --eval='(straight-rebuild-all)'
-
-check:
-$(EMACS_BATCH) --eval='(straight-check-all)'
-
-update:
-$(EMACS_BATCH) --eval='(minemacs-update)'
-#+end_src
-
