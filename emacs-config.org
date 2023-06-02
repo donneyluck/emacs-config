@@ -129,10 +129,10 @@
 
 (defun +load (&rest filename-parts)
   "Load a file, the FILENAME-PARTS are concatenated to form the file name."
-   (let ((filename (file-truename (apply #'concat filename-parts))))
-     (if (file-exists-p filename)
-         (load filename nil (not minemacs-verbose))
-       (user-error "[MinEmacs:Error] Cannot load \"%s\", the file doesn't exists." filename))))
+  (let ((filename (file-truename (apply #'concat filename-parts))))
+    (if (file-exists-p filename)
+        (load filename nil (not minemacs-verbose))
+      (user-error "[MinEmacs:Error] Cannot load \"%s\", the file doesn't exists." filename))))
 
 ;; HACK: Most core and third-party packages depends on the
 ;; `user-emacs-directory' variable to store some cache information and generated
@@ -1120,13 +1120,13 @@ pacakge [[https://github.com/emacs-dashboard/emacs-dashboard][dashboard]] 仪表
   (dashboard-image-banner-max-width 600)
   (dashboard-projects-backend 'project-el)
   (dashboard-startup-banner (concat minemacs-assets-dir "images/anonymous.png"))
-  :config
+ :config
   ;; Ensure setting the keybindings before openning the dashboard
   (evil-collection-dashboard-setup)
 
   ;; Avoid openning the dashboard when Emacs starts with an open file.
-  unless (cl-some #'buffer-file-name (buffer-list))
-  (dashboard-open)))
+  (unless (cl-some #'buffer-file-name (buffer-list))
+    (dashboard-open)))
 #+end_src
 
 package doom-modeline
@@ -7361,11 +7361,11 @@ TODO: 有空在看
     "Faces in certain major modes that spell-fu will not spellcheck."
     :group 'minemacs-ui
     :type '(repeat (cons symbol (repeat face))))
-  onfig
-  (defun +spell-fu--init-excluded-faces-h ()
-    "Set `spell-fu-faces-exclude' according to `+spell-excluded-faces-alist'."
-    (when-let (excluded (cdr (cl-find-if #'derived-mode-p +spell-excluded-faces-alist :key #'car)))
-      (setq-local spell-fu-faces-exclude excluded))))
+    :config
+    (defun +spell-fu--init-excluded-faces-h ()
+        "Set `spell-fu-faces-exclude' according to `+spell-excluded-faces-alist'."
+        (when-let (excluded (cdr (cl-find-if #'derived-mode-p +spell-excluded-faces-alist :key #'car)))
+        (setq-local spell-fu-faces-exclude excluded))))
 #+end_src
 
 =go-translate= 是一款基于 Google Translate 的 Emacs 翻译插件。它可以将当前 buffer 中的选中文本翻译成另一种语言，并将翻译结果显示在另一个 buffer 中。
